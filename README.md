@@ -1,14 +1,14 @@
 # File Management System (FMS)
 
 The FMS will be used for submitting all data files to AGR.
-The rest endpoint: `http://chip.alliancegenome.org/api/data/submit` is using a multipart post.
+The rest endpoint: `http://fms.alliancegenome.org/api/data/submit` is using a multipart post.
 
 Here is an example using curl:
 
 ```
 curl \
 	-H "api_access_token: 2C07D715..." \
-	-X POST "https://chip.alliancegenome.org/api/data/submit" \
+	-X POST "https://fms.alliancegenome.org/api/data/submit" \
 	-F "SchemaVersion_DataType_TaxonId=@/full/path/to/file1.json" \
 	-F "SchemaVersion_DataType_TaxonId=@/full/path/to/file2.json"
 ```
@@ -99,30 +99,30 @@ Valid combinations for Schema-DataType-TaxonId are as follows:
 
 	> curl \
 		-H "api_access_token: 2C07D715..." \
-		-X POST "https://chip.alliancegenome.org/api/data/submit" \
+		-X POST "https://fms.alliancegenome.org/api/data/submit" \
 		-F "0.7.0.0_GFF_MGD=@MGI_1.0.4_GFF.gff"
 	> curl \
 		-H "api_access_token: 2C07D715..." \
-		-X POST "https://chip.alliancegenome.org/api/data/submit" \
+		-X POST "https://fms.alliancegenome.org/api/data/submit" \
 		-F "0.6.2.0_Allele_MGD=@MGI_1.0.4_feature.json"
 	> curl \
 		-H "api_access_token: 2C07D715..." \
-		-X POST "https://chip.alliancegenome.org/api/data/submit" \
+		-X POST "https://fms.alliancegenome.org/api/data/submit" \
 		-F "0.6.1.0_BGI_FB=@FB_1.0.4_BGI.json"
 	> curl \
 		-H "api_access_token: 2C07D715..." \
-		-X POST "https://chip.alliancegenome.org/api/data/submit" \
+		-X POST "https://fms.alliancegenome.org/api/data/submit" \
 		-F "GAF_MGD=@gene_association_1.0.mgi.gaf"
 	> curl \
 		-H "api_access_token: 2C07D715..." \
-		-X POST "https://chip.alliancegenome.org/api/data/submit" \
+		-X POST "https://fms.alliancegenome.org/api/data/submit" \
 		-F "Allele_ZFIN=@ZFIN_1.0.4_feature.json"
 	
 #### Multiple files at a time
 
 	> curl \
 		-H "api_access_token: 2C07D715..." \
-		-X POST "https://chip.alliancegenome.org/api/data/submit" \
+		-X POST "https://fms.alliancegenome.org/api/data/submit" \
 		-F "0.7.0.0_BGI_FB=@FB_1.0.4_BGI.json" \
 		-F "0.7.0.0_Allele_FB=@FB_1.0.4_feature.json" \
 		-F "0.7.0.0_Disease_FB=@FB_1.0.4_disease.json" \
@@ -130,7 +130,7 @@ Valid combinations for Schema-DataType-TaxonId are as follows:
 		
 	> curl \
 		-H "api_access_token: 2C07D715..." \
-		-X POST "https://chip.alliancegenome.org/api/data/submit" \
+		-X POST "https://fms.alliancegenome.org/api/data/submit" \
 		-F "BGI_FB=@FB_1.0.4_BGI.json" \
 		-F "Allele_FB=@FB_1.0.4_feature.json" \
 		-F "Disease_FB=@FB_1.0.4_disease.json" \
@@ -147,7 +147,7 @@ For the following command:
 
 	> curl \
 		-H "api_access_token: 2C07D715..." \
-		-X POST "https://chip.alliancegenome.org/api/data/submit" \
+		-X POST "https://fms.alliancegenome.org/api/data/submit" \
 		-F "0.7.0.0_BGI_FB=@FB_1.0.4_BGI.json" \
 		-F "0.7.0.0_Allele_FB=@FB_1.0.4_feature.json" \
 		-F "0.7.0.0_Disease_FB=@FB_1.0.4_disease.json" \
@@ -172,7 +172,7 @@ For the following command:
 For the following command (Missing API Access Token):
 
 	> curl \
-		-X POST "https://chip.alliancegenome.org/api/data/submit" \
+		-X POST "https://fms.alliancegenome.org/api/data/submit" \
 		-F "0.7.0.0_BGI_MGD=@MGI_1.0.4_BGI.json" \
 		-F "0.7.0.0_Allele_MGD=@MGI_1.0.4_feature.json" \
 		-F "0.7.0.0_Disease_MGD=@MGI_1.0.4_disease.json" \
@@ -196,7 +196,7 @@ For the following command (Errors in BGI):
 
 	> curl \
 		-H "api_access_token: 2C07D715..." \
-		-X POST "https://chip.alliancegenome.org/api/data/submit" \
+		-X POST "https://fms.alliancegenome.org/api/data/submit" \
 		-F "0.7.0.0_BGI_MGD=@MGI_1.0.4_BGI.json" \
 		-F "0.7.0.0_Allele_MGD=@MGI_1.0.4_feature.json" \
 		-F "0.7.0.0_Disease_MGD=@MGI_1.0.4_disease.json" \
@@ -220,7 +220,7 @@ In a failed example only the files that failed need to be attempted again:
 
 	> curl \
 		-H "api_access_token: 2C07D715..." \
-		-X POST "https://chip.alliancegenome.org/api/data/submit" \
+		-X POST "https://fms.alliancegenome.org/api/data/submit" \
 		-F "0.7.0.0_BGI_10090=@MGI_1.0.4_BGI.json" \
 		-F "0.7.0.0_GFF_10090=@MGI_1.0.4_GFF.gff" 
 
@@ -246,7 +246,7 @@ The loader will run against the snapshot and releases API's, using the API Acces
 
 The following command can be used to pull a list of releases from the system that are available:
 	
-	> curl "https://chip.alliancegenome.org/api/data/releases"
+	> curl "https://fms.alliancegenome.org/api/data/releases"
 
 <details>
 <summary>View Success Response</summary>
@@ -262,7 +262,7 @@ The following command can be used to pull a list of releases from the system tha
 
 The following command, can be used to pull a specific SnapShot by release version, release version is required.
 
-	> curl "https://chip.alliancegenome.org/api/data/snapshot?releaseVersion=1.4.0.0"
+	> curl "https://fms.alliancegenome.org/api/data/snapshot?releaseVersion=1.4.0.0"
 
 <details>
 <summary>View Success Response</summary>
@@ -323,7 +323,7 @@ The following command, can be used to pull a specific SnapShot by release versio
 This will take a snapshot of all the latest datafiles for each Taxon Id by each DataType. 
 
 	> curl -H "api_access_token: 2C07D715..." \
-	"https://chip.alliancegenome.org/api/data/takesnapshot?releaseVersion=1.4.0.0"
+	"https://fms.alliancegenome.org/api/data/takesnapshot?releaseVersion=1.4.0.0"
 
 <details>
 <summary>View Success Response</summary>
