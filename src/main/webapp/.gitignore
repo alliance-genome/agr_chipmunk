@@ -1,0 +1,5 @@
+static
+*.js
+*.json
+*.ico
+index.html
