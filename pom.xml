@@ -15,8 +15,8 @@
 	<groupId>org.alliancegenome</groupId>
 	<version>0.0.1</version>
 
-	<artifactId>agr_submission</artifactId>
-	<name>AGR Java :: Submission System</name>
+	<artifactId>agr_chip</artifactId>
+	<name>AGR Java :: File Management System</name>
 	<packaging>war</packaging>
 
 	<properties>
