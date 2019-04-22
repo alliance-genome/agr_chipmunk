@@ -15,7 +15,7 @@
 	<groupId>org.alliancegenome</groupId>
 	<version>0.0.1</version>
 
-	<artifactId>agr_chip</artifactId>
+	<artifactId>agr_chipmunk</artifactId>
 	<name>AGR Java :: File Management System</name>
 	<packaging>war</packaging>
 
