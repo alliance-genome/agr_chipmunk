@@ -1,6 +1,6 @@
 swarm.logging=INFO
 
-swarm.ds.connection.url=jdbc:h2:/data/agr_submission
+swarm.ds.connection.url=jdbc:h2:/data/agr_chipmunk
 
 warm.undertow.servers.default-server.http-listeners.default.max-post-size=10485760000
 
