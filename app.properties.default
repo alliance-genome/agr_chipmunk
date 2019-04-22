@@ -4,5 +4,8 @@ swarm.ds.connection.url=jdbc:h2:/data/agr_chipmunk
 
 swarm.undertow.servers.default-server.http-listeners.default.max-post-size=10485760000
 
+java.net.preferIPv4Stack=true
+java.net.preferIPv4Addresses=true
+
 AWS_ACCESS_KEY=s3_upload_key
 AWS_SECRET_KEY=s3_upload_secret
