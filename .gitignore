@@ -8,3 +8,4 @@ audit.log
 .project
 /bin/
 *.db
+userdata.sh
