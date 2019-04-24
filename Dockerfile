@@ -6,5 +6,13 @@ WORKDIR /workdir/agr_fms_software
 
 ADD . .
 
+WORKDIR /workdir/agr_fms_software/src/main/cliapp
+
+RUN npm run-script build
+
+RUN mv build/* ../webapp
+
+WORKDIR /workdir/agr_fms_software
+
 RUN mvn -B clean package
 
