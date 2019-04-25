@@ -8,6 +8,7 @@ ADD . .
 
 WORKDIR /workdir/agr_fms_software/src/main/cliapp
 
+RUN npm install
 RUN npm run-script build
 
 RUN mv build/* ../webapp
