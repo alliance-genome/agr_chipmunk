@@ -3,3 +3,4 @@ static
 *.json
 *.ico
 index.html
+!swagger-ui/*
