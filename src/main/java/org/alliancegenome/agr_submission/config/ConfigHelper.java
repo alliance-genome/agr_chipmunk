@@ -34,7 +34,7 @@ public class ConfigHelper {
 		 * key in the defaults map there should be a corresponding get method for that value.
 		 */
 
-		defaults.put("API_ACCESS_TOKEN", "api_access_token"); // Api Value
+		defaults.put("API_ACCESS_TOKEN", null); // Api Value
 		
 		defaults.put("DEBUG", "false");
 

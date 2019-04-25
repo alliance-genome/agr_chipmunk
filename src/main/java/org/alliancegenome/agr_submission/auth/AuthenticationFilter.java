@@ -12,6 +12,8 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
+import org.alliancegenome.agr_submission.config.ConfigHelper;
+
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -33,22 +35,26 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 		// Get the Authorization header from the request
 		String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
 
-		log.info("AuthenticationFilter: filter: " + authorizationHeader);
-		
-		// Validate the Authorization header
-		if (!isTokenBasedAuthentication(authorizationHeader)) {
-			abortWithUnauthorized(requestContext);
-			return;
-		}
+		log.debug("AuthenticationFilter: filter: " + authorizationHeader);
 
-		// Extract the token from the Authorization header
-		String token = authorizationHeader.substring(AUTHENTICATION_SCHEME.length()).trim();
-
-		try {
-			validateToken(token);
-
-		} catch (Exception e) {
-			abortWithUnauthorized(requestContext);
+		if(ConfigHelper.getApiAccessToken() != null && ConfigHelper.getApiAccessToken().length() > 0) {
+			log.debug("Checking API Access token: " + ConfigHelper.getApiAccessToken());
+			if (!isTokenBasedAuthentication(authorizationHeader)) {
+				abortWithUnauthorized(requestContext);
+				return;
+			}
+	
+			// Extract the token from the Authorization header
+			String token = authorizationHeader.substring(AUTHENTICATION_SCHEME.length()).trim();
+	
+			try {
+				validateToken(token);
+	
+			} catch (Exception e) {
+				abortWithUnauthorized(requestContext);
+			}
+		} else {
+			log.debug("API Access Token is null allowing everyone: " + ConfigHelper.getApiAccessToken());
 		}
 	}
 
@@ -56,7 +62,8 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 		// Check if the Authorization header is valid
 		// It must not be null and must be prefixed with "Bearer" plus a whitespace
 		// The authentication scheme comparison must be case-insensitive
-		return authorizationHeader != null && authorizationHeader.toLowerCase().startsWith(AUTHENTICATION_SCHEME.toLowerCase() + " ");
+		return true;
+		//return authorizationHeader != null && authorizationHeader.toLowerCase().startsWith(AUTHENTICATION_SCHEME.toLowerCase() + " ");
 	}
 
 	private void abortWithUnauthorized(ContainerRequestContext requestContext) {
@@ -69,7 +76,8 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 	private void validateToken(String token) throws Exception {
 		// Check if the token was issued by the server and if it's not expired
 		// Throw an Exception if the token is invalid
-		log.info("Validating Token: " + token);
+		log.debug("API Access Token: " + ConfigHelper.getApiAccessToken());
+		log.debug("Validating Token: " + token);
 		// Do a lookup of the user and fire the event
 		//userAuthenticatedEvent.fire(username);
 	}

@@ -9,3 +9,4 @@ java.net.preferIPv4Addresses=true
 
 AWS_ACCESS_KEY=s3_upload_key
 AWS_SECRET_KEY=s3_upload_secret
+API_ACCESS_TOKEN=
