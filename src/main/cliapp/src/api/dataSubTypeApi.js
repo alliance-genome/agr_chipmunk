@@ -2,7 +2,7 @@
 class DataSubTypeApi {
 
 	static getAll() {
-		return fetch('http://localhost:8080/api/datasubtype/all').then(response => {
+		return fetch('/api/datasubtype/all').then(response => {
 			//console.log("Data Types API Running");
 			return response.json();
 		}).catch(error => {

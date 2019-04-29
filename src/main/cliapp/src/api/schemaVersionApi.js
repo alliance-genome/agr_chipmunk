@@ -2,7 +2,7 @@
 class SchemaVersionApi {
 
 	static getAll() {
-		return fetch('http://localhost:8080/api/schemaversion/all').then(response => {
+		return fetch('/api/schemaversion/all').then(response => {
 			//console.log("Data Types API Running");
 			return response.json();
 		}).catch(error => {
@@ -11,7 +11,7 @@ class SchemaVersionApi {
 	}
 
 	static getSchemaVersion(schemaVersion) {
-		return fetch('http://localhost:8080/api/schemaversion/' + schemaVersion).then(response => {
+		return fetch('/api/schemaversion/' + schemaVersion).then(response => {
 			//console.log("Data Type API Running", schemaVersion);
 			return response.json();
 		}).catch(error => {
