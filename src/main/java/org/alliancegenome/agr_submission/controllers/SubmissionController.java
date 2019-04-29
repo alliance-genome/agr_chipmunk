@@ -123,7 +123,7 @@ public class SubmissionController extends BaseController implements SubmissionCo
 	}
 
 	@Override
-	public APIResponce takeSnapShot(String releaseVersion) {
+	public SnapShotResponce takeSnapShot(String releaseVersion) {
 		SnapShot ssd = metaDataService.takeSnapShot(releaseVersion);
 		SnapShotResponce res = new SnapShotResponce();
 		res.setSnapShot(ssd);

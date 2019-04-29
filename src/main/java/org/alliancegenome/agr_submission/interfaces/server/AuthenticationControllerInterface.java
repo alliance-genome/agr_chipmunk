@@ -9,10 +9,12 @@ import javax.ws.rs.core.Response;
 
 import org.alliancegenome.agr_submission.auth.Credentials;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 @Path("/authentication")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Tag(name = "Authentication Endpoints")
 public interface AuthenticationControllerInterface {
 
 	@POST

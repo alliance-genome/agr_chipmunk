@@ -15,35 +15,47 @@ import javax.ws.rs.core.MediaType;
 import org.alliancegenome.agr_submission.auth.Secured;
 import org.alliancegenome.agr_submission.entities.SnapShot;
 import org.alliancegenome.agr_submission.views.View;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
 @Path("/snapshot")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Tag(name = "SnapShot Endpoints")
 public interface SnapShotControllerInterface {
 
 	@POST @Secured
 	@Path("/")
+	@APIResponses({
+		@APIResponse(responseCode = "200", description = "The SnapShot", content = @Content(schema = @Schema(implementation = SnapShot.class))),
+		@APIResponse(responseCode = "400", description = "User not found")
+	})
+	@Operation(summary = "Creates a new SnapShot", description="This endpoint is used for creating a new SnapShot")
 	@JsonView(View.SnapShotCreate.class)
 	public SnapShot create(SnapShot entity);
-	
+
 	@GET
 	@Path("/{id}")
 	@JsonView(View.SnapShotRead.class)
 	public SnapShot get(@Parameter(name = "Read: id") @PathParam("id") Long id);
-	
+
 	@PUT @Secured
 	@Path("/")
 	@JsonView(View.SnapShotUpdate.class)
 	public SnapShot update(@Parameter(name = "Update: Entity") SnapShot entity);
-	
+
 	@DELETE @Secured
 	@Path("/{id}")
 	@JsonView(View.SnapShotDelete.class)
 	public SnapShot delete(@Parameter(name = "Delete: Entity") @PathParam("id") Long id);
-	
+
 	@GET
 	@Path("/all")
 	@JsonView(View.SnapShotView.class)

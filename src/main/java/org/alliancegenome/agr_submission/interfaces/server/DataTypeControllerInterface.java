@@ -18,12 +18,14 @@ import org.alliancegenome.agr_submission.forms.AddDataSubTypeForm;
 import org.alliancegenome.agr_submission.forms.CreateSchemaFileForm;
 import org.alliancegenome.agr_submission.views.View;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
 @Path("/datatype")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Tag(name = "Data Type Endpoints")
 public interface DataTypeControllerInterface {
 
 	@POST @Secured

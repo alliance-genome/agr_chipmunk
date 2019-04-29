@@ -16,12 +16,14 @@ import org.alliancegenome.agr_submission.auth.Secured;
 import org.alliancegenome.agr_submission.entities.DataFile;
 import org.alliancegenome.agr_submission.views.View;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
 @Path("/datafile")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Tag(name = "DataFile Endpoints")
 public interface DataFileControllerInterface {
 
 	@POST
