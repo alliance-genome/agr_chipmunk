@@ -176,10 +176,11 @@ public class SubmissionService {
 	}
 
 	@Transactional
-	public SnapShot getShapShot(String releaseVersion) {
+	public SnapShot getLatestShapShot(String releaseVersion) {
 		ReleaseVersion rv = releaseDAO.findByField("releaseVersion", releaseVersion);
 		if(rv != null) {
 			SnapShot latest = null;
+			log.debug("Snapshots under releases: " + rv.getSnapShots());
 			for(SnapShot s: rv.getSnapShots()) {
 				if(latest == null || latest.getSnapShotDate().before(s.getSnapShotDate())) {
 					latest = s;
@@ -202,6 +203,7 @@ public class SubmissionService {
 		ReleaseVersion rv = releaseDAO.findByField("releaseVersion", releaseVersion);
 		if(rv != null) {
 			s.setReleaseVersion(rv);
+			s.setSnapShotDate(new Date());
 			return snapShotDAO.persist(s);
 		}
 		return null;

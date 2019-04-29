@@ -69,8 +69,8 @@ public class BaseSQLDAO<E extends BaseEntity> extends BaseDAO<E> {
 		HashMap<String, Object> params = new HashMap<>();
 		params.put(field, value);
 		List<E> list = search(params);
+		log.debug("Result List: " + list);
 		if(list.size() > 0) {
-			//sv = schemaDAO.getSchemaVersion(schema_id);
 			return list.get(0);
 		} else {
 			return null;

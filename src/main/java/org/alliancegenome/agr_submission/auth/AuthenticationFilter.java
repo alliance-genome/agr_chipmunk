@@ -35,7 +35,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 		// Get the Authorization header from the request
 		String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
 
-		log.debug("AuthenticationFilter: filter: " + authorizationHeader);
+		log.debug("Authorization Header: " + authorizationHeader);
 
 		if(ConfigHelper.getApiAccessToken() != null && ConfigHelper.getApiAccessToken().length() > 0) {
 			log.debug("Checking API Access token: " + ConfigHelper.getApiAccessToken());
@@ -49,7 +49,6 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 	
 			try {
 				validateToken(token);
-	
 			} catch (Exception e) {
 				abortWithUnauthorized(requestContext);
 			}
@@ -62,8 +61,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 		// Check if the Authorization header is valid
 		// It must not be null and must be prefixed with "Bearer" plus a whitespace
 		// The authentication scheme comparison must be case-insensitive
-		return true;
-		//return authorizationHeader != null && authorizationHeader.toLowerCase().startsWith(AUTHENTICATION_SCHEME.toLowerCase() + " ");
+		return authorizationHeader != null && authorizationHeader.toLowerCase().startsWith(AUTHENTICATION_SCHEME.toLowerCase() + " ");
 	}
 
 	private void abortWithUnauthorized(ContainerRequestContext requestContext) {
@@ -76,9 +74,13 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 	private void validateToken(String token) throws Exception {
 		// Check if the token was issued by the server and if it's not expired
 		// Throw an Exception if the token is invalid
-		log.debug("API Access Token: " + ConfigHelper.getApiAccessToken());
-		log.debug("Validating Token: " + token);
-		// Do a lookup of the user and fire the event
+		//log.debug("API Access Token: " + ConfigHelper.getApiAccessToken());
+		//log.debug("Validating Token: " + token);
+		if(!token.equals(ConfigHelper.getApiAccessToken())) {
+			log.warn("Authentication Unsuccessful: " + token);
+			throw new Exception("Authentication Unsuccessful: " + token + " != " + ConfigHelper.getApiAccessToken());
+		}
+		log.info("Authentication Successful: " + token);
 		//userAuthenticatedEvent.fire(username);
 	}
 }

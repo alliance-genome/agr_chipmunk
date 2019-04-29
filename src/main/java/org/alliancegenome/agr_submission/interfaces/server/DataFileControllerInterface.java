@@ -15,15 +15,11 @@ import javax.ws.rs.core.MediaType;
 import org.alliancegenome.agr_submission.auth.Secured;
 import org.alliancegenome.agr_submission.entities.DataFile;
 import org.alliancegenome.agr_submission.views.View;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-
 @Path("/datafile")
-@Api(value = "Data File Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public interface DataFileControllerInterface {
@@ -31,56 +27,49 @@ public interface DataFileControllerInterface {
 	@POST
 	@Secured
 	@Path("/{schemaVersion}/{dataType}/{dataSubtype}")
-	@ApiOperation("Create Entity")
 	@JsonView(View.DataFileCreate.class)
 	public DataFile create(
-		@ApiParam(value = "SchemaVersion: data") @PathParam("schemaVersion") String schemaVersion,
-		@ApiParam(value = "DataType: id") @PathParam("dataType") String dataType,
-		@ApiParam(value = "DataSubType: id") @PathParam("dataSubtype") String dataSubtype,
+		@Parameter(name = "SchemaVersion: data") @PathParam("schemaVersion") String schemaVersion,
+		@Parameter(name = "DataType: id") @PathParam("dataType") String dataType,
+		@Parameter(name = "DataSubType: id") @PathParam("dataSubtype") String dataSubtype,
 		DataFile entity
 	);
 	
 	@GET
 	@Path("/{id}")
-	@ApiOperation("Reads Entity")
 	@JsonView(View.DataFileRead.class)
-	public DataFile get(@ApiParam(value = "Read: id") @PathParam("id") Long id);
+	public DataFile get(@Parameter(name = "Read: id") @PathParam("id") Long id);
 	
 	@PUT
 	@Secured
 	@Path("/")
-	@ApiOperation("Update Entity")
 	@JsonView(View.DataFileUpdate.class)
-	public DataFile update(@ApiParam(value = "Update: Entity") DataFile entity);
+	public DataFile update(@Parameter(name = "Update: Entity") DataFile entity);
 	
 	@DELETE
 	@Secured
 	@Path("/{id}")
-	@ApiOperation("Delete Entity")
 	@JsonView(View.DataFileDelete.class)
-	public DataFile delete(@ApiParam(value = "Delete: Entity") @PathParam("id") Long id);
+	public DataFile delete(@Parameter(name = "Delete: Entity") @PathParam("id") Long id);
 	
 	@GET
 	@Path("/all")
-	@ApiOperation("Get All Entities")
 	@JsonView(View.DataFileView.class)
 	public List<DataFile> getDataFiles();
 	
 	@GET
 	@Path("/{dataType}")
-	@ApiOperation("Gets Data Files by Type")
 	@JsonView(View.DataFileView.class)
 	public List<DataFile> getDataTypeFiles(
-		@ApiParam(value = "DataType: id") @PathParam("dataType") String dataType
+		@Parameter(name = "DataType: id") @PathParam("dataType") String dataType
 	);
 	
 	@GET
 	@Path("/{dataType}/{dataSubtype}")
-	@ApiOperation("Gets Data Files by Type and subtype")
 	@JsonView(View.DataFileView.class)
 	public List<DataFile> getDataTypeSubTypeFiles(
-		@ApiParam(value = "DataType: id") @PathParam("dataType") String dataType,
-		@ApiParam(value = "DataSubType: id") @PathParam("dataSubtype") String dataSubtype
+		@Parameter(name = "DataType: id") @PathParam("dataType") String dataType,
+		@Parameter(name = "DataSubType: id") @PathParam("dataSubtype") String dataSubtype
 	);
 
 }

@@ -14,18 +14,17 @@ import org.alliancegenome.agr_submission.views.View;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity @ApiModel
+@Entity
 @Getter @Setter
 public class SchemaVersion extends BaseEntity {
 
 	@Id @GeneratedValue
-	@JsonView({View.SchemaVersionView.class, View.ReleaseVersionView.class, View.DataFileView.class, View.DataTypeView.class})
+	@JsonView({View.SchemaVersionView.class, View.ReleaseVersionView.class, View.DataFileView.class, View.DataTypeView.class, View.SnapShotView.class})
 	private Long id;
-	@JsonView({View.SchemaVersionView.class, View.ReleaseVersionView.class, View.DataFileView.class, View.DataTypeView.class})
+	@JsonView({View.SchemaVersionView.class, View.ReleaseVersionView.class, View.DataFileView.class, View.DataTypeView.class, View.SnapShotView.class})
 	private String schema;
 	
 	@OneToMany(mappedBy="schemaVersion", fetch=FetchType.EAGER)

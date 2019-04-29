@@ -8,18 +8,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.alliancegenome.agr_submission.auth.Credentials;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 
 @Path("/authentication")
-@Api(value = "User Authentication Endpoints")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public interface AuthenticationControllerInterface {
 
 	@POST
-	@ApiOperation("Authenticate User")
-	public Response authenticateUser(@ApiParam(value = "User Credentials") Credentials creds);
+	public Response authenticateUser(@Parameter(name = "User Credentials") Credentials creds);
 }

@@ -12,22 +12,21 @@ import org.alliancegenome.agr_submission.views.View;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity @ApiModel
+@Entity
 @Getter @Setter
 public class DataFile extends BaseEntity {
 
 	@Id @GeneratedValue
-	@JsonView({View.DataFileView.class, View.SchemaVersionView.class})
+	@JsonView({View.DataFileView.class, View.SchemaVersionView.class, View.SnapShotView.class})
 	private Long id;
-	@JsonView({View.DataFileView.class, View.SchemaVersionView.class})
+	@JsonView({View.DataFileView.class, View.SchemaVersionView.class, View.SnapShotView.class})
 	private String s3Path;
-	@JsonView({View.DataFileView.class, View.SchemaVersionView.class})
+	@JsonView({View.DataFileView.class, View.SchemaVersionView.class, View.SnapShotView.class})
 	private String urlPath;
-	@JsonView({View.DataFileView.class, View.SchemaVersionView.class})
+	@JsonView({View.DataFileView.class, View.SchemaVersionView.class, View.SnapShotView.class})
 	private Date uploadDate = new Date();
 	
 	@ManyToOne
@@ -35,11 +34,11 @@ public class DataFile extends BaseEntity {
 	private SchemaVersion schemaVersion;
 	
 	@ManyToOne
-	@JsonView({View.DataFileView.class, View.SchemaVersionView.class})
+	@JsonView({View.DataFileView.class, View.SchemaVersionView.class, View.SnapShotView.class})
 	private DataType dataType;
 	
 	@ManyToOne
-	@JsonView({View.DataFileView.class, View.SchemaVersionView.class})
+	@JsonView({View.DataFileView.class, View.SchemaVersionView.class, View.SnapShotView.class})
 	private DataSubType dataSubType;
 
 }

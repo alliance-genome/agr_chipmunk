@@ -17,19 +17,18 @@ import org.alliancegenome.agr_submission.views.View;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@Entity @ApiModel
+@Entity
 @Getter @Setter @ToString
 public class DataType extends BaseEntity {
 
 	@Id @GeneratedValue
-	@JsonView({View.DataTypeView.class, View.DataSubTypeView.class, View.DataFileView.class, View.SchemaVersionView.class})
+	@JsonView({View.DataTypeView.class, View.DataSubTypeView.class, View.DataFileView.class, View.SchemaVersionView.class, View.SnapShotView.class})
 	private Long id;
-	@JsonView({View.DataTypeView.class, View.DataSubTypeView.class, View.DataFileView.class, View.SchemaVersionView.class})
+	@JsonView({View.DataTypeView.class, View.DataSubTypeView.class, View.DataFileView.class, View.SchemaVersionView.class, View.SnapShotView.class})
 	private String name;
 	@JsonView({View.DataTypeView.class, View.DataSubTypeView.class, View.SchemaVersionView.class})
 	private String description;

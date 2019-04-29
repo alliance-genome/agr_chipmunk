@@ -10,11 +10,10 @@ import org.alliancegenome.agr_submission.views.View;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity @ApiModel
+@Entity
 @Getter @Setter
 public class SchemaFile extends BaseEntity {
 

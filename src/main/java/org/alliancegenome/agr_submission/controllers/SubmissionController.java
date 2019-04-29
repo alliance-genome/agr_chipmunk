@@ -35,40 +35,37 @@ public class SubmissionController extends BaseController implements SubmissionCo
 	private SubmissionService metaDataService;
 
 	@Override
-	public SubmissionResponce submitData(String api_access_token, MultipartFormDataInput input) {
+	public SubmissionResponce submitData(MultipartFormDataInput input) {
 		SubmissionResponce res = new SubmissionResponce();
 
 		Map<String, List<InputPart>> form = input.getFormDataMap();
 		boolean success = true;
 
-		if(authenticate(api_access_token)) {
-			for(String key: form.keySet()) {
 
-				InputPart inputPart = form.get(key).get(0);
-				Date d = new Date();
-				String outFileName = "tmp.data_" + d.getTime();
-				File outfile = new File(outFileName);
-				try {
-					InputStream is = inputPart.getBody(InputStream.class, null);
+		for(String key: form.keySet()) {
 
-					log.info("Saving file to local filesystem: " + outfile.getAbsolutePath());
-					FileUtils.copyInputStreamToFile(is, outfile);
-					log.info("Save file to local filesystem complete");
+			InputPart inputPart = form.get(key).get(0);
+			Date d = new Date();
+			String outFileName = "tmp.data_" + d.getTime();
+			File outfile = new File(outFileName);
+			try {
+				InputStream is = inputPart.getBody(InputStream.class, null);
 
-					metaDataService.submitAndValidateDataFile(key, outfile, true);
-					res.getFileStatus().put(key, "success");
-				} catch (GenericException | IOException e) {
-					log.error(e.getMessage());
-					outfile.delete();
-					res.getFileStatus().put(key, e.getMessage());
-					//e.printStackTrace();
-					success = false;
-				}
-			} 
-		} else {
-			res.getFileStatus().put("Auth Failure", "Authentication Failure: Please check your api_access_token");
-			success = false;
-		}
+				log.info("Saving file to local filesystem: " + outfile.getAbsolutePath());
+				FileUtils.copyInputStreamToFile(is, outfile);
+				log.info("Save file to local filesystem complete");
+
+				metaDataService.submitAndValidateDataFile(key, outfile, true);
+				res.getFileStatus().put(key, "success");
+			} catch (GenericException | IOException e) {
+				log.error(e.getMessage());
+				outfile.delete();
+				res.getFileStatus().put(key, e.getMessage());
+				//e.printStackTrace();
+				success = false;
+			}
+		} 
+
 
 		if(success) {
 			res.setStatus("success");
@@ -126,25 +123,20 @@ public class SubmissionController extends BaseController implements SubmissionCo
 	}
 
 	@Override
-	public APIResponce takeSnapShot(String api_access_token, String releaseVersion) {
+	public APIResponce takeSnapShot(String releaseVersion) {
+		SnapShot ssd = metaDataService.takeSnapShot(releaseVersion);
 		SnapShotResponce res = new SnapShotResponce();
+		res.setSnapShot(ssd);
 		res.setStatus("success");
-		if(authenticate(api_access_token)) {
-			SnapShot ssd = metaDataService.takeSnapShot(releaseVersion);
-			res.setSnapShot(ssd);
-		} else {
-			res.setStatus("failed");
-			res.setMessage("Authentication Failure: Please check your api_access_token");
-		}
 		return res;
 	}
 
 	@Override
 	public APIResponce getSnapShot(String releaseVersion) {
+		SnapShot ssd = metaDataService.getLatestShapShot(releaseVersion);
 		SnapShotResponce res = new SnapShotResponce();
-		res.setStatus("success");
-		SnapShot ssd = metaDataService.getShapShot(releaseVersion);
 		res.setSnapShot(ssd);
+		res.setStatus("success");
 		return res;
 	}
 
