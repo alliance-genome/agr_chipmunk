@@ -3,7 +3,6 @@ package org.alliancegenome.agr_submission.services;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -18,9 +17,7 @@ import org.alliancegenome.agr_submission.dao.SnapShotDAO;
 import org.alliancegenome.agr_submission.entities.DataFile;
 import org.alliancegenome.agr_submission.entities.DataSubType;
 import org.alliancegenome.agr_submission.entities.DataType;
-import org.alliancegenome.agr_submission.entities.ReleaseVersion;
 import org.alliancegenome.agr_submission.entities.SchemaVersion;
-import org.alliancegenome.agr_submission.entities.SnapShot;
 import org.alliancegenome.agr_submission.exceptions.GenericException;
 import org.alliancegenome.agr_submission.exceptions.SchemaDataTypeException;
 import org.alliancegenome.agr_submission.exceptions.ValidataionException;
@@ -173,40 +170,6 @@ public class SubmissionService {
 		df.setDataSubType(dataSubType);
 		df.setUploadDate(new Date());
 		dataFileDAO.persist(df);
-	}
-
-	@Transactional
-	public SnapShot getLatestShapShot(String releaseVersion) {
-		ReleaseVersion rv = releaseDAO.findByField("releaseVersion", releaseVersion);
-		if(rv != null) {
-			SnapShot latest = null;
-			log.debug("Snapshots under releases: " + rv.getSnapShots());
-			for(SnapShot s: rv.getSnapShots()) {
-				if(latest == null || latest.getSnapShotDate().before(s.getSnapShotDate())) {
-					latest = s;
-				}
-			}
-			return latest;
-		}
-		return null;
-	}
-
-	@Transactional
-	public List<ReleaseVersion> getReleases() {
-		return releaseDAO.findAll();
-	}
-
-	@Transactional
-	public SnapShot takeSnapShot(String releaseVersion) {
-		SnapShot s = new SnapShot();
-		
-		ReleaseVersion rv = releaseDAO.findByField("releaseVersion", releaseVersion);
-		if(rv != null) {
-			s.setReleaseVersion(rv);
-			s.setSnapShotDate(new Date());
-			return snapShotDAO.persist(s);
-		}
-		return null;
 	}
 
 

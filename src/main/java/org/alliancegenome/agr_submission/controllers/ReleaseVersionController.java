@@ -45,5 +45,5 @@ public class ReleaseVersionController extends BaseController implements ReleaseV
 	public ReleaseVersion addSchema(String release, String schema) {
 		return releaseVersionService.addSchema(release, schema);
 	}
-
+	
 }

@@ -12,12 +12,9 @@ import javax.inject.Inject;
 import javax.jws.WebService;
 
 import org.alliancegenome.agr_submission.BaseController;
-import org.alliancegenome.agr_submission.entities.SnapShot;
 import org.alliancegenome.agr_submission.exceptions.GenericException;
 import org.alliancegenome.agr_submission.interfaces.server.SubmissionControllerInterface;
 import org.alliancegenome.agr_submission.responces.APIResponce;
-import org.alliancegenome.agr_submission.responces.GetReleasesResponce;
-import org.alliancegenome.agr_submission.responces.SnapShotResponce;
 import org.alliancegenome.agr_submission.responces.SubmissionResponce;
 import org.alliancegenome.agr_submission.services.SubmissionService;
 import org.apache.commons.io.FileUtils;
@@ -119,32 +116,6 @@ public class SubmissionController extends BaseController implements SubmissionCo
 		} else {
 			res.setStatus("failed");
 		}
-		return res;
-	}
-
-	@Override
-	public SnapShotResponce takeSnapShot(String releaseVersion) {
-		SnapShot ssd = metaDataService.takeSnapShot(releaseVersion);
-		SnapShotResponce res = new SnapShotResponce();
-		res.setSnapShot(ssd);
-		res.setStatus("success");
-		return res;
-	}
-
-	@Override
-	public APIResponce getSnapShot(String releaseVersion) {
-		SnapShot ssd = metaDataService.getLatestShapShot(releaseVersion);
-		SnapShotResponce res = new SnapShotResponce();
-		res.setSnapShot(ssd);
-		res.setStatus("success");
-		return res;
-	}
-
-	@Override
-	public APIResponce getReleases() {
-		GetReleasesResponce res = new GetReleasesResponce();
-		res.setStatus("success");
-		res.setReleases(metaDataService.getReleases());
 		return res;
 	}
 

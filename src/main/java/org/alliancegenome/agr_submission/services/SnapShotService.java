@@ -1,12 +1,15 @@
 package org.alliancegenome.agr_submission.services;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.alliancegenome.agr_submission.BaseService;
+import org.alliancegenome.agr_submission.dao.ReleaseVersionDAO;
 import org.alliancegenome.agr_submission.dao.SnapShotDAO;
+import org.alliancegenome.agr_submission.entities.ReleaseVersion;
 import org.alliancegenome.agr_submission.entities.SnapShot;
 
 import lombok.extern.jbosslog.JBossLog;
@@ -14,8 +17,8 @@ import lombok.extern.jbosslog.JBossLog;
 @JBossLog
 public class SnapShotService extends BaseService<SnapShot> {
 
-	@Inject
-	private SnapShotDAO dao;
+	@Inject	private SnapShotDAO dao;
+	@Inject private ReleaseVersionDAO releaseDAO;
 
 	@Override
 	@Transactional
@@ -47,6 +50,35 @@ public class SnapShotService extends BaseService<SnapShot> {
 
 	public List<SnapShot> getSnapShots() {
 		return dao.findAll();
+	}
+	
+	@Transactional
+	public SnapShot getLatestShapShot(String releaseVersion) {
+		ReleaseVersion rv = releaseDAO.findByField("releaseVersion", releaseVersion);
+		if(rv != null) {
+			SnapShot latest = null;
+			log.debug("Snapshots under releases: " + rv.getSnapShots());
+			for(SnapShot s: rv.getSnapShots()) {
+				if(latest == null || latest.getSnapShotDate().before(s.getSnapShotDate())) {
+					latest = s;
+				}
+			}
+			return latest;
+		}
+		return null;
+	}
+
+	@Transactional
+	public SnapShot takeSnapShot(String releaseVersion) {
+		SnapShot s = new SnapShot();
+		
+		ReleaseVersion rv = releaseDAO.findByField("releaseVersion", releaseVersion);
+		if(rv != null) {
+			s.setReleaseVersion(rv);
+			s.setSnapShotDate(new Date());
+			return dao.persist(s);
+		}
+		return null;
 	}
 
 

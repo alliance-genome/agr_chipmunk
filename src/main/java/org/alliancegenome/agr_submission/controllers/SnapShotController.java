@@ -9,6 +9,8 @@ import javax.jws.WebService;
 import org.alliancegenome.agr_submission.BaseController;
 import org.alliancegenome.agr_submission.entities.SnapShot;
 import org.alliancegenome.agr_submission.interfaces.server.SnapShotControllerInterface;
+import org.alliancegenome.agr_submission.responces.APIResponce;
+import org.alliancegenome.agr_submission.responces.SnapShotResponce;
 import org.alliancegenome.agr_submission.services.SnapShotService;
 
 @RequestScoped
@@ -39,6 +41,24 @@ public class SnapShotController extends BaseController implements SnapShotContro
 	
 	public List<SnapShot> getSnapShots() {
 		return snapShotService.getSnapShots();
+	}
+
+	@Override
+	public SnapShotResponce takeSnapShot(String releaseVersion) {
+		SnapShot ssd = snapShotService.takeSnapShot(releaseVersion);
+		SnapShotResponce res = new SnapShotResponce();
+		res.setSnapShot(ssd);
+		res.setStatus("success");
+		return res;
+	}
+
+	@Override
+	public APIResponce getSnapShot(String releaseVersion) {
+		SnapShot ssd = snapShotService.getLatestShapShot(releaseVersion);
+		SnapShotResponce res = new SnapShotResponce();
+		res.setSnapShot(ssd);
+		res.setStatus("success");
+		return res;
 	}
 
 }
