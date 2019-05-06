@@ -9,11 +9,11 @@ Here is an example using curl:
 curl \
 	-H "Authorization: Bearer 2C07D715..." \
 	-X POST "https://fms.alliancegenome.org/api/data/submit" \
-	-F "SchemaVersion_DataType_TaxonId=@/full/path/to/file1.json" \
-	-F "SchemaVersion_DataType_TaxonId=@/full/path/to/file2.json"
+	-F "SchemaVersion_DataType_DataSubType=@/full/path/to/file1.json" \
+	-F "SchemaVersion_DataType_DataSubType=@/full/path/to/file2.json"
 ```
 
-Valid values for SchemaVersion, DataType, and TaxonId can be found in the examples below.
+Valid values for SchemaVersion, DataType, and DataSubType can be found in the examples below.
 
 ## Contents
 
@@ -21,7 +21,7 @@ Valid values for SchemaVersion, DataType, and TaxonId can be found in the exampl
 - [Data Type](#data-type)
 - [Data SubType](#data-subtype)
 - [Examples](#examples)
-  * [SchemaVersion DataType TaxonId String format](#schemaversion-datatype-taxonid-string-format)
+  * [SchemaVersion DataType DataSubType String format](#schemaversion-datatype-datasubtype-string-format)
   * [Valid examples for submitting files](#valid-examples-for-submitting-files)
 - [Return object](#return-object)
   * [Success example](#success-example)
@@ -55,8 +55,8 @@ This will be the current release of the schema can be found in the [releases](ht
 
 ## Data Type
 
-| Data Type | What it means | Schema Validation File | Format | Data SubType Required | Validation Required |
-| --- | --- | --- | --- | --- | --- | --- |
+| Data Type    | What it means                     | Schema Validation File  | Format | Data SubType Required | Validation Required |
+| ---          | ---                               | ---                                                       | ---  | ---  | ---  |
 | BGI          | Basic Gene information            | /gene/geneMetaData.json                                   | json | true | true |
 | Disease      | Disease Ontology Annotations File | /disease/diseaseMetaDataDefinition.json                   | json | true | true |
 | Orthology    | Orthology Information File        | /orthology/orthologyMetaData.json                         | json | true | true |
@@ -64,6 +64,7 @@ This will be the current release of the schema can be found in the [releases](ht
 | Genotype     | Genotype Information File         | /genotype/genotypeMetaDataDefinition.json                 | json | true | true |
 | Phenotype    | Phenotype Information File        | /phenotype/phenotypeMetaDataDefinition.json               | json | true | true |
 | Expression   | Expression Information File       | /expression/wildtypeExpressionMetaDataDefinition.json     | json | true | true |
+| Variation    | Variation Information File        | /allele/variantMetaData.json                              | json | true | true |
 | GAF          | Gene Ontology Annotations File    | - | tar.gz | true  | false |
 | GFF          | Gene Feature File                 | - | gff    | true  | false |
 | Ontology     | Ontology Information File         | - | obo    | true  | false |
@@ -83,9 +84,9 @@ This will be the current release of the schema can be found in the [releases](ht
 
 ## Examples
 
-### SchemaVersion DataType TaxonId String format
+### SchemaVersion DataType DataSubType String format
 
-Valid combinations for Schema-DataType-TaxonId are as follows:
+Valid combinations for Schema-DataType-DataSubType are as follows:
 
 | Type | What does it mean? |
 | --------------- | --- |
@@ -320,7 +321,7 @@ The following command, can be used to pull a specific SnapShot by release versio
 
 ### Take Snap Shot
 
-This will take a snapshot of all the latest datafiles for each Taxon Id by each DataType. 
+This will take a snapshot of all the latest datafiles for each DataSubType by each DataType. 
 
 	> curl -H "Authorization: Bearer 2C07D715..." \
 	"https://fms.alliancegenome.org/api/data/takesnapshot?releaseVersion=1.4.0.0"
