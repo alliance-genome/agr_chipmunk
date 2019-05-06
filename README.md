@@ -7,7 +7,7 @@ Here is an example using curl:
 
 ```
 curl \
-	-H "api_access_token: 2C07D715..." \
+	-H "Authorization: Bearer 2C07D715..." \
 	-X POST "https://fms.alliancegenome.org/api/data/submit" \
 	-F "SchemaVersion_DataType_TaxonId=@/full/path/to/file1.json" \
 	-F "SchemaVersion_DataType_TaxonId=@/full/path/to/file2.json"
@@ -98,30 +98,30 @@ Valid combinations for Schema-DataType-TaxonId are as follows:
 #### One file at a time
 
 	> curl \
-		-H "api_access_token: 2C07D715..." \
+		-H "Authorization: Bearer 2C07D715..." \
 		-X POST "https://fms.alliancegenome.org/api/data/submit" \
 		-F "0.7.0.0_GFF_MGD=@MGI_1.0.4_GFF.gff"
 	> curl \
-		-H "api_access_token: 2C07D715..." \
+		-H "Authorization: Bearer 2C07D715..." \
 		-X POST "https://fms.alliancegenome.org/api/data/submit" \
 		-F "0.6.2.0_Allele_MGD=@MGI_1.0.4_feature.json"
 	> curl \
-		-H "api_access_token: 2C07D715..." \
+		-H "Authorization: Bearer 2C07D715..." \
 		-X POST "https://fms.alliancegenome.org/api/data/submit" \
 		-F "0.6.1.0_BGI_FB=@FB_1.0.4_BGI.json"
 	> curl \
-		-H "api_access_token: 2C07D715..." \
+		-H "Authorization: Bearer 2C07D715..." \
 		-X POST "https://fms.alliancegenome.org/api/data/submit" \
 		-F "GAF_MGD=@gene_association_1.0.mgi.gaf"
 	> curl \
-		-H "api_access_token: 2C07D715..." \
+		-H "Authorization: Bearer 2C07D715..." \
 		-X POST "https://fms.alliancegenome.org/api/data/submit" \
 		-F "Allele_ZFIN=@ZFIN_1.0.4_feature.json"
 	
 #### Multiple files at a time
 
 	> curl \
-		-H "api_access_token: 2C07D715..." \
+		-H "Authorization: Bearer 2C07D715..." \
 		-X POST "https://fms.alliancegenome.org/api/data/submit" \
 		-F "0.7.0.0_BGI_FB=@FB_1.0.4_BGI.json" \
 		-F "0.7.0.0_Allele_FB=@FB_1.0.4_feature.json" \
@@ -129,7 +129,7 @@ Valid combinations for Schema-DataType-TaxonId are as follows:
 		-F "0.7.0.0_GFF_FB=@FB_1.0.4_GFF.gff"
 		
 	> curl \
-		-H "api_access_token: 2C07D715..." \
+		-H "Authorization: Bearer 2C07D715..." \
 		-X POST "https://fms.alliancegenome.org/api/data/submit" \
 		-F "BGI_FB=@FB_1.0.4_BGI.json" \
 		-F "Allele_FB=@FB_1.0.4_feature.json" \
@@ -146,7 +146,7 @@ The responce object that is returned will be based on the files that were submit
 For the following command:
 
 	> curl \
-		-H "api_access_token: 2C07D715..." \
+		-H "Authorization: Bearer 2C07D715..." \
 		-X POST "https://fms.alliancegenome.org/api/data/submit" \
 		-F "0.7.0.0_BGI_FB=@FB_1.0.4_BGI.json" \
 		-F "0.7.0.0_Allele_FB=@FB_1.0.4_feature.json" \
@@ -195,7 +195,7 @@ For the following command (Missing API Access Token):
 For the following command (Errors in BGI):
 
 	> curl \
-		-H "api_access_token: 2C07D715..." \
+		-H "Authorization: Bearer 2C07D715..." \
 		-X POST "https://fms.alliancegenome.org/api/data/submit" \
 		-F "0.7.0.0_BGI_MGD=@MGI_1.0.4_BGI.json" \
 		-F "0.7.0.0_Allele_MGD=@MGI_1.0.4_feature.json" \
@@ -219,7 +219,7 @@ For the following command (Errors in BGI):
 In a failed example only the files that failed need to be attempted again:
 
 	> curl \
-		-H "api_access_token: 2C07D715..." \
+		-H "Authorization: Bearer 2C07D715..." \
 		-X POST "https://fms.alliancegenome.org/api/data/submit" \
 		-F "0.7.0.0_BGI_10090=@MGI_1.0.4_BGI.json" \
 		-F "0.7.0.0_GFF_10090=@MGI_1.0.4_GFF.gff" 
@@ -322,7 +322,7 @@ The following command, can be used to pull a specific SnapShot by release versio
 
 This will take a snapshot of all the latest datafiles for each Taxon Id by each DataType. 
 
-	> curl -H "api_access_token: 2C07D715..." \
+	> curl -H "Authorization: Bearer 2C07D715..." \
 	"https://fms.alliancegenome.org/api/data/takesnapshot?releaseVersion=1.4.0.0"
 
 <details>
