@@ -239,7 +239,7 @@ In a failed example only the files that failed need to be attempted again:
 
 ## Loader
 
-The loader will run against the snapshot and releases API's, using the API Access Token for the "take snapshot" endpoint. One extra optional parameter is "system" which desinates the pipeline that will be used for releasing data. If the parameter is omited then it will be assumed value of "production". Links to download these files will be in the following format:
+The loader will run against the snapshot and releases API's, using the API Access Token for the "take snapshot" endpoint. Links to download these files will be in the following format:
 
 	https://s3.amazonaws.com/mod-datadumps/<path>
 
