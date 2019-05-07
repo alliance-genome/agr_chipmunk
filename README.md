@@ -58,17 +58,17 @@ This will be the current release of the schema can be found in the [releases](ht
 | Data Type    | What it means                     | Schema Validation File  | Format | Data SubType Required | Validation Required |
 | ---          | ---                               | ---                                                       | ---  | ---  | ---  |
 | BGI          | Basic Gene information            | /gene/geneMetaData.json                                   | json | true | true |
-| Disease      | Disease Ontology Annotations File | /disease/diseaseMetaDataDefinition.json                   | json | true | true |
-| Orthology    | Orthology Information File        | /orthology/orthologyMetaData.json                         | json | true | true |
-| Allele       | Allele Information File           | /allele/alleleMetaData.json                               | json | true | true |
-| Genotype     | Genotype Information File         | /genotype/genotypeMetaDataDefinition.json                 | json | true | true |
-| Phenotype    | Phenotype Information File        | /phenotype/phenotypeMetaDataDefinition.json               | json | true | true |
-| Expression   | Expression Information File       | /expression/wildtypeExpressionMetaDataDefinition.json     | json | true | true |
-| Variation    | Variation Information File        | /allele/variantMetaData.json                              | json | true | true |
+| DAF          | Disease Ontology Annotations File | /disease/diseaseMetaDataDefinition.json                   | json | true | true |
+| ORTHO        | Orthology Information File        | /orthology/orthologyMetaData.json                         | json | true | true |
+| ALLELE       | Allele Information File           | /allele/alleleMetaData.json                               | json | true | true |
+| GENOTYPE     | Genotype Information File         | /genotype/genotypeMetaDataDefinition.json                 | json | true | true |
+| PHENOTYPE    | Phenotype Information File        | /phenotype/phenotypeMetaDataDefinition.json               | json | true | true |
+| EXPRESSION   | Expression Information File       | /expression/wildtypeExpressionMetaDataDefinition.json     | json | true | true |
+| VARIATION    | Variation Information File        | /allele/variantMetaData.json                              | json | true | true |
 | GAF          | Gene Ontology Annotations File    | - | tar.gz | true  | false |
 | GFF          | Gene Feature File                 | - | gff    | true  | false |
-| Ontology     | Ontology Information File         | - | obo    | true  | false |
-| Interactions | Consolidated Interactions File    | - | tar.gz | false | false |
+| ONTOLOGY     | Ontology Information File         | - | obo    | true  | false |
+| INTERACTION  | Consolidated Interactions File    | - | tar.gz | false | false |
 
 ## Data SubType
 
