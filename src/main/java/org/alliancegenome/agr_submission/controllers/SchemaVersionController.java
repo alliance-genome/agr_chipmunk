@@ -36,7 +36,13 @@ public class SchemaVersionController extends BaseController implements SchemaVer
 	public SchemaVersion delete(Long id) {
 		return schemaVersionService.delete(id);
 	}
+
+	@Override
+	public SchemaVersion getCurrentSchemaVersion() {
+		return schemaVersionService.getCurrentSchemaVersion();
+	}
 	
+	@Override
 	public List<SchemaVersion> getSchemaVersions() {
 		return schemaVersionService.getSchemaVersions();
 	}

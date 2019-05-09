@@ -47,6 +47,11 @@ public interface SchemaVersionControllerInterface {
 	public SchemaVersion delete(@Parameter(name = "Delete: Entity") @PathParam("id") Long id);
 	
 	@GET
+	@Path("/current")
+	@JsonView(View.SchemaVersionView.class)
+	public SchemaVersion getCurrentSchemaVersion();
+	
+	@GET
 	@Path("/all")
 	@JsonView(View.SchemaVersionView.class)
 	public List<SchemaVersion> getSchemaVersions();

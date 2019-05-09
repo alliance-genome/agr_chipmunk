@@ -1,5 +1,6 @@
 package org.alliancegenome.agr_submission.services;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,13 +89,27 @@ public class DataFileService extends BaseService<DataFile> {
 	}
 
 	@Transactional
-	public List<DataFile> getDataTypeSubTypeFiles(String dataType, String dataSubtype) {
+	public List<DataFile> getDataTypeSubTypeFiles(String dataType, String dataSubtype, Boolean latest) {
 		DataType type = dataTypeDAO.findByField("name", dataType);
 		DataSubType dataSubType = dataSubTypeDAO.findByField("name", dataSubtype);
 		Map<String, Object> params = new HashMap<>();
 		params.put("dataType.id", type.getId().toString());
 		params.put("dataSubType.id", dataSubType.getId().toString());
-		return dao.search(params, "uploadDate");
+		List<DataFile> list = dao.search(params, "uploadDate");
+
+		if(latest && list != null && list.size() > 0) {
+			DataFile latestFile = list.get(0);
+			for(DataFile df: list) {
+				if(df.getUploadDate().after(latestFile.getUploadDate())) {
+					latestFile = df;
+				}
+			}
+			ArrayList<DataFile> ret = new ArrayList<DataFile>();
+			ret.add(latestFile);
+			return ret;
+		} else {
+			return list;
+		}
 	}
 
 }

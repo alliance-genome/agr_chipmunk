@@ -27,6 +27,8 @@ public class DataFile extends BaseEntity {
 	@JsonView({View.DataFileView.class, View.SchemaVersionView.class, View.SnapShotView.class})
 	private String urlPath;
 	@JsonView({View.DataFileView.class, View.SchemaVersionView.class, View.SnapShotView.class})
+	private String md5Sum;
+	@JsonView({View.DataFileView.class, View.SchemaVersionView.class, View.SnapShotView.class})
 	private Date uploadDate = new Date();
 	
 	@ManyToOne

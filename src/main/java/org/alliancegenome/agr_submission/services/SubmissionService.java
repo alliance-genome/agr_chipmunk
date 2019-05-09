@@ -1,7 +1,12 @@
 package org.alliancegenome.agr_submission.services;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Date;
 
 import javax.enterprise.context.RequestScoped;
@@ -23,6 +28,7 @@ import org.alliancegenome.agr_submission.exceptions.SchemaDataTypeException;
 import org.alliancegenome.agr_submission.exceptions.ValidataionException;
 import org.alliancegenome.agr_submission.util.aws.S3Helper;
 import org.alliancegenome.agr_submission.util.github.GitHelper;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jackson.JsonLoader;
@@ -44,7 +50,7 @@ public class SubmissionService {
 	@Inject private SchemaVersionDAO schemaVersionDAO;
 	@Inject private DataTypeDAO dataTypeDAO;
 	@Inject private DataSubTypeDAO dataSubTypeDAO;
-	
+
 	private static GitHelper gitHelper = new GitHelper();
 	private static S3Helper s3Helper = new S3Helper();
 
@@ -57,29 +63,29 @@ public class SubmissionService {
 		String schemaLookup;
 		String dataTypeLookup;
 		String dataSubTypeLookup;
-		
-		if(keys.length == 3) { // Schema-DataType-TaxonId
-			log.debug("Key has 3 items: parse: (Schema-DataType-TaxonId): " + key);
+
+		if(keys.length == 3) {
+			log.debug("Key has 3 items: parse: (Schema-DataType-DataSubType): " + key);
 			schemaLookup = keys[0];
 			dataTypeLookup = keys[1];
 			dataSubTypeLookup = keys[2];
 		} else if(keys.length == 2) { // DataType-TaxonId // Input a taxonId datatype file and validate against latest version of schema
-			log.debug("Key has 2 items: parse: (DataType-TaxonId): " + key);
+			log.debug("Key has 2 items: parse: (DataType-DataSubType): " + key);
 			schemaLookup = null;
 			dataTypeLookup = keys[0];
 			dataSubTypeLookup = keys[1];
 		} else {
 			throw new ValidataionException("Wrong Number of Args for File Data: " + key);
 		}
-		
+
 		SchemaVersion schemaVersion = getSchemaVersion(schemaLookup);
 		DataType dataType = dataTypeDAO.findByField("name", dataTypeLookup);
 		DataSubType dataSubType = dataSubTypeDAO.findByField("name", dataSubTypeLookup);
-		
+
 		if(dataType.isValidationRequired()) {
 			validateData(schemaVersion, dataType, inFile);
 		}
-	
+
 		if(saveFile) {
 			saveFile(schemaVersion, dataType, dataSubType, inFile);
 		}
@@ -88,7 +94,6 @@ public class SubmissionService {
 
 	private boolean validateData(SchemaVersion schemaVersionName, DataType dataType, File inFile) throws GenericException {
 
-//		// TODO fix this method to actullly validate data
 		log.info("Need to validate file: " + schemaVersionName.getSchema() + " " + dataType.getName());
 		String dataTypeFilePath = dataType.getSchemaFilesMap().get(schemaVersionName.getSchema());
 
@@ -145,29 +150,33 @@ public class SubmissionService {
 	}
 
 	private void saveFile(SchemaVersion schemaVersion, DataType dataType, DataSubType dataSubType, File inFile) throws GenericException {
-		if(dataSubType == null) {
-			int fileIndex = s3Helper.listFiles(schemaVersion + "/" + dataType.getName() + "/");
-			String filePath = schemaVersion.getSchema() + "/" + dataType.getName() + "/" + schemaVersion.getSchema() + "_" + dataType.getName() + "_" + fileIndex + "." + dataType.getFileExtension();
-			s3Helper.saveFile(filePath, inFile);
-			createDataFile(schemaVersion, dataType, null, filePath);
-		} else {
-			int fileIndex = s3Helper.listFiles(schemaVersion.getSchema() + "/" + dataType.getName() + "/" + dataSubType.getName() + "/");
 
-			String filePath =
-					schemaVersion.getSchema() + "/" + dataType.getName() + "/" + dataSubType.getName() + "/" +
-							schemaVersion.getSchema() + "_" + dataType.getName() + "_" + dataSubType.getName() + "_" + fileIndex + "." + dataType.getFileExtension();
+		String dir = schemaVersion.getSchema() + "/" + dataType.getName() + "/" + dataSubType.getName() + "/";
 
+		int fileIndex = s3Helper.listFiles(dir);
+
+		String filePath = dir + schemaVersion.getSchema() + "_" + dataType.getName() + "_" + dataSubType.getName() + "_" + fileIndex + "." + dataType.getFileExtension();
+
+		try {
+			FileInputStream fis = new FileInputStream(inFile);
+			String md5Sum = DigestUtils.md5Hex(fis);
+			log.info("Creating MD5 Sum: " + md5Sum);
+			fis.close();
 			s3Helper.saveFile(filePath, inFile);
-			createDataFile(schemaVersion, dataType, dataSubType, filePath);
+			createDataFile(schemaVersion, dataType, dataSubType, filePath, md5Sum);
+		} catch (Exception e) {
+			throw new GenericException(e.getMessage());
 		}
+		
 	}
-	
-	private void createDataFile(SchemaVersion schemaVersion, DataType dataType, DataSubType dataSubType, String filePath) {
+
+	private void createDataFile(SchemaVersion schemaVersion, DataType dataType, DataSubType dataSubType, String filePath, String md5Sum) {
 		DataFile df = new DataFile();
 		df.setDataType(dataType);
 		df.setS3Path(filePath);
 		df.setSchemaVersion(schemaVersion);
 		df.setDataSubType(dataSubType);
+		df.setMd5Sum(md5Sum);
 		df.setUploadDate(new Date());
 		dataFileDAO.persist(df);
 	}

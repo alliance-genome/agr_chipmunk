@@ -1,5 +1,8 @@
 package org.alliancegenome.agr_submission.dao;
 
+import java.util.List;
+import java.util.TreeSet;
+
 import javax.enterprise.context.ApplicationScoped;
 
 import org.alliancegenome.agr_submission.BaseSQLDAO;
@@ -20,13 +23,13 @@ public class SchemaVersionDAO extends BaseSQLDAO<SchemaVersion> {
 	}
 
 	public SchemaVersion getCurrentSchemaVersion() {
-		//getMetaDocument();
-		//if(metaData.getCurrentRelease().length() > 0) {
-		//	return metaData.getReleaseSchemaMap().get(metaData.getCurrentRelease());
-		//} else {
-			log.warn("Current Release Version is not Set on metadata document");
-			return null;
-		//}
+		List<SchemaVersion> versions = findAll();
+		TreeSet<String> set = new TreeSet<>();
+		for(SchemaVersion sv: versions) {
+			set.add(sv.getSchema());
+		}
+		log.debug("Return most current Schema Version: " + set.pollFirst());
+		return getByName(set.pollLast());
 	}
 	
 	public SchemaVersion getByName(String schemaVersion) {

@@ -49,5 +49,9 @@ public class SchemaVersionService extends BaseService<SchemaVersion> {
 		return dao.findAll();
 	}
 
+	public SchemaVersion getCurrentSchemaVersion() {
+		return dao.getCurrentSchemaVersion();
+	}
+
 
 }
