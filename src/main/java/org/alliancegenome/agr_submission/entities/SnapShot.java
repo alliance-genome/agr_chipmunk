@@ -43,17 +43,18 @@ public class SnapShot extends BaseEntity {
 	@JsonView(View.SnapShotView.class)
 	public ArrayList<DataFile> getDataFiles() {
 		ArrayList<DataFile> dataFiles = new ArrayList<DataFile>();
-		
 		HashMap<MultiKey<String>, DataFile> currentFiles = new HashMap<>();
-		
+
 		for(DataFile df: getSchemaVersion().getDataFiles()) {
 			MultiKey<String> key = new MultiKey<String>(df.getDataType().getName(), df.getDataSubType().getName());
 			DataFile entry = currentFiles.get(key);
-			if(entry == null) {
-				currentFiles.put(key, df);
-			} else {
-				if(df.getUploadDate().after(entry.getUploadDate()) && df.getUploadDate().before(snapShotDate)) {
+			if(df.getUploadDate().before(snapShotDate)) {
+				if(entry == null) {
 					currentFiles.put(key, df);
+				} else {
+					if(df.getUploadDate().after(entry.getUploadDate())) {
+						currentFiles.put(key, df);
+					}
 				}
 			}
 		}
