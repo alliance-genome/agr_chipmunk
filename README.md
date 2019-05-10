@@ -269,7 +269,7 @@ The following command can be used to pull a list of releases from the system tha
 
 The following command, can be used to pull a specific SnapShot by release version, release version is required.
 
-	> curl "https://fms.alliancegenome.org/api/snapshot/take/2.2.0"
+	> curl "https://fms.alliancegenome.org/api/data/releases/2.2.0"
 
 <details>
 <summary>View Success Response</summary>
@@ -330,7 +330,7 @@ The following command, can be used to pull a specific SnapShot by release versio
 This will take a snapshot of all the latest datafiles for each DataSubType by each DataType. 
 
 	> curl -H "Authorization: Bearer 2C07D715..." \
-	"https://fms.alliancegenome.org/api/data/takesnapshot?releaseVersion=1.4.0.0"
+	"https://fms.alliancegenome.org/api/snapshot/take/2.2.0"
 
 <details>
 <summary>View Success Response</summary>
