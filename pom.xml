@@ -12,7 +12,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.alliancegenome</groupId>
-	<version>0.0.1</version>
+	<version>0.0.2</version>
 
 	<artifactId>agr_chipmunk</artifactId>
 	<name>AGR Java :: File Management System</name>
