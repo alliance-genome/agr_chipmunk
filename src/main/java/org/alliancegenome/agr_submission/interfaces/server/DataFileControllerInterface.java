@@ -44,7 +44,7 @@ public interface DataFileControllerInterface {
 	@GET
 	@Path("/{id}")
 	@JsonView(View.DataFileRead.class)
-	public DataFile get(@Parameter(name = "Read: id") @PathParam("id") Long id);
+	public DataFile get(@Parameter(name = "Read: id") @PathParam("id") String id);
 
 	@PUT
 	@Secured

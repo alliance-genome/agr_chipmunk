@@ -37,7 +37,7 @@ public class DataFileService extends BaseService<DataFile> {
 		}
 		return null;
 	}
-	
+
 	@Transactional
 	public DataFile create(String schemaVersion, String dataType, String dataSubtype, DataFile entity) {
 		log.info("DataFileService: create: ");
@@ -53,12 +53,22 @@ public class DataFileService extends BaseService<DataFile> {
 		entity.setDataType(type);
 		return dao.persist(entity);
 	}
-
+	
 	@Override
 	@Transactional
 	public DataFile get(Long id) {
-		log.info("DataFileService: get: " + id);
 		return dao.find(id);
+	}
+	
+	@Transactional
+	public DataFile get(String id) {
+		log.info("DataFileService: get: " + id);
+		try {
+			Long ident = Long.parseLong(id);
+			return get(ident);
+		} catch (NumberFormatException ex) {
+			return dao.findByField("md5Sum", id);
+		}
 	}
 
 	@Override
@@ -75,7 +85,7 @@ public class DataFileService extends BaseService<DataFile> {
 		return dao.remove(id);
 	}
 
-	
+
 	public List<DataFile> getDataFiles() {
 		return dao.findAll();
 	}
@@ -100,7 +110,7 @@ public class DataFileService extends BaseService<DataFile> {
 		if(latest && list != null && list.size() > 0) {
 			DataFile latestFile = list.get(0);
 			for(DataFile df: list) {
-				if(df.getUploadDate().after(latestFile.getUploadDate())) {
+				if(df.getUploadDate().after(latestFile.getUploadDate()) && df.isValid()) {
 					latestFile = df;
 				}
 			}
@@ -111,5 +121,6 @@ public class DataFileService extends BaseService<DataFile> {
 			return list;
 		}
 	}
+
 
 }

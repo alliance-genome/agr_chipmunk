@@ -27,7 +27,7 @@ public class DataFileController extends BaseController implements DataFileContro
 	}
 
 	@Override
-	public DataFile get(Long id) {
+	public DataFile get(String id) {
 		return dataFileService.get(id);
 	}
 
