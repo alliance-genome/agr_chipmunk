@@ -29,7 +29,7 @@ public class DataFile extends BaseEntity {
 	@JsonView({View.DataFileView.class, View.SchemaVersionView.class, View.SnapShotView.class})
 	private String md5Sum;
 	@JsonView({View.DataFileView.class, View.SchemaVersionView.class, View.SnapShotView.class})
-	private boolean valid = true;
+	private Boolean valid = true;
 	@JsonView({View.DataFileView.class, View.SchemaVersionView.class, View.SnapShotView.class})
 	private Date uploadDate = new Date();
 	
@@ -44,5 +44,9 @@ public class DataFile extends BaseEntity {
 	@ManyToOne
 	@JsonView({View.DataFileView.class, View.SchemaVersionView.class, View.SnapShotView.class})
 	private DataSubType dataSubType;
+
+	public boolean isValid() {
+		return (valid == null || valid);
+	}
 
 }
