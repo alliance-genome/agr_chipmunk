@@ -263,7 +263,7 @@ The following command can be used to pull a list of releases from the system tha
 
 The following command, can be used to pull a specific SnapShot by release version, release version is required.
 
-	> curl "https://fms.alliancegenome.org/api/data/snapshot?releaseVersion=1.4.0.0"
+	> curl "https://fms.alliancegenome.org/api/snapshot/take/2.2.0"
 
 <details>
 <summary>View Success Response</summary>
