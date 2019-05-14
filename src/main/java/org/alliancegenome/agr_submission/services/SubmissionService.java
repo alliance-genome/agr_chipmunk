@@ -82,6 +82,16 @@ public class SubmissionService {
 		DataType dataType = dataTypeDAO.findByField("name", dataTypeLookup);
 		DataSubType dataSubType = dataSubTypeDAO.findByField("name", dataSubTypeLookup);
 
+		if(schemaVersion == null) {
+			throw new SchemaDataTypeException("Could not Find schemaVersion: " + schemaLookup);
+		}
+		if(dataType == null) {
+			throw new SchemaDataTypeException("Could not Find dataType: " + dataTypeLookup);
+		}
+		if(dataSubType == null) {
+			throw new SchemaDataTypeException("Could not Find dataSubType: " + dataSubTypeLookup);
+		}
+		
 		if(dataType.isValidationRequired()) {
 			validateData(schemaVersion, dataType, inFile);
 		}
@@ -160,6 +170,7 @@ public class SubmissionService {
 		try {
 			FileInputStream fis = new FileInputStream(inFile);
 			String md5Sum = DigestUtils.md5Hex(fis);
+			log.info("Saving File: " + filePath);
 			log.info("Creating MD5 Sum: " + md5Sum);
 			fis.close();
 			s3Helper.saveFile(filePath, inFile);

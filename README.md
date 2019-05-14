@@ -75,7 +75,7 @@ This will be the current release of the schema can be found in the [releases](ht
 | Name | Description |
 | --- | --- |
 | FB    | Fly Base |
-| Human | Human Supplied by RGD |
+| HUMAN | Human Supplied by RGD |
 | MGD   | Mouse Genome Database |
 | RGD   | Rat Genome Database |
 | SGD   | Saccharomyces Genome Database |
