@@ -93,9 +93,13 @@ public class DataFileService extends BaseService<DataFile> {
 	@Transactional
 	public List<DataFile> getDataTypeFiles(String dataType) {
 		DataType type = dataTypeDAO.findByField("name", dataType);
-		Map<String, Object> params = new HashMap<>();
-		params.put("dataType.id", type.getId().toString());
-		return dao.search(params, "uploadDate");
+		if(type != null) {
+			Map<String, Object> params = new HashMap<>();
+			params.put("dataType.id", type.getId().toString());
+			return dao.search(params, "uploadDate");
+		} else {
+			return null;
+		}
 	}
 
 	@Transactional
