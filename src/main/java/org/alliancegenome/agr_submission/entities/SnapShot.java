@@ -14,6 +14,8 @@ import org.alliancegenome.agr_submission.BaseEntity;
 import org.alliancegenome.agr_submission.views.View;
 import org.apache.commons.collections4.keyvalue.MultiKey;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import lombok.Getter;
@@ -40,6 +42,7 @@ public class SnapShot extends BaseEntity {
 	}
 	
 	@Transient
+	@JsonProperty(access = Access.READ_ONLY)
 	@JsonView(View.SnapShotView.class)
 	public ArrayList<DataFile> getDataFiles() {
 		ArrayList<DataFile> dataFiles = new ArrayList<DataFile>();
