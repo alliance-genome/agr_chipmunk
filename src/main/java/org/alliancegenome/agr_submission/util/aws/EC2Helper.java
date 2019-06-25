@@ -75,14 +75,14 @@ public class EC2Helper {
 
 		RunInstancesRequest runInstancesRequest = new RunInstancesRequest();
 
-		EbsBlockDevice root_ebs = new EbsBlockDevice().withVolumeSize(32).withVolumeType(VolumeType.Gp2).withDeleteOnTermination(true);
+		EbsBlockDevice root_ebs = new EbsBlockDevice().withVolumeSize(300).withVolumeType(VolumeType.Gp2).withDeleteOnTermination(true);
 		BlockDeviceMapping root = new BlockDeviceMapping().withDeviceName("/dev/xvda").withEbs(root_ebs);
 		
-		EbsBlockDevice swap_ebs = new EbsBlockDevice().withVolumeSize(16).withVolumeType(VolumeType.Gp2).withDeleteOnTermination(true);
+		EbsBlockDevice swap_ebs = new EbsBlockDevice().withVolumeSize(64).withVolumeType(VolumeType.Gp2).withDeleteOnTermination(true);
 		BlockDeviceMapping swap = new BlockDeviceMapping().withDeviceName("/dev/sdb").withEbs(swap_ebs);
 		
-		EbsBlockDevice container_ebs = new EbsBlockDevice().withVolumeSize(200).withVolumeType(VolumeType.Gp2).withDeleteOnTermination(true);
-		BlockDeviceMapping container = new BlockDeviceMapping().withDeviceName("/dev/sdc").withEbs(container_ebs);
+		//EbsBlockDevice container_ebs = new EbsBlockDevice().withVolumeSize(200).withVolumeType(VolumeType.Gp2).withDeleteOnTermination(true);
+		//BlockDeviceMapping container = new BlockDeviceMapping().withDeviceName("/dev/sdc").withEbs(container_ebs);
 
 		runInstancesRequest.withImageId("ami-08e58b93705fb503f")
 		// C54xlarge   16  68  32 - $0.68  - BGI:00:10:26, EXPRESSION:00:16:01, Interactions:00:11:44, GeneDescriptions:00:12:52
@@ -91,11 +91,11 @@ public class EC2Helper {
 		// C5d18xlarge 72 281 144 - $3.456 - BGI:00:10:43, EXPRESSION:00:15:32
 		// I316xlarge  64 200 488 - $4.992 - BGI:00:13:55, EXPRESSION:00:23:53
 		// R54xlarge   16  71 128 - $1.008 - BGI:00:09:33, EXPRESSION:00:17:16
-		.withInstanceType(InstanceType.M4Xlarge).withMinCount(1).withMaxCount(1)
-		.withBlockDeviceMappings(root, swap, container)
+		.withInstanceType(InstanceType.R54xlarge).withMinCount(1).withMaxCount(1)
+		.withBlockDeviceMappings(root, swap)
 		.withUserData(makeUserData())
-		.withTagSpecifications(getTagSpec("Docker GoCD2"))
-		.withSecurityGroups("default", "ES Transport", "HTTP", "HTTPS SSL", "SSH") // Step 6 default, ES Transport, HTTP, HTTPS SSL, SSH
+		.withTagSpecifications(getTagSpec("Docker Stage"))
+		.withSecurityGroups("default", "ES Transport", "HTTP/HTTPS", "SSH") // Step 6 default, ES Transport, HTTP, HTTPS SSL, SSH
 		.withKeyName("AGR-ssl2");
 
 		RunInstancesResult result = ec2.runInstances(runInstancesRequest);

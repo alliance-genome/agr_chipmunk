@@ -1,5 +1,6 @@
 package org.alliancegenome.agr_submission.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -31,6 +32,6 @@ public class ReleaseVersion extends BaseEntity {
 	private List<SnapShot> snapShots;
 	
 	@ManyToMany(fetch=FetchType.EAGER)
-	private List<SchemaVersion> schemaVersions;
+	private List<SchemaVersion> schemaVersions = new ArrayList<>();
 	
 }
