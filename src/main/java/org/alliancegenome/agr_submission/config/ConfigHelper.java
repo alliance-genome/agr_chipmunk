@@ -42,6 +42,7 @@ public class ConfigHelper {
 		defaults.put("AWS_SECRET_KEY", null);
 		defaults.put("AWS_BUCKET_NAME", "mod-datadumps-dev"); // This needs to always be a dev bucket unless running in production
 		
+		defaults.put("FMS_HOST", "localhost:8080");
 		
 		allKeys = defaults.keySet();
 
@@ -120,7 +121,10 @@ public class ConfigHelper {
 		if(!init) init();
 		return config.get("AWS_BUCKET_NAME");
 	}
-
+	public static String getFMSHost() {
+		if(!init) init();
+		return config.get("FMS_HOST");
+	}
 	
 	public static String getJavaLineSeparator() {
 		if(!init) init();
