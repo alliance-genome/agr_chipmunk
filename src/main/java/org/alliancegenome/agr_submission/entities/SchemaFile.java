@@ -18,13 +18,13 @@ import lombok.Setter;
 public class SchemaFile extends BaseEntity {
 
 	@Id @GeneratedValue
-	@JsonView({View.DataTypeView.class, View.SchemaVersionView.class})
+	@JsonView({View.SchemaFileView.class, View.DataTypeView.class, View.SchemaVersionView.class})
 	private Long id;
-	@JsonView({View.DataTypeView.class, View.SchemaVersionView.class})
+	@JsonView({View.SchemaFileView.class, View.DataTypeView.class, View.SchemaVersionView.class})
 	private String filePath;
 	
 	@ManyToOne
-	@JsonView({View.DataTypeView.class})
+	@JsonView({View.SchemaFileView.class, View.DataTypeView.class})
 	private SchemaVersion schemaVersion;
 	
 	@ManyToOne

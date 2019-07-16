@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.alliancegenome.agr_submission.auth.Secured;
 import org.alliancegenome.agr_submission.entities.DataType;
+import org.alliancegenome.agr_submission.entities.SchemaFile;
 import org.alliancegenome.agr_submission.forms.AddDataSubTypeForm;
 import org.alliancegenome.agr_submission.forms.CreateSchemaFileForm;
 import org.alliancegenome.agr_submission.views.View;
@@ -60,6 +61,13 @@ public interface DataTypeControllerInterface {
 			@Parameter(name = "DataType: id") @PathParam("dataType") String dataType,
 			CreateSchemaFileForm form
 	);
+	
+	@DELETE @Secured
+	@Path("/{dataType}/removeschemafile/{id}")
+	@JsonView(View.DataTypeDelete.class)
+	public SchemaFile deleteSchemaFile(
+			@Parameter(name = "DataType: id") @PathParam("dataType") String dataType,
+			@Parameter(name = "SchemaFile: id") @PathParam("id") Long id);
 	
 	@POST @Secured
 	@Path("/{dataType}/addsubtype")

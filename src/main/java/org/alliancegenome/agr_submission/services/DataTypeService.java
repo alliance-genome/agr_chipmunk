@@ -87,4 +87,8 @@ public class DataTypeService extends BaseService<DataType> {
 		return type;
 	}
 
+	public SchemaFile deleteSchemaFile(String dataType, Long id) {
+		return schemaFileDAO.remove(id);
+	}
+
 }
