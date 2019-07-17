@@ -26,35 +26,38 @@ import com.amazonaws.services.s3.transfer.Upload;
 public class S3Helper {
 
 	private Log log = LogFactory.getLog(getClass());
-	private AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(ConfigHelper.getAWSAccessKey(), ConfigHelper.getAWSSecretKey()))).withRegion(Regions.US_EAST_1).build();
+	//private AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(ConfigHelper.getAWSAccessKey(), ConfigHelper.getAWSSecretKey()))).withRegion(Regions.US_EAST_1).build();
 
 	public int listFiles(String prefix) {
 		int count = 0;
 		try {
 			log.info("Getting S3 file listing");
-			//AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(ConfigHelper.getAWSAccessKey(), ConfigHelper.getAWSSecretKey()))).withRegion(Regions.US_EAST_1).build();
+			AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(ConfigHelper.getAWSAccessKey(), ConfigHelper.getAWSSecretKey()))).withRegion(Regions.US_EAST_1).build();
 			ObjectListing ol = s3.listObjects(ConfigHelper.getAWSBucketName(), prefix);
 			log.debug(ol.getObjectSummaries().size());
 			count = ol.getObjectSummaries().size();
 			for (S3ObjectSummary summary : ol.getObjectSummaries()) {
 				log.debug(" - " + summary.getKey() + "\t(size = " + summary.getSize() + ")\t(lastModified = " + summary.getLastModified() + ")");
 			}
+			s3.shutdown();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 		return count;
 	}
 
 	public void saveFile(String path, File inFile) throws GenericException {
 		try {
 			log.info("Uploading file to S3: " + inFile.getAbsolutePath() + " -> s3://" + ConfigHelper.getAWSBucketName() + "/" + path);
-			//AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(ConfigHelper.getAWSAccessKey(), ConfigHelper.getAWSSecretKey()))).withRegion(Regions.US_EAST_1).build();
+			AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(ConfigHelper.getAWSAccessKey(), ConfigHelper.getAWSSecretKey()))).withRegion(Regions.US_EAST_1).build();
 			TransferManager tm = TransferManagerBuilder.standard().withS3Client(s3).build();
 			final Upload uploadFile = tm.upload(ConfigHelper.getAWSBucketName(), path, inFile);
 			uploadFile.waitForCompletion();
 			tm.shutdownNow();
 			inFile.delete();
 			log.info("S3 Upload complete");
+			s3.shutdown();
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new FileSavingException(e.getMessage());
@@ -62,7 +65,7 @@ public class S3Helper {
 	}
 	
 	public List<String> getBucketObjects(String bucket) {
-		//AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(ConfigHelper.getAWSAccessKey(), ConfigHelper.getAWSSecretKey()))).withRegion(Regions.US_EAST_1).build();
+		AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(ConfigHelper.getAWSAccessKey(), ConfigHelper.getAWSSecretKey()))).withRegion(Regions.US_EAST_1).build();
 		
 		ListObjectsV2Request req = new ListObjectsV2Request().withBucketName(bucket).withMaxKeys(100);
         ListObjectsV2Result result;
@@ -83,18 +86,23 @@ public class S3Helper {
             req.setContinuationToken(token);
         } while (result.isTruncated());
         
+        s3.shutdown();
         return ret;
 	}
 	
 	public void copyObject(String objectKey, String srcBucket, String dstBucket) {
+		AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(ConfigHelper.getAWSAccessKey(), ConfigHelper.getAWSSecretKey()))).withRegion(Regions.US_EAST_1).build();
 		System.out.println("Copying: " + srcBucket + "/" + objectKey + " -> " + dstBucket + "/" + objectKey);
 		s3.copyObject(srcBucket, objectKey, dstBucket, objectKey);
 		System.out.println("Copy Complete");
+		s3.shutdown();
 	}
 	
 	public void deleteObject(String objectKey, String bucket) {
+		AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(ConfigHelper.getAWSAccessKey(), ConfigHelper.getAWSSecretKey()))).withRegion(Regions.US_EAST_1).build();
 		System.out.println("Deleting: " + bucket + "/" + objectKey);
 		s3.deleteObject(bucket, objectKey);
+		s3.shutdown();
 	}
 
 }
