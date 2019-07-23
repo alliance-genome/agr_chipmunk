@@ -22,7 +22,6 @@ import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
-import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -41,7 +40,7 @@ public interface SnapShotControllerInterface {
 	@GET
 	@Path("/take/{releaseVersion}")
 	@JsonView({View.SnapShotView.class})
-	@Secured @SecurityRequirement(name = "api_token", scopes = "write: read")
+	@Secured
 	@APIResponses({
 		@APIResponse(responseCode = "200", description = "The SnapShot", content = @Content(schema = @Schema(implementation = SnapShotResponce.class))),
 		@APIResponse(responseCode = "400", description = "Unable to take snapshot")
@@ -50,7 +49,7 @@ public interface SnapShotControllerInterface {
 	public SnapShotResponce takeSnapShot(@PathParam(value = "releaseVersion") String releaseVersion);
 	
 	@POST
-	@Secured @SecurityRequirement(name = "api_token", scopes = "write: read")
+	@Secured
 	@Path("/")
 	@APIResponses({
 		@APIResponse(responseCode = "200", description = "The SnapShot", content = @Content(schema = @Schema(implementation = SnapShot.class))),
@@ -66,13 +65,13 @@ public interface SnapShotControllerInterface {
 	public SnapShot get(@PathParam("id") Long id);
 
 	@PUT
-	@Secured @SecurityRequirement(name = "api_token", scopes = "write: read")
+	@Secured
 	@Path("/")
 	@JsonView(View.SnapShotUpdate.class)
 	public SnapShot update(SnapShot entity);
 
 	@DELETE
-	@Secured @SecurityRequirement(name = "api_token", scopes = "write: read")
+	@Secured
 	@Path("/{id}")
 	@JsonView(View.SnapShotDelete.class)
 	public SnapShot delete(@PathParam("id") Long id);

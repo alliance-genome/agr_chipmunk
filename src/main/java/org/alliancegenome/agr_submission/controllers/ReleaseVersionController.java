@@ -23,7 +23,7 @@ public class ReleaseVersionController extends BaseController implements ReleaseV
 	}
 
 	@Override
-	public ReleaseVersion get(Long id) {
+	public ReleaseVersion get(String id) {
 		return releaseVersionService.get(id);
 	}
 

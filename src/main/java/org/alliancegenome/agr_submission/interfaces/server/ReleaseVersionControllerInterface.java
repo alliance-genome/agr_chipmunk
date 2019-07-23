@@ -15,6 +15,10 @@ import javax.ws.rs.core.MediaType;
 import org.alliancegenome.agr_submission.auth.Secured;
 import org.alliancegenome.agr_submission.entities.ReleaseVersion;
 import org.alliancegenome.agr_submission.views.View;
+import org.eclipse.microprofile.openapi.annotations.enums.ParameterIn;
+import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -34,7 +38,9 @@ public interface ReleaseVersionControllerInterface {
 	@GET
 	@Path("/{id}")
 	@JsonView(View.ReleaseVersionRead.class)
-	public ReleaseVersion get(@PathParam("id") Long id);
+	public ReleaseVersion get(
+			@Parameter(in=ParameterIn.PATH, name="id", description = "Long Id or Release Number", required=true, schema = @Schema(type = SchemaType.STRING)) 
+			@PathParam("id") String id);
 	
 	@PUT @Secured
 	@Path("/")

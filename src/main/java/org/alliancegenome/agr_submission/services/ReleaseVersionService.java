@@ -29,8 +29,18 @@ public class ReleaseVersionService extends BaseService<ReleaseVersion> {
 	@Override
 	@Transactional
 	public ReleaseVersion get(Long id) {
-		log.info("ReleaseVersionService: get: " + id);
 		return dao.find(id);
+	}
+
+	@Transactional
+	public ReleaseVersion get(String id) {
+		log.info("ReleaseVersionService: get: " + id);
+		try {
+			Long ident = Long.parseLong(id);
+			return get(ident);
+		} catch (NumberFormatException ex) {
+			return dao.findByField("releaseVersion", id);
+		}
 	}
 
 	@Override
