@@ -34,17 +34,17 @@ public interface SchemaVersionControllerInterface {
 	@GET
 	@Path("/{id}")
 	@JsonView(View.SchemaVersionRead.class)
-	public SchemaVersion get(@Parameter(name = "Read: id") @PathParam("id") Long id);
+	public SchemaVersion get(@PathParam("id") Long id);
 	
 	@PUT @Secured
 	@Path("/")
 	@JsonView(View.SchemaVersionUpdate.class)
-	public SchemaVersion update(@Parameter(name = "Update: Entity") SchemaVersion entity);
+	public SchemaVersion update(SchemaVersion entity);
 	
 	@DELETE @Secured
 	@Path("/{id}")
 	@JsonView(View.SchemaVersionDelete.class)
-	public SchemaVersion delete(@Parameter(name = "Delete: Entity") @PathParam("id") Long id);
+	public SchemaVersion delete(@PathParam("id") Long id);
 	
 	@GET
 	@Path("/current")

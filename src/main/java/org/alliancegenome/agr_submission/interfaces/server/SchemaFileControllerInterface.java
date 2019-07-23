@@ -35,7 +35,7 @@ public interface SchemaFileControllerInterface {
 	@GET
 	@Path("/{id}")
 	@JsonView(View.SchemaFileRead.class)
-	public SchemaFile get(@Parameter(name = "Read: id") @PathParam("id") Long id);
+	public SchemaFile get(@PathParam("id") Long id);
 	
 	@PUT
 	@Secured
@@ -47,7 +47,7 @@ public interface SchemaFileControllerInterface {
 	@Secured
 	@Path("/{id}")
 	@JsonView(View.SchemaFileDelete.class)
-	public SchemaFile delete(@Parameter(name = "Delete: Entity") @PathParam("id") Long id);
+	public SchemaFile delete(@PathParam("id") Long id);
 	
 	@GET
 	@Path("/all")

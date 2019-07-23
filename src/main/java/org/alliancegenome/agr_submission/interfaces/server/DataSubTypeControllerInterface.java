@@ -35,19 +35,19 @@ public interface DataSubTypeControllerInterface {
 	@GET
 	@Path("/{id}")
 	@JsonView(View.DataSubTypeRead.class)
-	public DataSubType get(@Parameter(name = "Read: id") @PathParam("id") Long id);
+	public DataSubType get(@PathParam("id") Long id);
 	
 	@PUT
 	@Secured
 	@Path("/")
 	@JsonView(View.DataSubTypeUpdate.class)
-	public DataSubType update(@Parameter(name = "Update: Entity") DataSubType entity);
+	public DataSubType update(DataSubType entity);
 	
 	@DELETE
 	@Secured
 	@Path("/{id}")
 	@JsonView(View.DataSubTypeDelete.class)
-	public DataSubType delete(@Parameter(name = "Delete: Entity") @PathParam("id") Long id);
+	public DataSubType delete(@PathParam("id") Long id);
 	
 	@GET
 	@Path("/all")

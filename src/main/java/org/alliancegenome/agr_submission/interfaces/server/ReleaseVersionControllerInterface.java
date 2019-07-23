@@ -35,17 +35,17 @@ public interface ReleaseVersionControllerInterface {
 	@GET
 	@Path("/{id}")
 	@JsonView(View.ReleaseVersionRead.class)
-	public ReleaseVersion get(@Parameter(name = "Read: id") @PathParam("id") Long id);
+	public ReleaseVersion get(@PathParam("id") Long id);
 	
 	@PUT @Secured
 	@Path("/")
 	@JsonView(View.ReleaseVersionUpdate.class)
-	public ReleaseVersion update(@Parameter(name = "Update: Entity") ReleaseVersion entity);
+	public ReleaseVersion update(ReleaseVersion entity);
 	
 	@DELETE @Secured
 	@Path("/{id}")
 	@JsonView(View.ReleaseVersionDelete.class)
-	public ReleaseVersion delete(@Parameter(name = "Delete: Entity") @PathParam("id") Long id);
+	public ReleaseVersion delete(@PathParam("id") Long id);
 	
 	@GET
 	@Path("/all")
@@ -56,8 +56,8 @@ public interface ReleaseVersionControllerInterface {
 	@Path("/{release}/addschema/{schema}")
 	@JsonView(View.ReleaseVersionRead.class)
 	public ReleaseVersion addSchema(
-			@Parameter(name = "Release") @PathParam("release") String release,
-			@Parameter(name = "Schema") @PathParam("schema") String schema
+			@PathParam("release") String release,
+			@PathParam("schema") String schema
 	);
 	
 }

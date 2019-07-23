@@ -37,17 +37,17 @@ public interface DataTypeControllerInterface {
 	@GET
 	@Path("/{id}")
 	@JsonView(View.DataTypeRead.class)
-	public DataType get(@Parameter(name = "Read: id") @PathParam("id") Long id);
+	public DataType get(@PathParam("id") Long id);
 	
 	@PUT @Secured
 	@Path("/")
 	@JsonView(View.DataTypeUpdate.class)
-	public DataType update(@Parameter(name = "Update: Entity") DataType entity);
+	public DataType update(DataType entity);
 	
 	@DELETE @Secured
 	@Path("/{id}")
 	@JsonView(View.DataTypeDelete.class)
-	public DataType delete(@Parameter(name = "Delete: Entity") @PathParam("id") Long id);
+	public DataType delete(@PathParam("id") Long id);
 	
 	@GET
 	@Path("/all")
@@ -58,7 +58,7 @@ public interface DataTypeControllerInterface {
 	@Path("/{dataType}/addschemafile")
 	@JsonView({View.DataTypeView.class})
 	public DataType addSchemaFile(
-			@Parameter(name = "DataType: id") @PathParam("dataType") String dataType,
+			@PathParam("dataType") String dataType,
 			CreateSchemaFileForm form
 	);
 	
@@ -66,14 +66,15 @@ public interface DataTypeControllerInterface {
 	@Path("/{dataType}/removeschemafile/{id}")
 	@JsonView(View.DataTypeDelete.class)
 	public SchemaFile deleteSchemaFile(
-			@Parameter(name = "DataType: id") @PathParam("dataType") String dataType,
-			@Parameter(name = "SchemaFile: id") @PathParam("id") Long id);
+		@PathParam("dataType") String dataType,
+		@PathParam("id") Long id
+	);
 	
 	@POST @Secured
 	@Path("/{dataType}/addsubtype")
 	@JsonView({View.DataTypeView.class})
 	public DataType addDataSubType(
-		@Parameter(name = "DataType: id") @PathParam("dataType") String dataType,
+		@PathParam("dataType") String dataType,
 		AddDataSubTypeForm form
 	);
 

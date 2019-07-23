@@ -35,9 +35,9 @@ public interface DataFileControllerInterface {
 	@Path("/{schemaVersion}/{dataType}/{dataSubtype}")
 	@JsonView(View.DataFileCreate.class)
 	public DataFile create(
-			@Parameter(name = "SchemaVersion: data") @PathParam("schemaVersion") String schemaVersion,
-			@Parameter(name = "DataType: id") @PathParam("dataType") String dataType,
-			@Parameter(name = "DataSubType: id") @PathParam("dataSubtype") String dataSubtype,
+			@PathParam("schemaVersion") String schemaVersion,
+			@PathParam("dataType") String dataType,
+			@PathParam("dataSubtype") String dataSubtype,
 			DataFile entity
 			);
 
@@ -52,13 +52,13 @@ public interface DataFileControllerInterface {
 	@Secured
 	@Path("/")
 	@JsonView(View.DataFileUpdate.class)
-	public DataFile update(@Parameter(name = "Update: Entity") DataFile entity);
+	public DataFile update(DataFile entity);
 
 	@DELETE
 	@Secured
 	@Path("/{id}")
 	@JsonView(View.DataFileDelete.class)
-	public DataFile delete(@Parameter(name = "Delete: Entity") @PathParam("id") Long id);
+	public DataFile delete(@PathParam("id") Long id);
 
 	@GET
 	@Path("/all")
@@ -69,7 +69,7 @@ public interface DataFileControllerInterface {
 	@Path("/{dataType}")
 	@JsonView(View.DataFileView.class)
 	public List<DataFile> getDataTypeFiles(
-		@Parameter(name = "DataType: id") @PathParam("dataType") String dataType
+		@PathParam("dataType") String dataType
 	);
 
 	@GET

@@ -64,19 +64,19 @@ public interface SnapShotControllerInterface {
 	@GET
 	@Path("/{id}")
 	@JsonView(View.SnapShotRead.class)
-	public SnapShot get(@Parameter(name = "Read: id") @PathParam("id") Long id);
+	public SnapShot get(@PathParam("id") Long id);
 
 	@PUT
 	@Secured @SecurityRequirement(name = "api_token", scopes = "write: read")
 	@Path("/")
 	@JsonView(View.SnapShotUpdate.class)
-	public SnapShot update(@Parameter(name = "Update: Entity") SnapShot entity);
+	public SnapShot update(SnapShot entity);
 
 	@DELETE
 	@Secured @SecurityRequirement(name = "api_token", scopes = "write: read")
 	@Path("/{id}")
 	@JsonView(View.SnapShotDelete.class)
-	public SnapShot delete(@Parameter(name = "Delete: Entity") @PathParam("id") Long id);
+	public SnapShot delete(@PathParam("id") Long id);
 
 	@GET
 	@Path("/all")

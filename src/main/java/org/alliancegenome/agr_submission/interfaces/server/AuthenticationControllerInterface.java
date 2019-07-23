@@ -18,5 +18,5 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 public interface AuthenticationControllerInterface {
 
 	@POST
-	public Response authenticateUser(@Parameter(name = "User Credentials") Credentials creds);
+	public Response authenticateUser(Credentials creds);
 }
