@@ -12,9 +12,7 @@ import javax.transaction.Transactional;
 import org.alliancegenome.agr_submission.dao.DataFileDAO;
 import org.alliancegenome.agr_submission.dao.DataSubTypeDAO;
 import org.alliancegenome.agr_submission.dao.DataTypeDAO;
-import org.alliancegenome.agr_submission.dao.ReleaseVersionDAO;
 import org.alliancegenome.agr_submission.dao.SchemaVersionDAO;
-import org.alliancegenome.agr_submission.dao.SnapShotDAO;
 import org.alliancegenome.agr_submission.entities.DataFile;
 import org.alliancegenome.agr_submission.entities.DataSubType;
 import org.alliancegenome.agr_submission.entities.DataType;
@@ -40,8 +38,8 @@ import lombok.extern.jbosslog.JBossLog;
 @RequestScoped
 public class SubmissionService {
 
-	@Inject private SnapShotDAO snapShotDAO;
-	@Inject private ReleaseVersionDAO releaseDAO;
+	//@Inject private SnapShotDAO snapShotDAO;
+	//@Inject private ReleaseVersionDAO releaseDAO;
 	@Inject private DataFileDAO dataFileDAO;
 	@Inject private SchemaVersionDAO schemaVersionDAO;
 	@Inject private DataTypeDAO dataTypeDAO;
