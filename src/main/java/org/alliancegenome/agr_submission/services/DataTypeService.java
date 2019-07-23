@@ -44,7 +44,13 @@ public class DataTypeService extends BaseService<DataType> {
 	@Transactional
 	public DataType update(DataType entity) {
 		log.info("DataTypeService: update: ");
-		return dao.merge(entity);
+		DataType dbEntity = get(entity.getId());
+		dbEntity.setDataSubTypeRequired(entity.isDataSubTypeRequired());
+		dbEntity.setDescription(entity.getDescription());
+		dbEntity.setFileExtension(entity.getFileExtension());
+		dbEntity.setName(entity.getName());
+		dbEntity.setValidationRequired(entity.isValidationRequired());
+		return dao.merge(dbEntity);
 	}
 
 	@Override
