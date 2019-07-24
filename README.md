@@ -55,20 +55,26 @@ This will be the current release of the schema can be found in the [releases](ht
 
 ## Data Type
 
-| Data Type    | What it means                     | Schema Validation File  | Format | Data SubType Required | Validation Required |
-| ---          | ---                               | ---                                                       | ---  | ---  | ---  |
-| BGI          | Basic Gene information            | /gene/geneMetaData.json                                   | json | true | true |
-| DAF          | Disease Ontology Annotations File | /disease/diseaseMetaDataDefinition.json                   | json | true | true |
-| ORTHO        | Orthology Information File        | /orthology/orthologyMetaData.json                         | json | true | true |
-| ALLELE       | Allele Information File           | /allele/alleleMetaData.json                               | json | true | true |
-| GENOTYPE     | Genotype Information File         | /genotype/genotypeMetaDataDefinition.json                 | json | true | true |
-| PHENOTYPE    | Phenotype Information File        | /phenotype/phenotypeMetaDataDefinition.json               | json | true | true |
-| EXPRESSION   | Expression Information File       | /expression/wildtypeExpressionMetaDataDefinition.json     | json | true | true |
-| VARIATION    | Variation Information File        | /allele/variantMetaData.json                              | json | true | true |
-| GAF          | Gene Ontology Annotations File    | - | tar.gz | true  | false |
-| GFF          | Gene Feature File                 | - | gff    | true  | false |
-| ONTOLOGY     | Ontology Information File         | - | obo    | true  | false |
-| INTERACTION  | Consolidated Interactions File    | - | tar.gz | false | false |
+| Data Type        | What it means                     | Schema Validation File  | Format | Data SubType Required | Validation Required |
+| ---              | ---                               | ---                                                            | ---  | ---  | ---  |
+| AGM              | Affected Genomic Model            | /ingest/affectedGenomicModel/affectedGenomicModelMetaData.json | json | true | true |
+| BGI              | Basic Gene information            | /ingest/gene/geneMetaData.json                                 | json | true | true |
+| DAF              | Disease Ontology Annotations File | /ingest/disease/diseaseMetaDataDefinition.json                 | json | true | true |
+| ORTHO            | Orthology Information File        | /ingest/orthology/orthologyMetaData.json                       | json | true | true |
+| ALLELE           | Allele Information File           | /ingest/allele/alleleMetaData.json                             | json | true | true |
+| GENOTYPE         | Genotype Information File         | /genotype/genotypeMetaDataDefinition.json                      | json | true | true |
+| PHENOTYPE        | Phenotype Information File        | /ingest/phenotype/phenotypeMetaDataDefinition.json             | json | true | true |
+| EXPRESSION       | Expression Information File       | /ingest/expression/wildtypeExpressionMetaDataDefinition.json   | json | true | true |
+| VARIATION        | Variation Information File        | /ingest/allele/variantMetaData.json                            | json | true | true |
+| SQTR             | Sequence Targeting Reagent File   | /genotype/sequenceTargetingReagentMetaData.json                | json | true | true |
+| TRANSCRIPT       | Transcript                        | /ingest/sequenceFeature/transcriptMetaData.json                | json | false | true |
+| GAF              | Gene Ontology Annotations File    | - | gaf    | true  | false |
+| EXPRESSIONATLAS  | Expression Atlas Information File | - | xml    | true  | false |
+| FASTA            | Assembly fasta file               | - | fa     | true  | false |
+| GFF              | Gene Feature File                 | - | gff    | true  | false |
+| ONTOLOGY         | Ontology Information File         | - | obo    | true  | false |
+| INTERACTION      | Consolidated Interactions File    | - | tar.gz | false | false |
+| NONGENESEQUENCEFEATURE | Non gene, non transcript/exon sequence features | /ingest/sequenceFeature/nonGeneSequenceFeatureMetaData.json   | json | false | false |
 
 ## Data SubType
 
