@@ -57,7 +57,7 @@ public interface ReleaseVersionControllerInterface {
 	@JsonView(View.ReleaseVersionView.class)
 	public List<ReleaseVersion> getReleaseVersions();
 
-	@GET
+	@GET @Secured
 	@Path("/{release}/setschema/{schema}")
 	@JsonView(View.ReleaseVersionRead.class)
 	public ReleaseVersion setSchema(
