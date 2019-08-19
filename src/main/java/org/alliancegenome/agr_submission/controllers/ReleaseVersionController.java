@@ -42,8 +42,8 @@ public class ReleaseVersionController extends BaseController implements ReleaseV
 	}
 
 	@Override
-	public ReleaseVersion addSchema(String release, String schema) {
-		return releaseVersionService.addSchema(release, schema);
+	public ReleaseVersion setSchema(String release, String schema) {
+		return releaseVersionService.setSchema(release, schema);
 	}
 	
 }

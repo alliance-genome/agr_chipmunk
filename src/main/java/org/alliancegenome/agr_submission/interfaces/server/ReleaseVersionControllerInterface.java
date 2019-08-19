@@ -58,9 +58,9 @@ public interface ReleaseVersionControllerInterface {
 	public List<ReleaseVersion> getReleaseVersions();
 
 	@GET
-	@Path("/{release}/addschema/{schema}")
+	@Path("/{release}/setschema/{schema}")
 	@JsonView(View.ReleaseVersionRead.class)
-	public ReleaseVersion addSchema(
+	public ReleaseVersion setSchema(
 			@PathParam("release") String release,
 			@PathParam("schema") String schema
 	);

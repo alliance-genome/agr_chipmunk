@@ -62,10 +62,11 @@ public class ReleaseVersionService extends BaseService<ReleaseVersion> {
 	}
 	
 	@Transactional
-	public ReleaseVersion addSchema(String release, String schema) {
+	public ReleaseVersion setSchema(String release, String schema) {
 		ReleaseVersion rv = dao.findByField("releaseVersion", release);
 		SchemaVersion sv = schemaDAO.findByField("schema", schema);
-		if(sv != null && !rv.getSchemaVersions().contains(sv)) {
+		if(rv != null && sv != null) {
+			rv.getSchemaVersions().clear();
 			rv.getSchemaVersions().add(sv);
 			dao.persist(rv);
 		}
