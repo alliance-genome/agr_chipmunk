@@ -12,10 +12,12 @@ import javax.transaction.Transactional;
 import org.alliancegenome.agr_submission.dao.DataFileDAO;
 import org.alliancegenome.agr_submission.dao.DataSubTypeDAO;
 import org.alliancegenome.agr_submission.dao.DataTypeDAO;
+import org.alliancegenome.agr_submission.dao.ReleaseVersionDAO;
 import org.alliancegenome.agr_submission.dao.SchemaVersionDAO;
 import org.alliancegenome.agr_submission.entities.DataFile;
 import org.alliancegenome.agr_submission.entities.DataSubType;
 import org.alliancegenome.agr_submission.entities.DataType;
+import org.alliancegenome.agr_submission.entities.ReleaseVersion;
 import org.alliancegenome.agr_submission.entities.SchemaVersion;
 import org.alliancegenome.agr_submission.exceptions.GenericException;
 import org.alliancegenome.agr_submission.exceptions.SchemaDataTypeException;
@@ -39,7 +41,7 @@ import lombok.extern.jbosslog.JBossLog;
 public class SubmissionService {
 
 	//@Inject private SnapShotDAO snapShotDAO;
-	//@Inject private ReleaseVersionDAO releaseDAO;
+	@Inject private ReleaseVersionDAO releaseVersionDAO;
 	@Inject private DataFileDAO dataFileDAO;
 	@Inject private SchemaVersionDAO schemaVersionDAO;
 	@Inject private DataTypeDAO dataTypeDAO;
@@ -54,30 +56,32 @@ public class SubmissionService {
 		// Split the keys by underscore
 		String[] keys = key.split("_");
 
-		String schemaLookup;
+		String releaseLookup;
 		String dataTypeLookup;
 		String dataSubTypeLookup;
 
 		if(keys.length == 3) {
 			log.debug("Key has 3 items: parse: (Schema-DataType-DataSubType): " + key);
-			schemaLookup = keys[0];
+			releaseLookup = keys[0];
 			dataTypeLookup = keys[1];
 			dataSubTypeLookup = keys[2];
 		} else if(keys.length == 2) { // DataType-TaxonId // Input a taxonId datatype file and validate against latest version of schema
 			log.debug("Key has 2 items: parse: (DataType-DataSubType): " + key);
-			schemaLookup = null;
+			releaseLookup = null;
 			dataTypeLookup = keys[0];
 			dataSubTypeLookup = keys[1];
 		} else {
 			throw new ValidataionException("Wrong Number of Args for File Data: " + key);
 		}
+		
 
-		SchemaVersion schemaVersion = getSchemaVersion(schemaLookup);
+		SchemaVersion schemaVersion = getSchemaVersionFromReleaseVersion(releaseLookup);
+		
 		DataType dataType = dataTypeDAO.findByField("name", dataTypeLookup);
 		DataSubType dataSubType = dataSubTypeDAO.findByField("name", dataSubTypeLookup);
 
 		if(schemaVersion == null) {
-			throw new SchemaDataTypeException("Could not Find schemaVersion: " + schemaLookup);
+			throw new SchemaDataTypeException("Could not Find releaseLookup: " + releaseLookup);
 		}
 		if(dataType == null) {
 			throw new SchemaDataTypeException("Could not Find dataType: " + dataTypeLookup);
@@ -138,6 +142,25 @@ public class SubmissionService {
 			throw new ValidataionException(e.getMessage());
 		}
 
+	}
+	
+	private SchemaVersion getSchemaVersionFromReleaseVersion(String releaseVersion) throws ValidataionException {
+		if(releaseVersion == null) {
+			ReleaseVersion rv = releaseVersionDAO.getCurrentReleaseVersion();
+			if(rv.getSchemaVersions().size() == 0) {
+				throw new ValidataionException("No Schema Versions found for Release Version: " + rv.getReleaseVersion());
+			}
+			return rv.getSchemaVersions().get(0);
+		} else {
+			ReleaseVersion rv = releaseVersionDAO.getByName(releaseVersion);
+			if(rv == null) {
+				throw new ValidataionException("Release Version not found: " + releaseVersion);
+			}
+			if(rv.getSchemaVersions().size() == 0) {
+				throw new ValidataionException("No Schema Versions found for Release Version: " + releaseVersion);
+			}
+			return rv.getSchemaVersions().get(0);
+		}
 	}
 
 	private SchemaVersion getSchemaVersion(String schemaString) throws ValidataionException {
