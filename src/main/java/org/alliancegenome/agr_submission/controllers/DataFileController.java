@@ -18,9 +18,9 @@ public class DataFileController extends BaseController implements DataFileContro
 	@Inject DataFileService dataFileService;
 	
 	@Override
-	public DataFile create(String schemaVersion, String dataType, String dataSubtype, DataFile entity) {
+	public DataFile create(String releaseVersion, String dataType, String dataSubtype, DataFile entity) {
 		if(entity != null) {
-			return dataFileService.create(schemaVersion, dataType, dataSubtype, entity);
+			return dataFileService.create(releaseVersion, dataType, dataSubtype, entity);
 		} else {
 			return null;
 		}
