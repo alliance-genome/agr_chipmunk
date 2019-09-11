@@ -191,7 +191,7 @@ public class SubmissionService {
 				if(!found) {
 					df.getReleaseVersions().add(releaseVersion);
 				}
-				df.setUploadDate(new Date());
+				
 			} else {
 				df = new DataFile();
 				df.getReleaseVersions().add(releaseVersion);
