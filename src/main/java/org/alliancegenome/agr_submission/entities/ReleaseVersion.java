@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import org.alliancegenome.agr_submission.BaseEntity;
 import org.alliancegenome.agr_submission.views.View;
@@ -31,7 +32,10 @@ public class ReleaseVersion extends BaseEntity {
 	@OneToMany(mappedBy="releaseVersion")
 	private List<SnapShot> snapShots;
 	
+	@OneToOne(fetch=FetchType.EAGER)
+	private SchemaVersion defaultSchemaVersion;
+	
 	@ManyToMany(fetch=FetchType.EAGER)
-	private List<SchemaVersion> schemaVersions = new ArrayList<>();
+	private List<DataFile> dataFiles = new ArrayList<>();
 	
 }

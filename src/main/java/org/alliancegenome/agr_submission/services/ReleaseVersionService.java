@@ -66,8 +66,7 @@ public class ReleaseVersionService extends BaseService<ReleaseVersion> {
 		ReleaseVersion rv = dao.findByField("releaseVersion", release);
 		SchemaVersion sv = schemaDAO.findByField("schema", schema);
 		if(rv != null && sv != null) {
-			rv.getSchemaVersions().clear();
-			rv.getSchemaVersions().add(sv);
+			rv.setDefaultSchemaVersion(sv);
 			dao.persist(rv);
 		}
 		return rv;

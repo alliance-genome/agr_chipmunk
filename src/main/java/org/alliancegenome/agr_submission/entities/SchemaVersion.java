@@ -6,8 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import org.alliancegenome.agr_submission.BaseEntity;
 import org.alliancegenome.agr_submission.views.View;
@@ -31,9 +31,9 @@ public class SchemaVersion extends BaseEntity {
 	@JsonView({View.SchemaVersionView.class})
 	private Set<SchemaFile> schemaFiles;
 	
-	@ManyToMany(mappedBy="schemaVersions", fetch=FetchType.EAGER)
+	@OneToOne(mappedBy="defaultSchemaVersion")
 	@JsonView({View.SchemaVersionView.class})
-	private Set<ReleaseVersion> releaseVersions;
+	private ReleaseVersion releaseVersion;
 	
 	@OneToMany(mappedBy="schemaVersion", fetch=FetchType.EAGER)
 	@JsonView({View.SchemaVersionView.class})

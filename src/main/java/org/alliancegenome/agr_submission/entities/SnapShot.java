@@ -36,19 +36,13 @@ public class SnapShot extends BaseEntity {
 	private ReleaseVersion releaseVersion;
 	
 	@Transient
-	@JsonView(View.SnapShotView.class)
-	public SchemaVersion getSchemaVersion() {
-		return releaseVersion.getSchemaVersions().get(0);
-	}
-	
-	@Transient
 	@JsonProperty(access = Access.READ_ONLY)
 	@JsonView(View.SnapShotView.class)
 	public ArrayList<DataFile> getDataFiles() {
 		ArrayList<DataFile> dataFiles = new ArrayList<DataFile>();
 		HashMap<MultiKey<String>, DataFile> currentFiles = new HashMap<>();
 
-		for(DataFile df: getSchemaVersion().getDataFiles()) {
+		for(DataFile df: releaseVersion.getDataFiles()) {
 			MultiKey<String> key = new MultiKey<String>(df.getDataType().getName(), df.getDataSubType().getName());
 			DataFile entry = currentFiles.get(key);
 			if(df.getUploadDate().before(snapShotDate)) {

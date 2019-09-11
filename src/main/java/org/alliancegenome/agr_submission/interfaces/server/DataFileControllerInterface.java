@@ -30,8 +30,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Tag(name = "DataFile Endpoints")
 public interface DataFileControllerInterface {
 
-	@POST
-	@Secured
+	@POST @Secured
 	@Path("/{schemaVersion}/{dataType}/{dataSubtype}")
 	@JsonView(View.DataFileCreate.class)
 	public DataFile create(
@@ -48,14 +47,12 @@ public interface DataFileControllerInterface {
 		@Parameter(in=ParameterIn.PATH, name="id", description = "Long Id or md5Sum", required=true, schema = @Schema(type = SchemaType.STRING)) @PathParam("id") String id
 	);
 
-	@PUT
-	@Secured
+	@PUT @Secured
 	@Path("/")
 	@JsonView(View.DataFileUpdate.class)
 	public DataFile update(DataFile entity);
 
-	@DELETE
-	@Secured
+	@DELETE @Secured
 	@Path("/{id}")
 	@JsonView(View.DataFileDelete.class)
 	public DataFile delete(@PathParam("id") Long id);
@@ -66,14 +63,14 @@ public interface DataFileControllerInterface {
 	public List<DataFile> getDataFiles();
 
 	@GET
-	@Path("/{dataType}")
+	@Path("/by/{dataType}")
 	@JsonView(View.DataFileView.class)
 	public List<DataFile> getDataTypeFiles(
 		@PathParam("dataType") String dataType
 	);
 
 	@GET
-	@Path("/{dataType}/{dataSubtype}")
+	@Path("/by/{dataType}/{dataSubtype}")
 	@JsonView(View.DataFileView.class)
 	@Operation(summary = "Get list of DataFile's", description = "Get list of DataFile's")
 	public List<DataFile> getDataTypeSubTypeFiles(
