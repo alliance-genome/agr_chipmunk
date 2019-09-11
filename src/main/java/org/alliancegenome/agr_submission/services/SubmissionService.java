@@ -9,10 +9,8 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
-import org.alliancegenome.agr_submission.dao.DataFileDAO;
 import org.alliancegenome.agr_submission.dao.DataSubTypeDAO;
 import org.alliancegenome.agr_submission.dao.DataTypeDAO;
-import org.alliancegenome.agr_submission.dao.ReleaseVersionDAO;
 import org.alliancegenome.agr_submission.dao.SchemaVersionDAO;
 import org.alliancegenome.agr_submission.entities.DataFile;
 import org.alliancegenome.agr_submission.entities.DataSubType;
@@ -65,7 +63,7 @@ public class SubmissionService {
 			releaseVersionLookup = keys[0];
 			dataTypeLookup = keys[1];
 			dataSubTypeLookup = keys[2];
-		} else if(keys.length == 2) { // DataType-TaxonId // Input a taxonId datatype file and validate against latest version of schema
+		} else if(keys.length == 2) { // DataType-DataSubType puts the file under the next release
 			log.debug("Key has 2 items: parse: (DataType-DataSubType): " + key);
 			releaseVersionLookup = null;
 			dataTypeLookup = keys[0];
@@ -74,7 +72,13 @@ public class SubmissionService {
 			throw new ValidataionException("Wrong Number of Args for File Data: " + key);
 		}
 		
-		ReleaseVersion releaseVersion = releaseService.get(releaseVersionLookup);
+		ReleaseVersion releaseVersion = null;
+		
+		if(releaseVersionLookup == null) {
+			releaseVersion = releaseService.getNextRelease();
+		} else {
+			releaseVersion = releaseService.get(releaseVersionLookup);
+		}
 		
 		if(releaseVersion == null) {
 			throw new SchemaDataTypeException("Could not Find releaseVersion: " + releaseVersionLookup);

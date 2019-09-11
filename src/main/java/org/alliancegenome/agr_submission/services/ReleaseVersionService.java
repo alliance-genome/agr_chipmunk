@@ -1,5 +1,6 @@
 package org.alliancegenome.agr_submission.services;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -70,6 +71,19 @@ public class ReleaseVersionService extends BaseService<ReleaseVersion> {
 			dao.persist(rv);
 		}
 		return rv;
+	}
+
+	@Transactional
+	public ReleaseVersion getNextRelease() {
+		List<ReleaseVersion> releaseVersions = getReleaseVersions();
+		ReleaseVersion nextRelease = null;
+		Date now = new Date();
+		for(ReleaseVersion rv: releaseVersions) {
+			if(now.before(rv.getReleaseDate()) && (nextRelease == null || rv.getReleaseDate().before(nextRelease.getReleaseDate()))) {
+				nextRelease = rv;
+			}
+		}
+		return nextRelease;
 	}
 
 

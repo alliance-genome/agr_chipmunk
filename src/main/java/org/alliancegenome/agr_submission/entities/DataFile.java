@@ -1,5 +1,6 @@
 package org.alliancegenome.agr_submission.entities;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -35,9 +36,9 @@ public class DataFile extends BaseEntity {
 	@JsonView({View.DataFileView.class, View.SchemaVersionView.class, View.SnapShotView.class})
 	private Date uploadDate = new Date();
 	
-	@ManyToMany
+	@ManyToMany(mappedBy = "dataFiles")
 	@JsonView({View.DataFileView.class})
-	private List<ReleaseVersion> releaseVersions;
+	private List<ReleaseVersion> releaseVersions = new ArrayList<>();
 	
 	@ManyToOne
 	@JsonView({View.DataFileView.class})

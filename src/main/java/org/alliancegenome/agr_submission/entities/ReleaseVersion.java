@@ -1,6 +1,7 @@
 package org.alliancegenome.agr_submission.entities;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -28,6 +29,8 @@ public class ReleaseVersion extends BaseEntity {
 	private Long id;
 	@JsonView({View.ReleaseVersionView.class, View.SchemaVersionView.class, View.SnapShotView.class})
 	private String releaseVersion;
+	@JsonView({View.ReleaseVersionView.class, View.SchemaVersionView.class, View.SnapShotView.class})
+	private Date releaseDate;
 	
 	@OneToMany(mappedBy="releaseVersion")
 	private List<SnapShot> snapShots;
