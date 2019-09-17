@@ -19,17 +19,18 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
-@Getter @Setter
+@Getter @Setter @ToString(of= {"id", "releaseVersion", "releaseDate", "defaultSchemaVersion"})
 public class ReleaseVersion extends BaseEntity {
 
 	@Id @GeneratedValue
-	@JsonView({View.ReleaseVersionView.class, View.SchemaVersionView.class, View.SnapShotView.class})
+	@JsonView({View.API.class})
 	private Long id;
-	@JsonView({View.ReleaseVersionView.class, View.SchemaVersionView.class, View.SnapShotView.class})
+	@JsonView({View.API.class})
 	private String releaseVersion;
-	@JsonView({View.ReleaseVersionView.class, View.SchemaVersionView.class, View.SnapShotView.class})
+	@JsonView({View.API.class})
 	private Date releaseDate;
 	
 	@OneToMany(mappedBy="releaseVersion")
@@ -37,8 +38,8 @@ public class ReleaseVersion extends BaseEntity {
 	
 	@OneToOne(fetch=FetchType.EAGER)
 	private SchemaVersion defaultSchemaVersion;
-	
-	@ManyToMany(fetch=FetchType.EAGER)
+
+	@ManyToMany(mappedBy = "releaseVersions", fetch=FetchType.EAGER)
 	private List<DataFile> dataFiles = new ArrayList<>();
 	
 }

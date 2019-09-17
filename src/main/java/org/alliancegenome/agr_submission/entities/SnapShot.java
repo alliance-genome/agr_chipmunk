@@ -20,19 +20,20 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
-@Getter @Setter
+@Getter @Setter @ToString(of= {"id", "snapShotDate"})
 public class SnapShot extends BaseEntity {
 
 	@Id @GeneratedValue
-	@JsonView(View.SnapShotView.class)
+	@JsonView(View.API.class)
 	private Long id;
-	@JsonView(View.SnapShotView.class)
+	@JsonView(View.API.class)
 	private Date snapShotDate;
 
 	@ManyToOne
-	@JsonView(View.SnapShotView.class)
+	@JsonView(View.API.class)
 	private ReleaseVersion releaseVersion;
 	
 	@Transient

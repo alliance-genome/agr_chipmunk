@@ -1,10 +1,10 @@
 package org.alliancegenome.agr_submission.entities;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
@@ -17,9 +17,10 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
-@Getter @Setter
+@Getter @Setter @ToString
 public class DataFile extends BaseEntity {
 
 	@Id @GeneratedValue
@@ -36,9 +37,9 @@ public class DataFile extends BaseEntity {
 	@JsonView({View.DataFileView.class, View.SchemaVersionView.class, View.SnapShotView.class})
 	private Date uploadDate = new Date();
 	
-	@ManyToMany(mappedBy = "dataFiles")
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JsonView({View.DataFileView.class})
-	private List<ReleaseVersion> releaseVersions = new ArrayList<>();
+	private List<ReleaseVersion> releaseVersions;
 	
 	@ManyToOne
 	@JsonView({View.DataFileView.class})

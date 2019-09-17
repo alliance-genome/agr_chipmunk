@@ -3,6 +3,7 @@ package org.alliancegenome.agr_submission.services;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.enterprise.context.RequestScoped;
@@ -75,25 +76,31 @@ public class SubmissionService {
 		ReleaseVersion releaseVersion = null;
 		
 		if(releaseVersionLookup == null) {
+			log.debug("Getting Next Release Version: ");
 			releaseVersion = releaseService.getNextRelease();
 		} else {
+			log.debug("Looking up release Version: " + releaseVersionLookup);
 			releaseVersion = releaseService.get(releaseVersionLookup);
+			
 		}
-		
+
 		if(releaseVersion == null) {
 			throw new SchemaDataTypeException("Could not Find releaseVersion: " + releaseVersionLookup);
 		}
+		log.debug("Release Version: " + releaseVersion);
 		
 		DataType dataType = dataTypeDAO.findByField("name", dataTypeLookup);
 		if(dataType == null) {
 			throw new SchemaDataTypeException("Could not Find dataType: " + dataTypeLookup);
 		}
+		log.debug("Data Type: " + dataType);
 		
 		DataSubType dataSubType = dataSubTypeDAO.findByField("name", dataSubTypeLookup);
 
 		if(dataSubType == null) {
 			throw new SchemaDataTypeException("Could not Find dataSubType: " + dataSubTypeLookup);
 		}
+		log.debug("Data Sub Type: " + dataSubType);
 		
 		SchemaVersion schemaVersion = null;
 		
@@ -104,6 +111,7 @@ public class SubmissionService {
 			if(schemaVersion == null) {
 				throw new SchemaDataTypeException("Could not Find default schemaVersion for release: " + releaseVersionLookup);
 			}
+			log.debug("Schema Version: " + schemaVersion);
 			
 			validateData(schemaVersion, dataType, inFile);
 		}
@@ -139,8 +147,12 @@ public class SubmissionService {
 		}
 		File schemaFile = gitHelper.getFile(schemaVersionName.getSchema(), dataTypeFilePath);
 
+		if(!schemaFile.exists()) {
+			throw new ValidataionException("Schema File does not exist in schema Repo: agr_schemas_" + schemaVersionName.getSchema() + dataTypeFilePath);
+		}
+		
 		try {
-
+			
 			JsonSchema schemaNode = JsonSchemaFactory.byDefault().getJsonSchema(schemaFile.toURI().toString());
 			JsonNode jsonNode = JsonLoader.fromFile(inFile);
 
@@ -175,6 +187,7 @@ public class SubmissionService {
 		} else {
 			filePath = dir + dataType.getName() + "_" + dataSubType.getName() + "_" + fileIndex + "." + dataType.getFileExtension();
 		}
+		log.debug("File Save Path: " + filePath);
 
 		try {
 			FileInputStream fis = new FileInputStream(inFile);
@@ -185,20 +198,27 @@ public class SubmissionService {
 			// Check that data file doesn't already exist in the system if so update its release version
 			DataFile df = dataFileService.get(md5Sum);
 			if(df != null) {
+				log.debug("DataFile found not uploading: " + df.getS3Path() + " MD5: " + df.getMd5Sum());
 				boolean found = false;
 				for(ReleaseVersion r: df.getReleaseVersions()) {
+					log.trace("Release: " + r.getReleaseVersion() + " Release Lookup: " + releaseVersion.getReleaseVersion());
 					if(r.getReleaseVersion().contentEquals(releaseVersion.getReleaseVersion())) {
+						log.debug("DataFile already under release: " + releaseVersion.getReleaseVersion());
 						found = true;
 						break;
 					}
 				}
 				if(!found) {
+					log.debug("Added DataFile to release version: " + releaseVersion.getReleaseVersion());
 					df.getReleaseVersions().add(releaseVersion);
 				}
 				
 			} else {
+				log.debug("MD5 not found: creating new file: " + filePath);
 				df = new DataFile();
-				df.getReleaseVersions().add(releaseVersion);
+				ArrayList<ReleaseVersion> list = new ArrayList<ReleaseVersion>();
+				list.add(releaseVersion);
+				df.setReleaseVersions(list);
 				df.setSchemaVersion(schemaVersion);
 				df.setDataType(dataType);
 				df.setDataSubType(dataSubType);

@@ -16,25 +16,27 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
-@Getter @Setter
+@Getter @Setter @ToString(of = {"id", "name", "description"})
 public class DataSubType extends BaseEntity {
 
 	@Id @GeneratedValue
-	@JsonView({View.DataSubTypeView.class, View.DataTypeView.class, View.DataFileView.class, View.SchemaVersionView.class, View.SnapShotView.class})
+	@JsonView({View.API.class})
 	private Long id;
-	@JsonView({View.DataSubTypeView.class, View.DataTypeView.class, View.DataFileView.class, View.SchemaVersionView.class, View.SnapShotView.class})
+	@JsonView({View.API.class})
 	private String name;
-	@JsonView({View.DataSubTypeView.class, View.DataTypeView.class, View.SchemaVersionView.class})
+	@JsonView({View.API.class})
 	private String description;
 	
 	@ManyToMany(mappedBy = "dataSubTypes")
+	@JsonView({View.DataSubTypeView.class})
 	private List<DataType> dataTypes;
 	
 	@Transient
 	@JsonIgnore
-	@JsonView({View.DataSubTypeView.class, View.DataTypeView.class, View.DataFileView.class, View.SchemaVersionView.class})
+	@JsonView({View.API.class})
 	public String getLabel() {
 		return name;
 	}
