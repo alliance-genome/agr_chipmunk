@@ -32,49 +32,16 @@ public class SubmissionController extends BaseController implements SubmissionCo
 	private SubmissionService metaDataService;
 
 	@Override
-	public SubmissionResponce submitData(MultipartFormDataInput input) {
-		SubmissionResponce res = new SubmissionResponce();
-
-		Map<String, List<InputPart>> form = input.getFormDataMap();
-		boolean success = true;
-
-
-		for(String key: form.keySet()) {
-
-			InputPart inputPart = form.get(key).get(0);
-			Date d = new Date();
-			String outFileName = "tmp.data_" + d.getTime();
-			File outfile = new File(outFileName);
-			try {
-				InputStream is = inputPart.getBody(InputStream.class, null);
-
-				log.info("Saving file to local filesystem: " + outfile.getAbsolutePath());
-				FileUtils.copyInputStreamToFile(is, outfile);
-				log.info("Save file to local filesystem complete");
-
-				metaDataService.submitAndValidateDataFile(key, outfile, true);
-				res.getFileStatus().put(key, "success");
-			} catch (GenericException | IOException e) {
-				log.error(e.getMessage());
-				outfile.delete();
-				res.getFileStatus().put(key, e.getMessage());
-				//e.printStackTrace();
-				success = false;
-			}
-		} 
-
-
-		if(success) {
-			res.setStatus("success");
-		} else {
-			res.setStatus("failed");
-		}
-		return res;
-
+	public APIResponce submitData(MultipartFormDataInput input) {
+		return processData(input, true);
 	}
 
 	@Override
 	public APIResponce validateData(MultipartFormDataInput input) {
+		return processData(input, false);
+	}
+	
+	private APIResponce processData(MultipartFormDataInput input, boolean saveFile) {
 		SubmissionResponce res = new SubmissionResponce();
 
 		Map<String, List<InputPart>> form = input.getFormDataMap();
@@ -94,7 +61,7 @@ public class SubmissionController extends BaseController implements SubmissionCo
 				FileUtils.copyInputStreamToFile(is, outfile);
 				log.info("Save file to local filesystem complete");
 
-				boolean passed = metaDataService.submitAndValidateDataFile(key, outfile, false);
+				boolean passed = metaDataService.submitAndValidateDataFile(key, outfile, saveFile);
 
 				if(passed) {
 					res.getFileStatus().put(key, "success");

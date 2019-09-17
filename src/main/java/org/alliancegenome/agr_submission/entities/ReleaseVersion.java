@@ -3,6 +3,7 @@ package org.alliancegenome.agr_submission.entities;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -41,5 +42,9 @@ public class ReleaseVersion extends BaseEntity {
 
 	@ManyToMany(mappedBy = "releaseVersions", fetch=FetchType.EAGER)
 	private List<DataFile> dataFiles = new ArrayList<>();
+	
+	@OneToMany(mappedBy="releaseVersion", fetch=FetchType.EAGER)
+	@JsonView({View.ReleaseVersionView.class})
+	private Set<DataFile> dataFiles;
 	
 }

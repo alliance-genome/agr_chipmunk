@@ -12,6 +12,7 @@ import javax.transaction.Transactional;
 
 import org.alliancegenome.agr_submission.dao.DataSubTypeDAO;
 import org.alliancegenome.agr_submission.dao.DataTypeDAO;
+import org.alliancegenome.agr_submission.dao.ReleaseVersionDAO;
 import org.alliancegenome.agr_submission.dao.SchemaVersionDAO;
 import org.alliancegenome.agr_submission.entities.DataFile;
 import org.alliancegenome.agr_submission.entities.DataSubType;
@@ -88,11 +89,12 @@ public class SubmissionService {
 			throw new SchemaDataTypeException("Could not Find releaseVersion: " + releaseVersionLookup);
 		}
 		log.debug("Release Version: " + releaseVersion);
-		
+
 		DataType dataType = dataTypeDAO.findByField("name", dataTypeLookup);
 		if(dataType == null) {
 			throw new SchemaDataTypeException("Could not Find dataType: " + dataTypeLookup);
 		}
+    
 		log.debug("Data Type: " + dataType);
 		
 		DataSubType dataSubType = dataSubTypeDAO.findByField("name", dataSubTypeLookup);
@@ -123,7 +125,7 @@ public class SubmissionService {
 		return true;
 	}
 
-	private boolean validateData(SchemaVersion schemaVersionName, DataType dataType, File inFile) throws GenericException {
+	private boolean validateData(ReleaseVersion releaseVersion, SchemaVersion schemaVersionName, DataType dataType, File inFile) throws GenericException {
 
 		log.info("Need to validate file: " + schemaVersionName.getSchema() + " " + dataType.getName());
 		String dataTypeFilePath = dataType.getSchemaFilesMap().get(schemaVersionName.getSchema());
@@ -171,7 +173,6 @@ public class SubmissionService {
 
 	}
 
-
 	private void saveFile(ReleaseVersion releaseVersion, SchemaVersion schemaVersion, DataType dataType, DataSubType dataSubType, File inFile) throws GenericException {
 
 		String dir = releaseVersion.getReleaseVersion() + "/" + dataType.getName() + "/" + dataSubType.getName() + "/";
@@ -193,6 +194,7 @@ public class SubmissionService {
 			FileInputStream fis = new FileInputStream(inFile);
 			String md5Sum = DigestUtils.md5Hex(fis);
 			fis.close();
+
 			log.info("MD5 Sum: " + md5Sum);
 
 			// Check that data file doesn't already exist in the system if so update its release version

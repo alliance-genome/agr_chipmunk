@@ -31,10 +31,10 @@ import com.fasterxml.jackson.annotation.JsonView;
 public interface DataFileControllerInterface {
 
 	@POST @Secured
-	@Path("/{schemaVersion}/{dataType}/{dataSubtype}")
+	@Path("/{releaseVersion}/{dataType}/{dataSubtype}")
 	@JsonView(View.DataFileCreate.class)
 	public DataFile create(
-			@PathParam("schemaVersion") String schemaVersion,
+			@PathParam("releaseVersion") String releaseVersion,
 			@PathParam("dataType") String dataType,
 			@PathParam("dataSubtype") String dataSubtype,
 			DataFile entity

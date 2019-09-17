@@ -43,6 +43,10 @@ public class DataFile extends BaseEntity {
 	
 	@ManyToOne
 	@JsonView({View.DataFileView.class})
+	private ReleaseVersion releaseVersion;
+	
+	@ManyToOne
+	@JsonView({View.DataFileView.class})
 	private SchemaVersion schemaVersion;
 	
 	@ManyToOne
