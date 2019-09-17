@@ -25,8 +25,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Tag(name = "Data Sub Type Endpoints")
 public interface DataSubTypeControllerInterface {
 
-	@POST
-	@Secured
+	@POST @Secured
 	@Path("/")
 	@JsonView(View.DataSubTypeCreate.class)
 	public DataSubType create(DataSubType entity);
@@ -36,14 +35,12 @@ public interface DataSubTypeControllerInterface {
 	@JsonView(View.DataSubTypeRead.class)
 	public DataSubType get(@PathParam("id") Long id);
 	
-	@PUT
-	@Secured
+	@PUT @Secured
 	@Path("/")
 	@JsonView(View.DataSubTypeUpdate.class)
 	public DataSubType update(DataSubType entity);
 	
-	@DELETE
-	@Secured
+	@DELETE @Secured
 	@Path("/{id}")
 	@JsonView(View.DataSubTypeDelete.class)
 	public DataSubType delete(@PathParam("id") Long id);

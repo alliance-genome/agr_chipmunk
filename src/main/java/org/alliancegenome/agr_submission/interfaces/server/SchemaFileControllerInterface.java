@@ -25,8 +25,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Tag(name = "Schema File Endpoints")
 public interface SchemaFileControllerInterface {
 
-	@POST
-	@Secured
+	@POST @Secured
 	@Path("/")
 	@JsonView(View.SchemaFileCreate.class)
 	public SchemaFile create(SchemaFile entity);
@@ -36,14 +35,12 @@ public interface SchemaFileControllerInterface {
 	@JsonView(View.SchemaFileRead.class)
 	public SchemaFile get(@PathParam("id") Long id);
 	
-	@PUT
-	@Secured
+	@PUT @Secured
 	@Path("/")
 	@JsonView(View.SchemaFileUpdate.class)
 	public SchemaFile update(SchemaFile entity);
 	
-	@DELETE
-	@Secured
+	@DELETE @Secured
 	@Path("/{id}")
 	@JsonView(View.SchemaFileDelete.class)
 	public SchemaFile delete(@PathParam("id") Long id);

@@ -13,8 +13,8 @@ public class GitHelper {
 	private Log log = LogFactory.getLog(getClass());
 	private String prefix = "/git";
 
-	public void setupRelease(String release) {
-		String localPath = ConfigHelper.getValidationSoftwarePath() + prefix + "/" + release;
+	public void setupSchemaRelease(String schemaRelease) {
+		String localPath = ConfigHelper.getValidationSoftwarePath() + prefix + "/" + schemaRelease;
 
 		File f = new File(localPath);
 
@@ -25,7 +25,7 @@ public class GitHelper {
 				Git.cloneRepository()
 						.setURI( "https://github.com/alliance-genome/agr_schemas.git" )
 						.setDirectory(new File(localPath))
-						.setBranch(release)
+						.setBranch(schemaRelease)
 						.call();
 			} catch (GitAPIException e) {
 				e.printStackTrace();
@@ -33,9 +33,9 @@ public class GitHelper {
 		}
 	}
 
-	public File getFile(String release, String filePath) {
-		setupRelease(release);
-		String path = ConfigHelper.getValidationSoftwarePath() + prefix + "/" + release;
+	public File getFile(String schemaRelease, String filePath) {
+		setupSchemaRelease(schemaRelease);
+		String path = ConfigHelper.getValidationSoftwarePath() + prefix + "/" + schemaRelease;
 		log.debug("Validation File: " + path + filePath);
 		return new File(path + filePath);
 	}

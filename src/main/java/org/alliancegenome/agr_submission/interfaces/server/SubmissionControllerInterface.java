@@ -9,7 +9,6 @@ import javax.ws.rs.core.MediaType;
 import org.alliancegenome.agr_submission.auth.Secured;
 import org.alliancegenome.agr_submission.responces.APIResponce;
 import org.alliancegenome.agr_submission.views.View;
-import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
@@ -23,7 +22,8 @@ public interface SubmissionControllerInterface {
 	
 	@POST
 	@Path("/submit")
-	@Secured @SecurityRequirement(name = "api_token", scopes = "write: read")
+	@Secured
+	//@SecurityRequirement(name = "api_token", scopes = "write: read")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@JsonView({View.API.class})
 	public APIResponce submitData(MultipartFormDataInput input);

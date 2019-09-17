@@ -26,17 +26,17 @@ import lombok.ToString;
 public class DataType extends BaseEntity {
 
 	@Id @GeneratedValue
-	@JsonView({View.DataTypeView.class, View.DataSubTypeView.class, View.DataFileView.class, View.SchemaVersionView.class, View.SnapShotView.class})
+	@JsonView({View.API.class})
 	private Long id;
-	@JsonView({View.DataTypeView.class, View.DataSubTypeView.class, View.DataFileView.class, View.SchemaVersionView.class, View.SnapShotView.class})
+	@JsonView({View.API.class})
 	private String name;
-	@JsonView({View.DataTypeView.class, View.DataSubTypeView.class, View.SchemaVersionView.class})
+	@JsonView({View.API.class})
 	private String description;
-	@JsonView({View.DataTypeView.class, View.DataSubTypeView.class, View.SchemaVersionView.class})
+	@JsonView({View.API.class})
 	private String fileExtension;
-	@JsonView({View.DataTypeView.class, View.DataSubTypeView.class, View.SchemaVersionView.class})
+	@JsonView({View.API.class})
 	private boolean dataSubTypeRequired;
-	@JsonView({View.DataTypeView.class, View.DataSubTypeView.class, View.SchemaVersionView.class})
+	@JsonView({View.API.class})
 	private boolean validationRequired;
 
 	@ManyToMany(fetch=FetchType.EAGER)

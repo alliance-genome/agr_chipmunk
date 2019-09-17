@@ -3,13 +3,13 @@ package org.alliancegenome.agr_submission.services;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
-import org.alliancegenome.agr_submission.dao.DataFileDAO;
 import org.alliancegenome.agr_submission.dao.DataSubTypeDAO;
 import org.alliancegenome.agr_submission.dao.DataTypeDAO;
 import org.alliancegenome.agr_submission.dao.ReleaseVersionDAO;
@@ -41,8 +41,8 @@ import lombok.extern.jbosslog.JBossLog;
 public class SubmissionService {
 
 	//@Inject private SnapShotDAO snapShotDAO;
-	@Inject private ReleaseVersionDAO releaseVersionDAO;
-	@Inject private DataFileDAO dataFileDAO;
+	@Inject private ReleaseVersionService releaseService;
+	@Inject private DataFileService dataFileService;
 	@Inject private SchemaVersionDAO schemaVersionDAO;
 	@Inject private DataTypeDAO dataTypeDAO;
 	@Inject private DataSubTypeDAO dataSubTypeDAO;
@@ -56,62 +56,72 @@ public class SubmissionService {
 		// Split the keys by underscore
 		String[] keys = key.split("_");
 
-		String releaseLookup;
+		String releaseVersionLookup;
 		String dataTypeLookup;
 		String dataSubTypeLookup;
 
 		if(keys.length == 3) {
 			log.debug("Key has 3 items: parse: (Release-DataType-DataSubType): " + key);
-			releaseLookup = keys[0];
+			releaseVersionLookup = keys[0];
 			dataTypeLookup = keys[1];
 			dataSubTypeLookup = keys[2];
-		} else if(keys.length == 2) { // DataType-TaxonId // Input a taxonId datatype file and validate against latest version of schema
+		} else if(keys.length == 2) { // DataType-DataSubType puts the file under the next release
 			log.debug("Key has 2 items: parse: (DataType-DataSubType): " + key);
-			releaseLookup = null;
+			releaseVersionLookup = null;
 			dataTypeLookup = keys[0];
 			dataSubTypeLookup = keys[1];
 		} else {
 			throw new ValidataionException("Wrong Number of Args for File Data: " + key);
 		}
 		
-		
 		ReleaseVersion releaseVersion = null;
-		SchemaVersion schemaVersion = null;
 		
-		if(releaseLookup == null) {
-			releaseVersion = releaseVersionDAO.getCurrentReleaseVersion();
-			if(releaseVersion.getSchemaVersions().size() == 0) {
-				throw new ValidataionException("No Schema Versions found for Release Version: " + releaseVersion.getReleaseVersion());
-			}
-			schemaVersion = releaseVersion.getSchemaVersions().get(0);
+		if(releaseVersionLookup == null) {
+			log.debug("Getting Next Release Version: ");
+			releaseVersion = releaseService.getNextRelease();
 		} else {
-			releaseVersion = releaseVersionDAO.getByName(releaseLookup);
-			if(releaseVersion == null) {
-				throw new ValidataionException("Release Version not found: " + releaseLookup);
-			}
-			if(releaseVersion.getSchemaVersions().size() == 0) {
-				throw new ValidataionException("No Schema Versions found for Release Version: " + releaseLookup);
-			}
-			schemaVersion = releaseVersion.getSchemaVersions().get(0);
+			log.debug("Looking up release Version: " + releaseVersionLookup);
+			releaseVersion = releaseService.get(releaseVersionLookup);
+			
 		}
+
+		if(releaseVersion == null) {
+			throw new SchemaDataTypeException("Could not Find releaseVersion: " + releaseVersionLookup);
+		}
+		log.debug("Release Version: " + releaseVersion);
 
 		DataType dataType = dataTypeDAO.findByField("name", dataTypeLookup);
 		if(dataType == null) {
 			throw new SchemaDataTypeException("Could not Find dataType: " + dataTypeLookup);
 		}
+    
+		log.debug("Data Type: " + dataType);
 		
 		DataSubType dataSubType = dataSubTypeDAO.findByField("name", dataSubTypeLookup);
+
 		if(dataSubType == null) {
 			throw new SchemaDataTypeException("Could not Find dataSubType: " + dataSubTypeLookup);
 		}
+		log.debug("Data Sub Type: " + dataSubType);
+		
+		SchemaVersion schemaVersion = null;
 		
 		if(dataType.isValidationRequired()) {
-			validateData(releaseVersion, schemaVersion, dataType, inFile);
-		}
+			
+			schemaVersion = releaseVersion.getDefaultSchemaVersion();
 
+			if(schemaVersion == null) {
+				throw new SchemaDataTypeException("Could not Find default schemaVersion for release: " + releaseVersionLookup);
+			}
+			log.debug("Schema Version: " + schemaVersion);
+			
+			validateData(schemaVersion, dataType, inFile);
+		}
+		
 		if(saveFile) {
 			saveFile(releaseVersion, schemaVersion, dataType, dataSubType, inFile);
 		}
+
 		return true;
 	}
 
@@ -139,8 +149,12 @@ public class SubmissionService {
 		}
 		File schemaFile = gitHelper.getFile(schemaVersionName.getSchema(), dataTypeFilePath);
 
+		if(!schemaFile.exists()) {
+			throw new ValidataionException("Schema File does not exist in schema Repo: agr_schemas_" + schemaVersionName.getSchema() + dataTypeFilePath);
+		}
+		
 		try {
-
+			
 			JsonSchema schemaNode = JsonSchemaFactory.byDefault().getJsonSchema(schemaFile.toURI().toString());
 			JsonNode jsonNode = JsonLoader.fromFile(inFile);
 
@@ -161,37 +175,67 @@ public class SubmissionService {
 
 	private void saveFile(ReleaseVersion releaseVersion, SchemaVersion schemaVersion, DataType dataType, DataSubType dataSubType, File inFile) throws GenericException {
 
-		String dir = releaseVersion.getReleaseVersion() + "/" + schemaVersion.getSchema() + "/" + dataType.getName() + "/" + dataSubType.getName() + "/";
+		String dir = releaseVersion.getReleaseVersion() + "/" + dataType.getName() + "/" + dataSubType.getName() + "/";
+		
+		//String dir = schemaVersion.getSchema() + "/" + dataType.getName() + "/" + dataSubType.getName() + "/";
 
 		int fileIndex = s3Helper.listFiles(dir);
 
-		String filePath = dir + releaseVersion.getReleaseVersion() + "_" + schemaVersion.getSchema() + "_" + dataType.getName() + "_" + dataSubType.getName() + "_" + fileIndex + "." + dataType.getFileExtension();
+		String filePath = null;
+		
+		if(schemaVersion != null) {
+			filePath = dir + schemaVersion.getSchema() + "_" + dataType.getName() + "_" + dataSubType.getName() + "_" + fileIndex + "." + dataType.getFileExtension();
+		} else {
+			filePath = dir + dataType.getName() + "_" + dataSubType.getName() + "_" + fileIndex + "." + dataType.getFileExtension();
+		}
+		log.debug("File Save Path: " + filePath);
 
 		try {
 			FileInputStream fis = new FileInputStream(inFile);
 			String md5Sum = DigestUtils.md5Hex(fis);
-			log.info("Saving File: " + filePath);
-			log.info("Creating MD5 Sum: " + md5Sum);
 			fis.close();
-			s3Helper.saveFile(filePath, inFile);
-			createDataFile(releaseVersion, schemaVersion, dataType, dataSubType, filePath, md5Sum);
+
+			log.info("MD5 Sum: " + md5Sum);
+
+			// Check that data file doesn't already exist in the system if so update its release version
+			DataFile df = dataFileService.get(md5Sum);
+			if(df != null) {
+				log.debug("DataFile found not uploading: " + df.getS3Path() + " MD5: " + df.getMd5Sum());
+				boolean found = false;
+				for(ReleaseVersion r: df.getReleaseVersions()) {
+					log.trace("Release: " + r.getReleaseVersion() + " Release Lookup: " + releaseVersion.getReleaseVersion());
+					if(r.getReleaseVersion().contentEquals(releaseVersion.getReleaseVersion())) {
+						log.debug("DataFile already under release: " + releaseVersion.getReleaseVersion());
+						found = true;
+						break;
+					}
+				}
+				if(!found) {
+					log.debug("Added DataFile to release version: " + releaseVersion.getReleaseVersion());
+					df.getReleaseVersions().add(releaseVersion);
+				}
+				
+			} else {
+				log.debug("MD5 not found: creating new file: " + filePath);
+				df = new DataFile();
+				ArrayList<ReleaseVersion> list = new ArrayList<ReleaseVersion>();
+				list.add(releaseVersion);
+				df.setReleaseVersions(list);
+				df.setSchemaVersion(schemaVersion);
+				df.setDataType(dataType);
+				df.setDataSubType(dataSubType);
+				df.setS3Path(filePath);
+				df.setMd5Sum(md5Sum);
+				df.setUploadDate(new Date());
+				log.info("Saving New File: " + filePath);
+				s3Helper.saveFile(filePath, inFile);
+			}
+			dataFileService.update(df);
+			
 		} catch (Exception e) {
 			throw new GenericException(e.getMessage());
 		}
 		
 	}
-
-	private void createDataFile(ReleaseVersion releaseVersion, SchemaVersion schemaVersion, DataType dataType, DataSubType dataSubType, String filePath, String md5Sum) {
-		DataFile df = new DataFile();
-		df.setDataType(dataType);
-		df.setS3Path(filePath);
-		df.setReleaseVersion(releaseVersion);
-		df.setSchemaVersion(schemaVersion);
-		df.setDataSubType(dataSubType);
-		df.setMd5Sum(md5Sum);
-		df.setUploadDate(new Date());
-		dataFileDAO.persist(df);
-	}
-
 
 }

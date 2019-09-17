@@ -29,20 +29,20 @@ public class BaseSQLDAO<E extends BaseEntity> extends BaseDAO<E> {
 	}
 	
 	public E persist(E entity) {
-		log.trace("SqlDAO: persist: " + entityManager);
+		log.debug("SqlDAO: persist: " + entity);
 		entityManager.persist(entity);
 		return entity;
 	}
 
 	public E find(Long id) {
-		log.trace("SqlDAO: find: " + id + " " + entityManager);
+		log.debug("SqlDAO: find: " + id + " " + myClass);
 		E entity = entityManager.find(myClass, id);
 		log.debug("Entity Found: " + entity);
 		return entity;
 	}
 
 	public List<E> findAll() {
-		//log.info("SqlDAO: findAll: " + entityManager);
+		log.debug("SqlDAO: findAll: " + myClass);
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<E> cq = cb.createQuery(myClass);
 		Root<E> rootEntry = cq.from(myClass);
@@ -52,7 +52,7 @@ public class BaseSQLDAO<E extends BaseEntity> extends BaseDAO<E> {
 	}
 
 	public E merge(E entity) {
-		log.trace("SqlDAO: merge: " + entityManager);
+		log.debug("SqliteDAO: merge: " + entity);
 		entityManager.merge(entity);
 		return entity;
 	}

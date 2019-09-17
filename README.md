@@ -9,19 +9,19 @@ Here is an example using curl:
 curl \
 	-H "Authorization: Bearer 2C07D715..." \
 	-X POST "https://fms.alliancegenome.org/api/data/submit" \
-	-F "SchemaVersion_DataType_DataSubType=@/full/path/to/file1.json" \
-	-F "SchemaVersion_DataType_DataSubType=@/full/path/to/file2.json"
+	-F "ReleaseVersion_DataType_DataSubType=@/full/path/to/file1.json" \
+	-F "ReleaseVersion_DataType_DataSubType=@/full/path/to/file2.json"
 ```
 
-Valid values for SchemaVersion, DataType, and DataSubType can be found in the examples below.
+Valid values for ReleaseVersion, DataType, and DataSubType can be found in the examples below.
 
 ## Contents
 
-- [Schema Version](#schema-version)
+- [Release Version](#release-version)
 - [Data Type](#data-type)
 - [Data SubType](#data-subtype)
 - [Examples](#examples)
-  * [SchemaVersion DataType DataSubType String format](#schemaversion-datatype-datasubtype-string-format)
+  * [ReleaseVersion DataType DataSubType String format](#releaseversion-datatype-datasubtype-string-format)
   * [Valid examples for submitting files](#valid-examples-for-submitting-files)
 - [Return object](#return-object)
   * [Success example](#success-example)
@@ -35,23 +35,21 @@ Valid values for SchemaVersion, DataType, and DataSubType can be found in the ex
 
 This will be a key that is generated for the DQM's to use for uploading files.
 
-## Schema Version
+## Release Version
 
-| Schema Version |
+| Release Version |
 | --- |
-| 0.6.0.0 |
-| 0.6.1.0 |
-| 0.7.0.0 |
-| 1.0.0.0 |
-| 1.0.0.1 |
-| 1.0.0.2 |
-| 1.0.0.3 |
-| 1.0.0.4 |
-| 1.0.0.5 |
-| 1.0.0.6 |
+| 0.6.0 |
+| 1.0.0 |
+| 1.7.0 |
+| 2.0.0 |
+| 2.1.0 |
+| 2.2.0 |
+| 2.3.0 |
+| 2.4.0 |
 | etc... |
 
-This will be the current release of the schema can be found in the [releases](https://github.com/alliance-genome/agr_schemas/releases) section for the schema repository. Schema does not follow the same release schedule as the main branches.
+This will be the current main release of the Alliance.
 
 ## Data Type
 
@@ -90,15 +88,15 @@ This will be the current release of the schema can be found in the [releases](ht
 
 ## Examples
 
-### SchemaVersion DataType DataSubType String format
+### ReleaseVersion DataType DataSubType String format
 
-Valid combinations for Schema-DataType-DataSubType are as follows:
+Valid combinations for Release-DataType-DataSubType are as follows:
 
 | Type | What does it mean? |
 | --------------- | --- |
-| SchemaVersion\_DataType\_DataSubType | Validation will occur for BGI, Disease, Orthology, Allele, Genotype, Phenotype, Expression and not for GAF, GFF, and Ontology, all files will be stored under the Schema Directory in S3. |
-| DataType\_DataSubType | Validation will occur for BGI, Disease, Orthology, Allele, Genotype, Phenotype, Expression and not for GAF, GFF, and Ontology, the current schema version will get looked up from Github. All files will be stored under the Schema Directory in S3.
-| SchemaVersion-DataType | Invalid (Data Type not found for: SchemaVersion) |
+| ReleaseVersion\_DataType\_DataSubType | Validation will occur for BGI, Disease, Orthology, Allele, Genotype, Phenotype, Expression and not for GAF, GFF, and Ontology, all files will be stored under the Release Version Directory in S3. |
+| DataType\_DataSubType | Validation will occur for BGI, Disease, Orthology, Allele, Genotype, Phenotype, Expression and not for GAF, GFF, and Ontology, the current release version will get looked up based on date, and the default schema will be used to validate the file. All files will be stored under the Release Version Directory in S3.
+| ReleaseVersion-DataType | Invalid (Data Type not found for: ReleaseVersion) |
 
 ### Valid examples for submitting files
 
@@ -107,15 +105,15 @@ Valid combinations for Schema-DataType-DataSubType are as follows:
 	> curl \
 		-H "Authorization: Bearer 2C07D715..." \
 		-X POST "https://fms.alliancegenome.org/api/data/submit" \
-		-F "0.7.0.0_GFF_MGD=@MGI_1.0.4_GFF.gff"
+		-F "1.2.0_GFF_MGD=@MGI_1.0.4_GFF.gff"
 	> curl \
 		-H "Authorization: Bearer 2C07D715..." \
 		-X POST "https://fms.alliancegenome.org/api/data/submit" \
-		-F "0.6.2.0_Allele_MGD=@MGI_1.0.4_feature.json"
+		-F "1.7.0_Allele_MGD=@MGI_1.0.4_feature.json"
 	> curl \
 		-H "Authorization: Bearer 2C07D715..." \
 		-X POST "https://fms.alliancegenome.org/api/data/submit" \
-		-F "0.6.1.0_BGI_FB=@FB_1.0.4_BGI.json"
+		-F "2.0.0_BGI_FB=@FB_1.0.4_BGI.json"
 	> curl \
 		-H "Authorization: Bearer 2C07D715..." \
 		-X POST "https://fms.alliancegenome.org/api/data/submit" \
@@ -130,10 +128,10 @@ Valid combinations for Schema-DataType-DataSubType are as follows:
 	> curl \
 		-H "Authorization: Bearer 2C07D715..." \
 		-X POST "https://fms.alliancegenome.org/api/data/submit" \
-		-F "0.7.0.0_BGI_FB=@FB_1.0.4_BGI.json" \
-		-F "0.7.0.0_Allele_FB=@FB_1.0.4_feature.json" \
-		-F "0.7.0.0_Disease_FB=@FB_1.0.4_disease.json" \
-		-F "0.7.0.0_GFF_FB=@FB_1.0.4_GFF.gff"
+		-F "2.2.0_BGI_FB=@FB_1.0.4_BGI.json" \
+		-F "2.2.0_Allele_FB=@FB_1.0.4_feature.json" \
+		-F "2.2.0_Disease_FB=@FB_1.0.4_disease.json" \
+		-F "2.2.0_GFF_FB=@FB_1.0.4_GFF.gff"
 		
 	> curl \
 		-H "Authorization: Bearer 2C07D715..." \
@@ -155,20 +153,20 @@ For the following command:
 	> curl \
 		-H "Authorization: Bearer 2C07D715..." \
 		-X POST "https://fms.alliancegenome.org/api/data/submit" \
-		-F "0.7.0.0_BGI_FB=@FB_1.0.4_BGI.json" \
-		-F "0.7.0.0_Allele_FB=@FB_1.0.4_feature.json" \
-		-F "0.7.0.0_Disease_FB=@FB_1.0.4_disease.json" \
-		-F "0.7.0.0_GFF_FB=@FB_1.0.4_GFF.gff"
+		-F "2.2.0_BGI_FB=@FB_1.0.4_BGI.json" \
+		-F "2.2.0_Allele_FB=@FB_1.0.4_feature.json" \
+		-F "2.2.0_Disease_FB=@FB_1.0.4_disease.json" \
+		-F "2.2.0_GFF_FB=@FB_1.0.4_GFF.gff"
 
 <details>
 <summary>View Response</summary>
 <pre>
 ```{
 	"fileStatus": {
-		"0.7.0.0_BGI_FB":"success",
-		"0.7.0.0_Disease_FB":"success",
-		"0.7.0.0_GFF_FB":"success",
-		"0.7.0.0_Allele_FB":"success"
+		"2.2.0_BGI_FB":"success",
+		"2.2.0_Disease_FB":"success",
+		"2.2.0_GFF_FB":"success",
+		"2.2.0_Allele_FB":"success"
 	},
 	"status":"success"
 }```
@@ -180,20 +178,20 @@ For the following command (Missing API Access Token):
 
 	> curl \
 		-X POST "https://fms.alliancegenome.org/api/data/submit" \
-		-F "0.7.0.0_BGI_MGD=@MGI_1.0.4_BGI.json" \
-		-F "0.7.0.0_Allele_MGD=@MGI_1.0.4_feature.json" \
-		-F "0.7.0.0_Disease_MGD=@MGI_1.0.4_disease.json" \
-		-F "0.7.0.0_GFF_MGD=@MGI_1.0.4_GFF.gff" 
+		-F "2.2.0_BGI_MGD=@MGI_1.0.4_BGI.json" \
+		-F "2.2.0_Allele_MGD=@MGI_1.0.4_feature.json" \
+		-F "2.2.0_Disease_MGD=@MGI_1.0.4_disease.json" \
+		-F "2.2.0_GFF_MGD=@MGI_1.0.4_GFF.gff" 
 
 <details>
 <summary>View Failure Response</summary>
 <pre>
 {
 	"fileStatus": {
-		"0.7.0.0_BGI_MGD":"Authentication Failure: Please check your api_access_token",
-		"0.7.0.0_Allele_MGD":"Authentication Failure: Please check your api_access_token",
-		"0.7.0.0_Disease_MGD":"Authentication Failure: Please check your api_access_token",
-		"0.7.0.0_GFF_MGD":"Authentication Failure: Please check your api_access_token"
+		"2.2.0_BGI_MGD":"Authentication Failure: Please check your api_access_token",
+		"2.2.0_Allele_MGD":"Authentication Failure: Please check your api_access_token",
+		"2.2.0_Disease_MGD":"Authentication Failure: Please check your api_access_token",
+		"2.2.0_GFF_MGD":"Authentication Failure: Please check your api_access_token"
 	},
 	"status":"failed"
 }</pre>
@@ -204,20 +202,20 @@ For the following command (Errors in BGI):
 	> curl \
 		-H "Authorization: Bearer 2C07D715..." \
 		-X POST "https://fms.alliancegenome.org/api/data/submit" \
-		-F "0.7.0.0_BGI_MGD=@MGI_1.0.4_BGI.json" \
-		-F "0.7.0.0_Allele_MGD=@MGI_1.0.4_feature.json" \
-		-F "0.7.0.0_Disease_MGD=@MGI_1.0.4_disease.json" \
-		-F "0.7.0.0_GFF_MGD=@MGI_1.0.4_GFF.gff" 
+		-F "2.2.0_BGI_MGD=@MGI_1.0.4_BGI.json" \
+		-F "2.2.0_Allele_MGD=@MGI_1.0.4_feature.json" \
+		-F "2.2.0_Disease_MGD=@MGI_1.0.4_disease.json" \
+		-F "2.2.0_GFF_MGD=@MGI_1.0.4_GFF.gff" 
 
 <details>
 <summary>View Failure Response</summary>
 <pre>
 {
 	"fileStatus": {
-		"0.7.0.0_Allele_MGD":"success",
-		"0.7.0.0_BGI_MGD":"string \"https://en.wikipedia.org/wiki/Cathepsin L2\" is not a valid URI",
-		"0.7.0.0_Disease_10090":"success",
-		"0.7.0.0_GFF_MGD":"Unable to complete multi-part upload. Individual part upload failed : Your socket connection to the server was not read from or written to within the timeout period. Idle connections will be closed. (Service: Amazon S3; Status Code: 400; Error Code: RequestTimeout; Request ID: 3ABBDFD90F0C4CAA)"
+		"2.2.0_Allele_MGD":"success",
+		"2.2.0_BGI_MGD":"string \"https://en.wikipedia.org/wiki/Cathepsin L2\" is not a valid URI",
+		"2.2.0_Disease_10090":"success",
+		"2.2.0_GFF_MGD":"Unable to complete multi-part upload. Individual part upload failed : Your socket connection to the server was not read from or written to within the timeout period. Idle connections will be closed. (Service: Amazon S3; Status Code: 400; Error Code: RequestTimeout; Request ID: 3ABBDFD90F0C4CAA)"
 	},
 	"status":"failed"
 }</pre>
@@ -228,16 +226,16 @@ In a failed example only the files that failed need to be attempted again:
 	> curl \
 		-H "Authorization: Bearer 2C07D715..." \
 		-X POST "https://fms.alliancegenome.org/api/data/submit" \
-		-F "0.7.0.0_BGI_10090=@MGI_1.0.4_BGI.json" \
-		-F "0.7.0.0_GFF_10090=@MGI_1.0.4_GFF.gff" 
+		-F "2.2.0_BGI_10090=@MGI_1.0.4_BGI.json" \
+		-F "2.2.0_GFF_10090=@MGI_1.0.4_GFF.gff" 
 
 <details>
 <summary>View Success Response</summary>
 <pre>
 {
 	"fileStatus": {
-		"0.7.0.0_BGI_10090":"success",
-		"0.7.0.0_GFF_10090":"success"
+		"2.2.0_BGI_10090":"success",
+		"2.2.0_GFF_10090":"success"
 	},
 	"status":"success"
 }</pre>
@@ -259,9 +257,9 @@ The following command can be used to pull a list of releases from the system tha
 <summary>View Success Response</summary>
 <pre>
 {
-    "1.4.0.0": 1523284823719,
-    "1.0.0.0": 1523284848246,
-    "1.3.0.0": 1523284837284
+    "1.4.0": 1523284823719,
+    "1.0.0": 1523284848246,
+    "1.3.0": 1523284837284
 }</pre>
 </details>
 
@@ -275,7 +273,7 @@ The following command, can be used to pull a specific SnapShot by release versio
 <summary>View Success Response</summary>
 <pre>
 {
-    "releaseVersion": "1.4.0.0",
+    "releaseVersion": "1.4.0",
     "schemaVersion": "1.0.0.2",
     "snapShotDate": 1523284823719,
     "dataFiles": [
@@ -336,7 +334,7 @@ This will take a snapshot of all the latest datafiles for each DataSubType by ea
 <summary>View Success Response</summary>
 <pre>
 {
-    "releaseVersion": "1.4.0.0",
+    "releaseVersion": "1.4.0",
     "schemaVersion": "1.0.0.2",
     "snapShotDate": 1523284823719,
     "dataFiles": [

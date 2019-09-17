@@ -37,10 +37,10 @@ public interface SnapShotControllerInterface {
 	@JsonView({View.SnapShotView.class})
 	public APIResponce getSnapShot(@PathParam(value = "releaseVersion") String releaseVersion);
 	
-	@GET
+	@GET @Secured
 	@Path("/take/{releaseVersion}")
 	@JsonView({View.SnapShotView.class})
-	@Secured
+	
 	@APIResponses({
 		@APIResponse(responseCode = "200", description = "The SnapShot", content = @Content(schema = @Schema(implementation = SnapShotResponce.class))),
 		@APIResponse(responseCode = "400", description = "Unable to take snapshot")
@@ -48,8 +48,7 @@ public interface SnapShotControllerInterface {
 	@Operation(summary = "Creates a new SnapShot", description="This endpoint is used for creating a new SnapShot")
 	public SnapShotResponce takeSnapShot(@PathParam(value = "releaseVersion") String releaseVersion);
 	
-	@POST
-	@Secured
+	@POST @Secured
 	@Path("/")
 	@APIResponses({
 		@APIResponse(responseCode = "200", description = "The SnapShot", content = @Content(schema = @Schema(implementation = SnapShot.class))),
@@ -64,14 +63,12 @@ public interface SnapShotControllerInterface {
 	@JsonView(View.SnapShotRead.class)
 	public SnapShot get(@PathParam("id") Long id);
 
-	@PUT
-	@Secured
+	@PUT @Secured
 	@Path("/")
 	@JsonView(View.SnapShotUpdate.class)
 	public SnapShot update(SnapShot entity);
 
-	@DELETE
-	@Secured
+	@DELETE @Secured
 	@Path("/{id}")
 	@JsonView(View.SnapShotDelete.class)
 	public SnapShot delete(@PathParam("id") Long id);
