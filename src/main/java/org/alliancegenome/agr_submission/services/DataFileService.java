@@ -12,10 +12,11 @@ import org.alliancegenome.agr_submission.BaseService;
 import org.alliancegenome.agr_submission.dao.DataFileDAO;
 import org.alliancegenome.agr_submission.dao.DataSubTypeDAO;
 import org.alliancegenome.agr_submission.dao.DataTypeDAO;
-import org.alliancegenome.agr_submission.dao.SchemaVersionDAO;
+import org.alliancegenome.agr_submission.dao.ReleaseVersionDAO;
 import org.alliancegenome.agr_submission.entities.DataFile;
 import org.alliancegenome.agr_submission.entities.DataSubType;
 import org.alliancegenome.agr_submission.entities.DataType;
+import org.alliancegenome.agr_submission.entities.ReleaseVersion;
 import org.alliancegenome.agr_submission.entities.SchemaVersion;
 
 import lombok.extern.jbosslog.JBossLog;
@@ -26,7 +27,7 @@ public class DataFileService extends BaseService<DataFile> {
 	@Inject private DataFileDAO dao;
 	@Inject private DataTypeDAO dataTypeDAO;
 	@Inject private DataSubTypeDAO dataSubTypeDAO;
-	@Inject private SchemaVersionDAO schemaDAO;
+	@Inject private ReleaseVersionDAO releaseDAO;
 
 	@Override
 	public DataFile create(DataFile entity) {
@@ -39,18 +40,21 @@ public class DataFileService extends BaseService<DataFile> {
 	}
 
 	@Transactional
-	public DataFile create(String schemaVersion, String dataType, String dataSubtype, DataFile entity) {
+	public DataFile create(String releaseVersion, String dataType, String dataSubtype, DataFile entity) {
 		log.info("DataFileService: create: ");
 		DataType type = dataTypeDAO.findByField("name", dataType);
 		DataSubType dataSubType = dataSubTypeDAO.findByField("name", dataSubtype);
-		SchemaVersion sv = schemaDAO.findByField("schema", schemaVersion);
+		ReleaseVersion rv = releaseDAO.findByField("releaseVersion", releaseVersion);
+		SchemaVersion sv = rv.getSchemaVersions().get(0);
+
 		if(type == null || dataSubType == null || sv == null) {
 			log.error("Was not able to find everything needed to create data file: " + type + " " + dataSubType + " " + sv);
 			return null;
 		}
-		entity.setDataSubType(dataSubType);
+		entity.setReleaseVersion(rv);
 		entity.setSchemaVersion(sv);
 		entity.setDataType(type);
+		entity.setDataSubType(dataSubType);
 		return dao.persist(entity);
 	}
 	

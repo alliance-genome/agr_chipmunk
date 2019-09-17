@@ -10,6 +10,7 @@ public class S3Syncer {
 
 	public static void main(String[] args) {
 		ConfigHelper.init();
+		boolean reportonly = false;
 		
 		S3Helper s3 = new S3Helper();
 		
@@ -39,12 +40,14 @@ public class S3Syncer {
 		System.out.println("List to Copy: " + copyList.size());
 		System.out.println("List to Delete: " + deleteList.size());
 		
-		for(String s: copyList) {
-			s3.copyObject(s, srcBucket, dstBucket);
-		}
-		
-		for(String s: deleteList) {
-			s3.deleteObject(s, dstBucket);
+		if(!reportonly) {
+			for(String s: copyList) {
+				s3.copyObject(s, srcBucket, dstBucket);
+			}
+			
+			for(String s: deleteList) {
+				s3.deleteObject(s, dstBucket);
+			}
 		}
 		
 		
