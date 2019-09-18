@@ -45,7 +45,7 @@ public class DataFileService extends BaseService<DataFile> {
 		DataType type = dataTypeDAO.findByField("name", dataType);
 		DataSubType dataSubType = dataSubTypeDAO.findByField("name", dataSubtype);
 		ReleaseVersion rv = releaseDAO.findByField("releaseVersion", releaseVersion);
-		SchemaVersion sv = rv.getSchemaVersions().get(0);
+		SchemaVersion sv = rv.getDefaultSchemaVersion();
 
 		if(type == null || dataSubType == null || sv == null) {
 			log.error("Was not able to find everything needed to create data file: " + type + " " + dataSubType + " " + sv);
