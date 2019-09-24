@@ -73,16 +73,16 @@ public class SubmissionService {
 		} else {
 			throw new ValidataionException("Wrong Number of Args for File Data: " + key);
 		}
-		
+
 		ReleaseVersion releaseVersion = null;
-		
+
 		if(releaseVersionLookup == null) {
 			log.debug("Getting Next Release Version: ");
 			releaseVersion = releaseService.getNextRelease();
 		} else {
 			log.debug("Looking up release Version: " + releaseVersionLookup);
 			releaseVersion = releaseService.get(releaseVersionLookup);
-			
+
 		}
 
 		if(releaseVersion == null) {
@@ -94,30 +94,29 @@ public class SubmissionService {
 		if(dataType == null) {
 			throw new SchemaDataTypeException("Could not Find dataType: " + dataTypeLookup);
 		}
-    
 		log.debug("Data Type: " + dataType);
-		
+
 		DataSubType dataSubType = dataSubTypeDAO.findByField("name", dataSubTypeLookup);
 
 		if(dataSubType == null) {
 			throw new SchemaDataTypeException("Could not Find dataSubType: " + dataSubTypeLookup);
 		}
 		log.debug("Data Sub Type: " + dataSubType);
-		
+
 		SchemaVersion schemaVersion = null;
-		
+
 		if(dataType.isValidationRequired()) {
-			
+
 			schemaVersion = releaseVersion.getDefaultSchemaVersion();
 
 			if(schemaVersion == null) {
 				throw new SchemaDataTypeException("Could not Find default schemaVersion for release: " + releaseVersionLookup);
 			}
 			log.debug("Schema Version: " + schemaVersion);
-			
-			validateData(schemaVersion, dataType, inFile);
+
+			validateData(releaseVersion, schemaVersion, dataType, inFile);
 		}
-		
+
 		if(saveFile) {
 			saveFile(releaseVersion, schemaVersion, dataType, dataSubType, inFile);
 		}
@@ -152,9 +151,9 @@ public class SubmissionService {
 		if(!schemaFile.exists()) {
 			throw new ValidataionException("Schema File does not exist in schema Repo: agr_schemas_" + schemaVersionName.getSchema() + dataTypeFilePath);
 		}
-		
+
 		try {
-			
+
 			JsonSchema schemaNode = JsonSchemaFactory.byDefault().getJsonSchema(schemaFile.toURI().toString());
 			JsonNode jsonNode = JsonLoader.fromFile(inFile);
 
@@ -176,13 +175,13 @@ public class SubmissionService {
 	private void saveFile(ReleaseVersion releaseVersion, SchemaVersion schemaVersion, DataType dataType, DataSubType dataSubType, File inFile) throws GenericException {
 
 		String dir = releaseVersion.getReleaseVersion() + "/" + dataType.getName() + "/" + dataSubType.getName() + "/";
-		
+
 		//String dir = schemaVersion.getSchema() + "/" + dataType.getName() + "/" + dataSubType.getName() + "/";
 
 		int fileIndex = s3Helper.listFiles(dir);
 
 		String filePath = null;
-		
+
 		if(schemaVersion != null) {
 			filePath = dir + schemaVersion.getSchema() + "_" + dataType.getName() + "_" + dataSubType.getName() + "_" + fileIndex + "." + dataType.getFileExtension();
 		} else {
@@ -214,7 +213,7 @@ public class SubmissionService {
 					log.debug("Added DataFile to release version: " + releaseVersion.getReleaseVersion());
 					df.getReleaseVersions().add(releaseVersion);
 				}
-				
+
 			} else {
 				log.debug("MD5 not found: creating new file: " + filePath);
 				df = new DataFile();
@@ -231,11 +230,11 @@ public class SubmissionService {
 				s3Helper.saveFile(filePath, inFile);
 			}
 			dataFileService.update(df);
-			
+
 		} catch (Exception e) {
 			throw new GenericException(e.getMessage());
 		}
-		
+
 	}
 
 }
