@@ -31,7 +31,6 @@ public class DataSubType extends BaseEntity {
 	private String description;
 	
 	@ManyToMany(mappedBy = "dataSubTypes")
-	@JsonView({View.DataSubTypeView.class})
 	private List<DataType> dataTypes;
 	
 	@Transient
