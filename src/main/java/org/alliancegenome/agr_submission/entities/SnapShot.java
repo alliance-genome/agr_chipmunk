@@ -33,12 +33,12 @@ public class SnapShot extends BaseEntity {
 	private Date snapShotDate;
 
 	@ManyToOne
-	@JsonView(View.API.class)
+	@JsonView(View.SnapShotView.class)
 	private ReleaseVersion releaseVersion;
 	
 	@Transient
 	@JsonProperty(access = Access.READ_ONLY)
-	@JsonView(View.SnapShotView.class)
+	@JsonView({View.SnapShotView.class, View.ReleaseVersionView.class})
 	public ArrayList<DataFile> getDataFiles() {
 		ArrayList<DataFile> dataFiles = new ArrayList<DataFile>();
 		HashMap<MultiKey<String>, DataFile> currentFiles = new HashMap<>();

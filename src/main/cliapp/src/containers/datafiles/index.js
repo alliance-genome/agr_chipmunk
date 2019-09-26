@@ -4,7 +4,7 @@ import { loadDataFiles } from '../../actions/dataFileActions';
 import { connect } from 'react-redux';
 
 import SideCard from '../../components/SideCard';
-import DataFileList from '../../components/DataFileList';
+import RenderDataFiles from '../../components/RenderDataFiles';
 
 class DataFiles extends Component {
 
@@ -29,7 +29,7 @@ class DataFiles extends Component {
                 </Col>
 
                 <Col xs={{ order: 1 }} md={{ size: 7, offset: 1 }} tag="section" className="py-5 mb-5 py-md-0 mb-md-0">
-                    <DataFileList data={this.props.dataFiles} />
+                    <RenderDataFiles dataFiles={this.props.dataFiles} />
                 </Col>
             </Fragment>
         )

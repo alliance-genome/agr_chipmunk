@@ -41,7 +41,7 @@ public class ReleaseVersion extends BaseEntity {
 	private SchemaVersion defaultSchemaVersion;
 
 	@ManyToMany(mappedBy = "releaseVersions", fetch=FetchType.EAGER)
-	@JsonView({View.ReleaseVersionView.class})
+	//@JsonView({View.ReleaseVersionView.class})
 	private List<DataFile> dataFiles = new ArrayList<>();
 	
 }

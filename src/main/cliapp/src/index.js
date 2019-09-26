@@ -16,6 +16,7 @@ import AdminPage from './containers/adminpage';
 import LoginPage from './containers/loginpage';
 import AdminDataTypes from './containers/adminpage/AdminDataTypes';
 import AdminSchemaVersions from './containers/adminpage/AdminSchemaVersions';
+import AdminReleaseVersions from './containers/adminpage/AdminReleaseVersions';
 import DataFiles from './containers/datafiles';
 
 import Header from './components/Header';
@@ -44,6 +45,9 @@ ReactDOM.render(
 
 								<Route path="/admin/schemaversion/:schemaVersion?" component={AdminSchemaVersions} />
 								<Route path="/admin/schemaversions" component={AdminSchemaVersions} />
+
+								<Route path="/admin/releaseversion/:releaseVersion?" component={AdminReleaseVersions} />
+								<Route path="/admin/releaseversions" component={AdminReleaseVersions} />
 
 								<Route exact path="/admin" component={AdminPage} />
 								

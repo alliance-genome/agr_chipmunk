@@ -24,17 +24,17 @@ import lombok.ToString;
 public class DataFile extends BaseEntity {
 
 	@Id @GeneratedValue
-	@JsonView({View.DataFileView.class, View.SchemaVersionView.class, View.SnapShotView.class})
+	@JsonView({View.API.class})
 	private Long id;
-	@JsonView({View.DataFileView.class, View.SchemaVersionView.class, View.SnapShotView.class})
+	@JsonView({View.API.class})
 	private String s3Path;
-	@JsonView({View.DataFileView.class, View.SchemaVersionView.class, View.SnapShotView.class})
+	@JsonView({View.API.class})
 	private String urlPath;
-	@JsonView({View.DataFileView.class, View.SchemaVersionView.class, View.SnapShotView.class})
+	@JsonView({View.API.class})
 	private String md5Sum;
-	@JsonView({View.DataFileView.class, View.SchemaVersionView.class, View.SnapShotView.class})
+	@JsonView({View.API.class})
 	private Boolean valid = true;
-	@JsonView({View.DataFileView.class, View.SchemaVersionView.class, View.SnapShotView.class})
+	@JsonView({View.API.class})
 	private Date uploadDate = new Date();
 	
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -50,11 +50,11 @@ public class DataFile extends BaseEntity {
 	private SchemaVersion schemaVersion;
 	
 	@ManyToOne
-	@JsonView({View.DataFileView.class, View.SchemaVersionView.class, View.SnapShotView.class})
+	@JsonView({View.DataFileView.class, View.SchemaVersionView.class, View.SnapShotView.class, View.ReleaseVersionView.class})
 	private DataType dataType;
 	
 	@ManyToOne
-	@JsonView({View.DataFileView.class, View.SchemaVersionView.class, View.SnapShotView.class})
+	@JsonView({View.DataFileView.class, View.SchemaVersionView.class, View.SnapShotView.class, View.ReleaseVersionView.class})
 	private DataSubType dataSubType;
 
 	public boolean isValid() {

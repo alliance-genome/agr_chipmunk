@@ -11,6 +11,7 @@ import org.alliancegenome.agr_submission.dao.ReleaseVersionDAO;
 import org.alliancegenome.agr_submission.dao.SchemaVersionDAO;
 import org.alliancegenome.agr_submission.entities.ReleaseVersion;
 import org.alliancegenome.agr_submission.entities.SchemaVersion;
+import org.alliancegenome.agr_submission.entities.SnapShot;
 
 import lombok.extern.jbosslog.JBossLog;
 
@@ -42,6 +43,13 @@ public class ReleaseVersionService extends BaseService<ReleaseVersion> {
 		} catch (NumberFormatException ex) {
 			return dao.findByField("releaseVersion", id);
 		}
+	}
+	
+	@Transactional
+	public List<SnapShot> getSnapshots(String id) {
+		List<SnapShot> ret = get(id).getSnapShots();
+		ret.size();
+		return ret;
 	}
 
 	@Override
@@ -85,6 +93,5 @@ public class ReleaseVersionService extends BaseService<ReleaseVersion> {
 		}
 		return nextRelease;
 	}
-
 
 }

@@ -8,6 +8,7 @@ import javax.jws.WebService;
 
 import org.alliancegenome.agr_submission.BaseController;
 import org.alliancegenome.agr_submission.entities.ReleaseVersion;
+import org.alliancegenome.agr_submission.entities.SnapShot;
 import org.alliancegenome.agr_submission.interfaces.server.ReleaseVersionControllerInterface;
 import org.alliancegenome.agr_submission.services.ReleaseVersionService;
 
@@ -25,6 +26,11 @@ public class ReleaseVersionController extends BaseController implements ReleaseV
 	@Override
 	public ReleaseVersion get(String id) {
 		return releaseVersionService.get(id);
+	}
+	
+	@Override
+	public List<SnapShot> getSnapshots(String id) {
+		return releaseVersionService.getSnapshots(id);
 	}
 
 	@Override
