@@ -8,7 +8,7 @@ const RenderDataFile = ({dataFile}) => (
 
 	<div>
 	{ dataFile != null && 
-		<Collapsible trigger={ dataFile.dataType.name + "/" + dataFile.dataSubType.name + ": " + dateFormat(dataFile.uploadDate) }>
+		<Collapsible trigger={ dateFormat(dataFile.uploadDate, "yyyy-mm-dd HH:MM:ss") + ": " + dataFile.dataType.name + "/" + dataFile.dataSubType.name }>
 			<ListGroupItem key={dataFile.id}>
 				<ListGroup>
 					<ListGroupItem>{ dataFile.s3Path } <Badge pill href={'http://download.alliancegenome.org/' + dataFile.s3Path }>Download</Badge></ListGroupItem>

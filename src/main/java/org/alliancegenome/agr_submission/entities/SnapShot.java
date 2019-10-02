@@ -1,6 +1,7 @@
 package org.alliancegenome.agr_submission.entities;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -56,9 +57,11 @@ public class SnapShot extends BaseEntity {
 				}
 			}
 		}
+
 		for(MultiKey<String> key: currentFiles.keySet()) {
 			dataFiles.add(currentFiles.get(key));
 		}
+		Collections.sort(dataFiles);
 		return dataFiles;
 	}
 	

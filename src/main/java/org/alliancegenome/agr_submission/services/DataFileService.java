@@ -51,7 +51,8 @@ public class DataFileService extends BaseService<DataFile> {
 			log.error("Was not able to find everything needed to create data file: " + type + " " + dataSubType + " " + sv);
 			return null;
 		}
-		entity.setReleaseVersion(rv);
+
+		entity.getReleaseVersions().add(rv);
 		entity.setSchemaVersion(sv);
 		entity.setDataType(type);
 		entity.setDataSubType(dataSubType);
@@ -108,6 +109,7 @@ public class DataFileService extends BaseService<DataFile> {
 
 	@Transactional
 	public List<DataFile> getDataTypeSubTypeFiles(String dataType, String dataSubtype, Boolean latest) {
+		
 		DataType type = dataTypeDAO.findByField("name", dataType);
 		DataSubType dataSubType = dataSubTypeDAO.findByField("name", dataSubtype);
 		Map<String, Object> params = new HashMap<>();
@@ -128,6 +130,23 @@ public class DataFileService extends BaseService<DataFile> {
 		} else {
 			return list;
 		}
+	}
+
+	public List<DataFile> getReleaseDataTypeSubTypeFiles(String releaseVersion, String dataType, String dataSubtype, Boolean latest) {
+		ReleaseVersion releaseVersionLookup = releaseDAO.findByField("releaseVersion", releaseVersion);
+		List<DataFile> files = getDataTypeSubTypeFiles(dataType, dataSubtype, latest);
+		ArrayList<DataFile> ret = new ArrayList<DataFile>();
+		
+		for(DataFile df: files) {
+			for(ReleaseVersion rv: df.getReleaseVersions()) {
+				if(rv.getReleaseVersion().equals(releaseVersionLookup.getReleaseVersion())) {
+					ret.add(df);
+					break;
+				}
+			}
+		}
+		
+		return ret;
 	}
 
 

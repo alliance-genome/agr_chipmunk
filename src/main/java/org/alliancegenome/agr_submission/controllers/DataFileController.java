@@ -54,5 +54,10 @@ public class DataFileController extends BaseController implements DataFileContro
 	public List<DataFile> getDataTypeSubTypeFiles(String dataType, String dataSubtype, Boolean latest) {
 		return dataFileService.getDataTypeSubTypeFiles(dataType, dataSubtype, latest);
 	}
+	
+	@Override
+	public List<DataFile> getReleaseDataTypeSubTypeFiles(String releaseVersion, String dataType, String dataSubtype, Boolean latest) {
+		return dataFileService.getReleaseDataTypeSubTypeFiles(releaseVersion, dataType, dataSubtype, latest);
+	}
 
 }

@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -216,9 +218,9 @@ public class SubmissionService {
 			} else {
 				log.debug("MD5 not found: creating new file: " + filePath);
 				df = new DataFile();
-				ArrayList<ReleaseVersion> list = new ArrayList<ReleaseVersion>();
-				list.add(releaseVersion);
-				df.setReleaseVersions(list);
+				Set<ReleaseVersion> set = new HashSet<ReleaseVersion>();
+				set.add(releaseVersion);
+				df.setReleaseVersions(set);
 				df.setSchemaVersion(schemaVersion);
 				df.setDataType(dataType);
 				df.setDataSubType(dataSubType);

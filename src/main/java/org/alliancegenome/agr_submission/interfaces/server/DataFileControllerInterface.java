@@ -68,7 +68,7 @@ public interface DataFileControllerInterface {
 	public List<DataFile> getDataTypeFiles(
 		@PathParam("dataType") String dataType
 	);
-
+	
 	@GET
 	@Path("/by/{dataType}/{dataSubtype}")
 	@JsonView(View.DataFileView.class)
@@ -80,4 +80,15 @@ public interface DataFileControllerInterface {
 		@Parameter(in=ParameterIn.QUERY, name="latest", description = "Latest File or All", required=false, schema = @Schema(type = SchemaType.BOOLEAN)) @QueryParam("latest") Boolean latest
 	);
 
+	@GET
+	@Path("/by/{releaseVersion}/{dataType}/{dataSubtype}")
+	@JsonView(View.DataFileView.class)
+	@Operation(summary = "Get list of DataFile's", description = "Get list of DataFile's")
+	public List<DataFile> getReleaseDataTypeSubTypeFiles(
+		@Parameter(in=ParameterIn.PATH, name="releaseVersion", description = "Release Version Name", required=true, schema = @Schema(type = SchemaType.STRING)) @PathParam("releaseVersion") String releaseVersion,
+		@Parameter(in=ParameterIn.PATH, name="dataType", description = "Data Type Name", required=true, schema = @Schema(type = SchemaType.STRING)) @PathParam("dataType") String dataType,
+		@Parameter(in=ParameterIn.PATH, name="dataSubtype", description = "Data Sub Type Name", required=true, schema = @Schema(type = SchemaType.STRING)) @PathParam("dataSubtype") String dataSubType,
+		@DefaultValue("false")
+		@Parameter(in=ParameterIn.QUERY, name="latest", description = "Latest File or All", required=false, schema = @Schema(type = SchemaType.BOOLEAN)) @QueryParam("latest") Boolean latest
+	);
 }

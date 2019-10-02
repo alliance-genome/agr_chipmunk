@@ -2,6 +2,7 @@ package org.alliancegenome.agr_submission.entities;
 
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -25,6 +26,7 @@ public class DataSubType extends BaseEntity {
 	@Id @GeneratedValue
 	@JsonView({View.API.class})
 	private Long id;
+	@Column(unique=true)
 	@JsonView({View.API.class})
 	private String name;
 	@JsonView({View.API.class})

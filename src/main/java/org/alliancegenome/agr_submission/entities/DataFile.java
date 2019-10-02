@@ -1,7 +1,8 @@
 package org.alliancegenome.agr_submission.entities;
 
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -21,7 +22,7 @@ import lombok.ToString;
 
 @Entity
 @Getter @Setter @ToString
-public class DataFile extends BaseEntity {
+public class DataFile extends BaseEntity implements Comparable<DataFile> {
 
 	@Id @GeneratedValue
 	@JsonView({View.API.class})
@@ -39,12 +40,8 @@ public class DataFile extends BaseEntity {
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JsonView({View.DataFileView.class})
-	private List<ReleaseVersion> releaseVersions;
-	
-	@ManyToOne
-	@JsonView({View.DataFileView.class})
-	private ReleaseVersion releaseVersion;
-	
+	private Set<ReleaseVersion> releaseVersions = new HashSet<ReleaseVersion>();
+
 	@ManyToOne
 	@JsonView({View.DataFileView.class})
 	private SchemaVersion schemaVersion;
@@ -59,6 +56,11 @@ public class DataFile extends BaseEntity {
 
 	public boolean isValid() {
 		return (valid == null || valid);
+	}
+
+	@Override
+	public int compareTo(DataFile o) {
+		return o.uploadDate.compareTo(uploadDate);
 	}
 
 }
