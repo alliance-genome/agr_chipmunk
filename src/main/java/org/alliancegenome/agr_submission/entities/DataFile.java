@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -32,6 +33,7 @@ public class DataFile extends BaseEntity implements Comparable<DataFile> {
 	@JsonView({View.API.class})
 	private String urlPath;
 	@JsonView({View.API.class})
+	@Column(unique=true)
 	private String md5Sum;
 	@JsonView({View.API.class})
 	private Boolean valid = true;

@@ -14,7 +14,6 @@ public class User extends BaseEntity {
 
 	@Id @GeneratedValue
 	private Long id;
-	
-	private String username = "oblodgett";
-	private String password = "password";
+	private String username;
+	private String password;
 }

@@ -18,6 +18,8 @@ import org.alliancegenome.agr_submission.entities.DataSubType;
 import org.alliancegenome.agr_submission.entities.DataType;
 import org.alliancegenome.agr_submission.entities.ReleaseVersion;
 import org.alliancegenome.agr_submission.entities.SchemaVersion;
+import org.apache.commons.collections4.keyvalue.MultiKey;
+import org.apache.commons.collections4.map.MultiKeyMap;
 
 import lombok.extern.jbosslog.JBossLog;
 
@@ -131,6 +133,29 @@ public class DataFileService extends BaseService<DataFile> {
 			return list;
 		}
 	}
+	
+	@Transactional
+	public List<DataFile> getDataFilesByRelease(String releaseVersion, Boolean latest) {
+		ReleaseVersion releaseVersionLookup = releaseDAO.findByField("releaseVersion", releaseVersion);
+	
+		if(latest) {
+			MultiKeyMap<String, DataFile> map = new MultiKeyMap<>();
+			for(DataFile df: releaseVersionLookup.getDataFiles()) {
+				MultiKey<String> key = new MultiKey<String>(df.getDataType().getName(), df.getDataSubType().getName());
+				
+				DataFile dataFile = map.get(key);
+				
+				if(dataFile == null || df.getUploadDate().after(dataFile.getUploadDate())) {
+					dataFile = df;
+				}
+				map.put(key, dataFile);
+			}
+	
+			return new ArrayList<DataFile>(map.values());
+		} else {
+			return new ArrayList<DataFile>(releaseVersionLookup.getDataFiles());
+		}
+	}
 
 	public List<DataFile> getReleaseDataTypeSubTypeFiles(String releaseVersion, String dataType, String dataSubtype, Boolean latest) {
 		ReleaseVersion releaseVersionLookup = releaseDAO.findByField("releaseVersion", releaseVersion);
@@ -148,6 +173,5 @@ public class DataFileService extends BaseService<DataFile> {
 		
 		return ret;
 	}
-
 
 }

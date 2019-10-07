@@ -2,6 +2,7 @@ package org.alliancegenome.agr_submission.entities;
 
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -25,6 +26,7 @@ public class SchemaVersion extends BaseEntity {
 	@JsonView({View.SchemaVersionView.class, View.ReleaseVersionView.class, View.DataFileView.class, View.DataTypeView.class, View.SnapShotView.class, View.SchemaFileView.class})
 	private Long id;
 	@JsonView({View.SchemaVersionView.class, View.ReleaseVersionView.class, View.DataFileView.class, View.DataTypeView.class, View.SnapShotView.class, View.SchemaFileView.class})
+	@Column(unique = true)
 	private String schema;
 	
 	@OneToMany(mappedBy="schemaVersion", fetch=FetchType.EAGER)

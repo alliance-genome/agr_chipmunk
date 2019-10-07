@@ -70,6 +70,15 @@ public interface DataFileControllerInterface {
 	);
 	
 	@GET
+	@Path("/by/release/{releaseVersion}")
+	@JsonView(View.DataFileView.class)
+	public List<DataFile> getDataFilesByRelease(
+		@PathParam("releaseVersion") String releaseVersion,
+		@DefaultValue("false")
+		@Parameter(in=ParameterIn.QUERY, name="latest", description = "Latest File or All", required=false, schema = @Schema(type = SchemaType.BOOLEAN)) @QueryParam("latest") Boolean latest
+	);
+	
+	@GET
 	@Path("/by/{dataType}/{dataSubtype}")
 	@JsonView(View.DataFileView.class)
 	@Operation(summary = "Get list of DataFile's", description = "Get list of DataFile's")
