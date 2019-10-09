@@ -180,6 +180,7 @@ public class DataFileService extends BaseService<DataFile> {
 		return ret;
 	}
 
+	@Transactional
 	public DataFile invalidate(String id) {
 		DataFile dbEntity = get(id);
 		dbEntity.setValid(false);
