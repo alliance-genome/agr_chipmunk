@@ -2,6 +2,7 @@ package org.alliancegenome.agr_submission.interfaces.server;
 
 import java.util.List;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -27,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 @Path("/datafile")
 @Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "DataFile Endpoints")
 public interface DataFileControllerInterface {
 
