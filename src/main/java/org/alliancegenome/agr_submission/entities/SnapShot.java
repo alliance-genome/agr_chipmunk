@@ -47,7 +47,7 @@ public class SnapShot extends BaseEntity {
 		for(DataFile df: releaseVersion.getDataFiles()) {
 			MultiKey<String> key = new MultiKey<String>(df.getDataType().getName(), df.getDataSubType().getName());
 			DataFile entry = currentFiles.get(key);
-			if(df.getUploadDate().before(snapShotDate)) {
+			if(df.getUploadDate().before(snapShotDate) && df.isValid()) {
 				if(entry == null) {
 					currentFiles.put(key, df);
 				} else {
