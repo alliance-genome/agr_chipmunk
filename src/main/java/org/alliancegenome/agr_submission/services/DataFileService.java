@@ -69,13 +69,7 @@ public class DataFileService extends BaseService<DataFile> {
 	
 	@Transactional
 	public DataFile get(String id) {
-		log.info("DataFileService: get: " + id);
-		try {
-			Long ident = Long.parseLong(id);
-			return get(ident);
-		} catch (NumberFormatException ex) {
-			return dao.findByField("md5Sum", id);
-		}
+		return dao.getByIdOrMD5Sum(id);
 	}
 
 	@Override
