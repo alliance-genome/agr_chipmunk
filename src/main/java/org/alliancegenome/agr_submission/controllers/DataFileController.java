@@ -47,8 +47,8 @@ public class DataFileController extends BaseController implements DataFileContro
 	}
 
 	@Override
-	public List<DataFile> getDataTypeFiles(String dataType) {
-		return dataFileService.getDataTypeFiles(dataType);
+	public List<DataFile> getDataTypeFiles(String dataType, Boolean latest) {
+		return dataFileService.getDataTypeFiles(dataType, latest);
 	}
 
 	@Override

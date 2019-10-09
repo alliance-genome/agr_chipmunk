@@ -75,7 +75,9 @@ public interface DataFileControllerInterface {
 	@Path("/by/{dataType}")
 	@JsonView(View.DataFileView.class)
 	public List<DataFile> getDataTypeFiles(
-		@PathParam("dataType") String dataType
+		@PathParam("dataType") String dataType,
+		@DefaultValue("false")
+		@Parameter(in=ParameterIn.QUERY, name="latest", description = "Latest File or All", required=false, schema = @Schema(type = SchemaType.BOOLEAN)) @QueryParam("latest") Boolean latest
 	);
 	
 	@GET

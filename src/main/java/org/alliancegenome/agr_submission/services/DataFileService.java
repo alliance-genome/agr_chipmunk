@@ -98,12 +98,30 @@ public class DataFileService extends BaseService<DataFile> {
 	}
 
 	@Transactional
-	public List<DataFile> getDataTypeFiles(String dataType) {
+	public List<DataFile> getDataTypeFiles(String dataType, Boolean latest) {
 		DataType type = dataTypeDAO.findByField("name", dataType);
 		if(type != null) {
 			Map<String, Object> params = new HashMap<>();
 			params.put("dataType.id", type.getId().toString());
-			return dao.search(params, "uploadDate");
+			List<DataFile> list = dao.search(params, "uploadDate");
+			
+			if(latest) {
+				MultiKeyMap<String, DataFile> map = new MultiKeyMap<>();
+				for(DataFile df: list) {
+					MultiKey<String> key = new MultiKey<String>(df.getDataType().getName(), df.getDataSubType().getName());
+					
+					DataFile dataFile = map.get(key);
+					
+					if(dataFile == null || df.getUploadDate().after(dataFile.getUploadDate())) {
+						dataFile = df;
+					}
+					map.put(key, dataFile);
+				}
+				return new ArrayList<DataFile>(map.values());
+			} else {
+				return list;
+			}
+
 		} else {
 			return null;
 		}
