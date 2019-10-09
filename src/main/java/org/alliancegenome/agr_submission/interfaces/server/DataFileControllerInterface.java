@@ -54,11 +54,18 @@ public interface DataFileControllerInterface {
 	@JsonView(View.DataFileUpdate.class)
 	public DataFile update(DataFile entity);
 
+	@PUT @Secured
+	@Path("/{id}/invalidate")
+	@JsonView(View.DataFileUpdate.class)
+	public DataFile invalidate(
+		@Parameter(in=ParameterIn.PATH, name="id", description = "Long Id or md5Sum", required=true, schema = @Schema(type = SchemaType.STRING)) @PathParam("id") String id
+	);
+	
 	@DELETE @Secured
 	@Path("/{id}")
 	@JsonView(View.DataFileDelete.class)
 	public DataFile delete(@PathParam("id") Long id);
-
+	
 	@GET
 	@Path("/all")
 	@JsonView(View.DataFileView.class)

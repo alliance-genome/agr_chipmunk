@@ -180,4 +180,10 @@ public class DataFileService extends BaseService<DataFile> {
 		return ret;
 	}
 
+	public DataFile invalidate(String id) {
+		DataFile dbEntity = get(id);
+		dbEntity.setValid(false);
+		return dao.merge(dbEntity);
+	}
+
 }
