@@ -82,7 +82,13 @@ public class DataFileService extends BaseService<DataFile> {
 	@Transactional
 	public DataFile update(DataFile entity) {
 		log.info("DataFileService: update: ");
-		return dao.merge(entity);
+		DataFile dbEntity = get(entity.getId());
+		dbEntity.setMd5Sum(entity.getMd5Sum());
+		dbEntity.setS3Path(entity.getS3Path());
+		dbEntity.setUrlPath(entity.getUrlPath());
+		dbEntity.setValid(entity.getValid());
+		dbEntity.setUploadDate(entity.getUploadDate());
+		return dao.merge(dbEntity);
 	}
 
 	@Override
