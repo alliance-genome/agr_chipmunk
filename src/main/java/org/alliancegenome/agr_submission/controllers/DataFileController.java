@@ -67,8 +67,8 @@ public class DataFileController extends BaseController implements DataFileContro
 	}
 
 	@Override
-	public DataFile invalidate(String id) {
-		return dataFileService.invalidate(id);
+	public DataFile validateToggle(String id) {
+		return dataFileService.validateToggle(id);
 	}
 
 }

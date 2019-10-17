@@ -55,9 +55,9 @@ public interface DataFileControllerInterface {
 	public DataFile update(DataFile entity);
 
 	@PUT @Secured
-	@Path("/{id}/invalidate")
+	@Path("/{id}/validateToggle")
 	@JsonView(View.DataFileUpdate.class)
-	public DataFile invalidate(
+	public DataFile validateToggle(
 		@Parameter(in=ParameterIn.PATH, name="id", description = "Long Id or md5Sum", required=true, schema = @Schema(type = SchemaType.STRING)) @PathParam("id") String id
 	);
 	

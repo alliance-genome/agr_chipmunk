@@ -193,9 +193,9 @@ public class DataFileService extends BaseService<DataFile> {
 	}
 
 	@Transactional
-	public DataFile invalidate(String id) {
+	public DataFile validateToggle(String id) {
 		DataFile dbEntity = get(id);
-		dbEntity.setValid(false);
+		dbEntity.setValid(!dbEntity.isValid());
 		return dao.merge(dbEntity);
 	}
 
