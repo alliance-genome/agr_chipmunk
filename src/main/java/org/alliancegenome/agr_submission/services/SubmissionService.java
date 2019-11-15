@@ -11,6 +11,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
+import org.alliancegenome.agr_submission.dao.DataFileDAO;
 import org.alliancegenome.agr_submission.dao.DataSubTypeDAO;
 import org.alliancegenome.agr_submission.dao.DataTypeDAO;
 import org.alliancegenome.agr_submission.dao.SchemaVersionDAO;
@@ -42,7 +43,7 @@ public class SubmissionService {
 
 	//@Inject private SnapShotDAO snapShotDAO;
 	@Inject private ReleaseVersionService releaseService;
-	@Inject private DataFileService dataFileService;
+	@Inject private DataFileDAO dataFileDao;
 	@Inject private SchemaVersionDAO schemaVersionDAO;
 	@Inject private DataTypeDAO dataTypeDAO;
 	@Inject private DataSubTypeDAO dataSubTypeDAO;
@@ -197,7 +198,7 @@ public class SubmissionService {
 			log.info("MD5 Sum: " + md5Sum);
 
 			// Check that data file doesn't already exist in the system if so update its release version
-			DataFile df = dataFileService.get(md5Sum);
+			DataFile df = dataFileDao.getByIdOrMD5Sum(md5Sum);
 			if(df != null) {
 				log.debug("DataFile found not uploading: " + df.getS3Path() + " MD5: " + df.getMd5Sum());
 				boolean found = false;
@@ -229,7 +230,7 @@ public class SubmissionService {
 				log.info("Saving New File: " + filePath);
 				s3Helper.saveFile(filePath, inFile);
 			}
-			dataFileService.update(df);
+			dataFileDao.merge(df);
 
 		} catch (Exception e) {
 			throw new GenericException(e.getMessage());

@@ -12,4 +12,13 @@ public class DataFileDAO extends BaseSQLDAO<DataFile> {
 		super(DataFile.class);
 	}
 
+	public DataFile getByIdOrMD5Sum(String id) {
+		try {
+			Long ident = Long.parseLong(id);
+			return find(ident);
+		} catch (NumberFormatException ex) {
+			return findByField("md5Sum", id);
+		}
+	}
+
 }

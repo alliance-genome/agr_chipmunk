@@ -8,6 +8,7 @@ import javax.jws.WebService;
 
 import org.alliancegenome.agr_submission.BaseController;
 import org.alliancegenome.agr_submission.entities.DataFile;
+import org.alliancegenome.agr_submission.entities.SchemaVersion;
 import org.alliancegenome.agr_submission.interfaces.server.DataFileControllerInterface;
 import org.alliancegenome.agr_submission.services.DataFileService;
 
@@ -46,8 +47,8 @@ public class DataFileController extends BaseController implements DataFileContro
 	}
 
 	@Override
-	public List<DataFile> getDataTypeFiles(String dataType) {
-		return dataFileService.getDataTypeFiles(dataType);
+	public List<DataFile> getDataTypeFiles(String dataType, Boolean latest) {
+		return dataFileService.getDataTypeFiles(dataType, latest);
 	}
 
 	@Override
@@ -63,6 +64,11 @@ public class DataFileController extends BaseController implements DataFileContro
 	@Override
 	public List<DataFile> getDataFilesByRelease(String releaseVersion, Boolean latest) {
 		return dataFileService.getDataFilesByRelease(releaseVersion, latest);
+	}
+
+	@Override
+	public DataFile validateToggle(String id) {
+		return dataFileService.validateToggle(id);
 	}
 
 }

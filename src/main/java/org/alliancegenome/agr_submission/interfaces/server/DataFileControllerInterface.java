@@ -2,6 +2,7 @@ package org.alliancegenome.agr_submission.interfaces.server;
 
 import java.util.List;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -27,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 @Path("/datafile")
 @Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "DataFile Endpoints")
 public interface DataFileControllerInterface {
 
@@ -52,11 +54,18 @@ public interface DataFileControllerInterface {
 	@JsonView(View.DataFileUpdate.class)
 	public DataFile update(DataFile entity);
 
+	@PUT @Secured
+	@Path("/{id}/validateToggle")
+	@JsonView(View.DataFileUpdate.class)
+	public DataFile validateToggle(
+		@Parameter(in=ParameterIn.PATH, name="id", description = "Long Id or md5Sum", required=true, schema = @Schema(type = SchemaType.STRING)) @PathParam("id") String id
+	);
+	
 	@DELETE @Secured
 	@Path("/{id}")
 	@JsonView(View.DataFileDelete.class)
 	public DataFile delete(@PathParam("id") Long id);
-
+	
 	@GET
 	@Path("/all")
 	@JsonView(View.DataFileView.class)
@@ -66,7 +75,9 @@ public interface DataFileControllerInterface {
 	@Path("/by/{dataType}")
 	@JsonView(View.DataFileView.class)
 	public List<DataFile> getDataTypeFiles(
-		@PathParam("dataType") String dataType
+		@PathParam("dataType") String dataType,
+		@DefaultValue("false")
+		@Parameter(in=ParameterIn.QUERY, name="latest", description = "Latest File or All", required=false, schema = @Schema(type = SchemaType.BOOLEAN)) @QueryParam("latest") Boolean latest
 	);
 	
 	@GET
