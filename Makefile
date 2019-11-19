@@ -4,6 +4,6 @@ run:
 	java -jar target/agr_chipmunk-thorntail.jar -Papp.properties
 
 build:
-	mvn clean package
+	mvn -T 6 clean package
 
 apirun: build run
