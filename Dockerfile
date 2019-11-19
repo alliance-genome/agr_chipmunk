@@ -15,5 +15,5 @@ RUN mv build/* ../webapp
 
 WORKDIR /workdir/agr_fms_software
 
-RUN mvn -B clean package
+RUN mvn -T 6 -B clean package
 
