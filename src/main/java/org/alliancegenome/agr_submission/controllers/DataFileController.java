@@ -8,7 +8,6 @@ import javax.jws.WebService;
 
 import org.alliancegenome.agr_submission.BaseController;
 import org.alliancegenome.agr_submission.entities.DataFile;
-import org.alliancegenome.agr_submission.entities.SchemaVersion;
 import org.alliancegenome.agr_submission.interfaces.server.DataFileControllerInterface;
 import org.alliancegenome.agr_submission.services.DataFileService;
 
@@ -40,6 +39,11 @@ public class DataFileController extends BaseController implements DataFileContro
 	@Override
 	public DataFile delete(Long id) {
 		return dataFileService.delete(id);
+	}
+	
+	@Override
+	public List<DataFile> assignDataFilesFromRelease1ToRelease2(String releaseVersion1, String releaseVersion2) {
+		return dataFileService.assignDataFilesFromRelease1ToRelease2(releaseVersion1, releaseVersion2);
 	}
 	
 	public List<DataFile> getDataFiles() {

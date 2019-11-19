@@ -92,7 +92,39 @@ public class DataFileService extends BaseService<DataFile> {
 		return dao.remove(id);
 	}
 
-
+	@Transactional
+	public List<DataFile> assignDataFilesFromRelease1ToRelease2(String releaseVersion1, String releaseVersion2) {
+		
+		List<DataFile> list1 = getDataFilesByRelease(releaseVersion1, true); // Only looking to add the latest files to the new release
+		ReleaseVersion rv2 = releaseDAO.findByField("releaseVersion", releaseVersion2);
+		
+		if(list1 == null || list1.isEmpty() || rv2 == null) {
+			log.error("Was not able to find everything needed to assign Release Versions: " + releaseVersion1 + " " + releaseVersion2);
+			return null;
+		}
+		
+		Map<String, DataFile> map = new HashMap<String, DataFile>();
+		log.debug("List: " + list1.size());
+		
+		for(DataFile df: rv2.getDataFiles()) {
+			map.put(df.getMd5Sum(), df);
+		}
+		
+		log.debug("Before: " + rv2.getDataFiles().size());
+		for(DataFile df: list1) {
+			if(!map.containsKey(df.getMd5Sum())) {
+				map.put(df.getMd5Sum(), df);
+				df.getReleaseVersions().add(rv2);
+				rv2.getDataFiles().add(df);
+			}
+		}
+		log.debug("After: " + rv2.getDataFiles().size());
+		
+		releaseDAO.merge(rv2);
+		
+		return new ArrayList<DataFile>(rv2.getDataFiles());
+	}
+	
 	public List<DataFile> getDataFiles() {
 		return dao.findAll();
 	}

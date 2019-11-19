@@ -70,6 +70,14 @@ public interface DataFileControllerInterface {
 	@Path("/all")
 	@JsonView(View.DataFileView.class)
 	public List<DataFile> getDataFiles();
+	
+	@POST @Secured
+	@Path("/assign/{releaseVersion1}/{releaseVersion2}")
+	@JsonView(View.DataFileCreate.class)
+	public List<DataFile> assignDataFilesFromRelease1ToRelease2(
+		@Parameter(in=ParameterIn.PATH, name="releaseVersion1", description = "Old Release Version", required=true, schema = @Schema(type = SchemaType.STRING)) @PathParam("releaseVersion1") String releaseVersion1,
+		@Parameter(in=ParameterIn.PATH, name="releaseVersion2", description = "New Release Version", required=true, schema = @Schema(type = SchemaType.STRING)) @PathParam("releaseVersion2") String releaseVersion2
+	);
 
 	@GET
 	@Path("/by/{dataType}")
