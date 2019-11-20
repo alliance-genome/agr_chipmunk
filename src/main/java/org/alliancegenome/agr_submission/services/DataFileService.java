@@ -144,7 +144,7 @@ public class DataFileService extends BaseService<DataFile> {
 					
 					DataFile dataFile = map.get(key);
 					
-					if(dataFile == null || df.getUploadDate().after(dataFile.getUploadDate())) {
+					if(dataFile == null || (df.getUploadDate().after(dataFile.getUploadDate()) && df.isValid())) {
 						dataFile = df;
 					}
 					map.put(key, dataFile);
@@ -195,7 +195,7 @@ public class DataFileService extends BaseService<DataFile> {
 				
 				DataFile dataFile = map.get(key);
 				
-				if(dataFile == null || df.getUploadDate().after(dataFile.getUploadDate())) {
+				if(dataFile == null || (df.getUploadDate().after(dataFile.getUploadDate()) && df.isValid())) {
 					dataFile = df;
 				}
 				map.put(key, dataFile);
