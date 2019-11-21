@@ -15,6 +15,8 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.alliancegenome.agr_submission.entities.log.LogRequestMethod;
+
 import lombok.extern.jbosslog.JBossLog;
 
 @JBossLog
@@ -63,7 +65,7 @@ public class BaseSQLDAO<E extends BaseEntity> extends BaseDAO<E> {
 		entityManager.remove(entity);
 		return entity;
 	}
-	
+
 	public E findByField(String field, String value) {
 		log.debug("SqlDAO: findByField: " + field + " " + value);
 		HashMap<String, Object> params = new HashMap<>();
@@ -77,10 +79,10 @@ public class BaseSQLDAO<E extends BaseEntity> extends BaseDAO<E> {
 		}
 	}
 	
-	public List<E> search(Map<String, Object> params) {
+	protected List<E> search(Map<String, Object> params) {
 		return search(params, null);
 	}
-
+	
 	public List<E> search(Map<String, Object> params, String orderByField) {
 		log.debug("Search By Params: " + params + " Order by: " + orderByField);
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
