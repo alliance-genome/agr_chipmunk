@@ -28,7 +28,11 @@ public class LogApiRequestFilter implements ContainerRequestFilter {
 		LogApiDTO info = new  LogApiDTO();
 		
 		info.setRequestMethod(requestContext.getMethod());
-		info.setHeadersString(requestContext.getHeaders().toString());
+		
+		HashMap<String, List<String>> headerMap = new HashMap<String, List<String>>(requestContext.getHeaders());
+		headerMap.remove("Authorization");
+		
+		info.setHeadersString(headerMap.toString());
 		info.setAddress(servletRequest.getRemoteAddr());
 		info.setUserAgent(requestContext.getHeaders().get("User-Agent"));
 		//info.setPath(requestContext.getUriInfo().getPath());
