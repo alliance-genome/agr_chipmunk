@@ -7,7 +7,7 @@ import { Col } from 'reactstrap';
 import Header from '../../components/Header';
 
 
-const URL = 'ws://' + window.location.hostname + ':' + (window.location.port === "3000" ? "8080" : window.location.port) + '/apilog';
+const URL = (window.location.protocol === 'https:' ? "wss" : "ws") + '://' + window.location.hostname + ':' + (window.location.port === "3000" ? "8080" : window.location.port) + '/apilog';
 
 class LoggingPage extends Component {
 	
@@ -18,7 +18,8 @@ class LoggingPage extends Component {
 	client = new W3CWebSocket(URL);
 
 	componentWillMount() {
-		console.log(URL);
+		//console.log(URL);
+		
 		this.client.onopen = () => {
 			console.log('WebSocket Client Connected');
 		};
