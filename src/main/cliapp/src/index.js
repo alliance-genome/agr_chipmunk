@@ -14,6 +14,7 @@ import { createStore, applyMiddleware } from 'redux';
 import Homepage from './containers/homepage';
 import AdminPage from './containers/adminpage';
 import LoginPage from './containers/loginpage';
+import LoggingPage from './containers/loggingpage';
 import AdminDataTypes from './containers/adminpage/AdminDataTypes';
 import AdminSchemaVersions from './containers/adminpage/AdminSchemaVersions';
 import AdminReleaseVersions from './containers/adminpage/AdminReleaseVersions';
@@ -39,7 +40,6 @@ ReactDOM.render(
 								<Route exact path="/" component={Homepage} />
 								<Route path="/login" component={LoginPage} />
 
-
 								<Route path="/admin/datatype/:dataType?" component={AdminDataTypes} />
 								<Route path="/admin/datatypes" component={AdminDataTypes} />
 
@@ -50,6 +50,8 @@ ReactDOM.render(
 								<Route path="/admin/releaseversions" component={AdminReleaseVersions} />
 
 								<Route exact path="/admin" component={AdminPage} />
+
+								<Route exact path="/logging" component={LoggingPage} />
 								
 								<Route path="/datafiles/:dataType/:dataSubType" component={DataFiles} />
 								<Route path="/datafiles" component={DataFiles} />

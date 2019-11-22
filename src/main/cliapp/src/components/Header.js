@@ -17,13 +17,12 @@ const Header = () => {
                                 <NavItem><NavLink tag={RRNavLink} to="/">Home</NavLink></NavItem>
                                 <NavItem><NavLink tag={RRNavLink} to="/datafiles">Data Files</NavLink></NavItem>
                                 <NavItem><NavLink tag={RRNavLink} to="/admin">Admin</NavLink></NavItem>
+                                <NavItem><NavLink tag={RRNavLink} to="/logging">Api Logging</NavLink></NavItem>
                                 <NavItem><NavLink tag={RRNavLink} to="/swagger-ui">Swagger API</NavLink></NavItem>
                             </Nav>
                         </Col>
 
-                        <Col className="justify-content-between">
-                            <Nav></Nav>
-                        </Col>
+                     
 
                         <Col className="justify-content-end">
                             <Nav navbar>
