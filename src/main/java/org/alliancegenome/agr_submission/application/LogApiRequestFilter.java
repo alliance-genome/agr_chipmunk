@@ -34,7 +34,10 @@ public class LogApiRequestFilter implements ContainerRequestFilter {
 		
 		info.setHeadersString(headerMap.toString());
 		info.setAddress(servletRequest.getRemoteAddr());
-		info.setUserAgent(requestContext.getHeaders().get("User-Agent"));
+		List<String> userAgent = requestContext.getHeaders().get("User-Agent"); 
+		if(userAgent != null) {
+			info.setUserAgent(userAgent);
+		}
 		//info.setPath(requestContext.getUriInfo().getPath());
 		//info.setAbsolutePath(requestContext.getUriInfo().getAbsolutePath().toString());
 		
