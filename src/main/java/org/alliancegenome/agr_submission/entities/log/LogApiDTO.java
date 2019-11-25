@@ -13,7 +13,7 @@ public class LogApiDTO {
 	public String requestMethod;
 	public String headersString;
 	public String address;
-	public List<String> userAgent;
+	public List<String> userAgent = new ArrayList<String>();
 	public HashMap<String, List<String>> queryParameters;
 	public HashMap<String, List<String>> pathParameters;
 	public String requestUri;
