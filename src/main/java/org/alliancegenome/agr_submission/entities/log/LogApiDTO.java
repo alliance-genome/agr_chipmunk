@@ -1,7 +1,6 @@
 package org.alliancegenome.agr_submission.entities.log;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import lombok.Getter;
 import lombok.Setter;
