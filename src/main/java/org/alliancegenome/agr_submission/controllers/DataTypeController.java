@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.jws.WebService;
 
 import org.alliancegenome.agr_submission.BaseController;
 import org.alliancegenome.agr_submission.entities.DataType;
@@ -15,7 +14,6 @@ import org.alliancegenome.agr_submission.interfaces.server.DataTypeControllerInt
 import org.alliancegenome.agr_submission.services.DataTypeService;
 
 @RequestScoped
-@WebService
 public class DataTypeController extends BaseController implements DataTypeControllerInterface {
 
 	@Inject DataTypeService dataTypeService;

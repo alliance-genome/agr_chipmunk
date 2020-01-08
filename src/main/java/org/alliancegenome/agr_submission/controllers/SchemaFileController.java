@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.jws.WebService;
 
 import org.alliancegenome.agr_submission.BaseController;
 import org.alliancegenome.agr_submission.entities.SchemaFile;
@@ -12,7 +11,6 @@ import org.alliancegenome.agr_submission.interfaces.server.SchemaFileControllerI
 import org.alliancegenome.agr_submission.services.SchemaFileService;
 
 @RequestScoped
-@WebService
 public class SchemaFileController extends BaseController implements SchemaFileControllerInterface {
 
 	@Inject SchemaFileService schemaFileService;

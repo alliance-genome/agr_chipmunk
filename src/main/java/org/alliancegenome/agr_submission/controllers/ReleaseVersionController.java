@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.jws.WebService;
 
 import org.alliancegenome.agr_submission.BaseController;
 import org.alliancegenome.agr_submission.entities.ReleaseVersion;
@@ -13,7 +12,6 @@ import org.alliancegenome.agr_submission.interfaces.server.ReleaseVersionControl
 import org.alliancegenome.agr_submission.services.ReleaseVersionService;
 
 @RequestScoped
-@WebService
 public class ReleaseVersionController extends BaseController implements ReleaseVersionControllerInterface {
 
 	@Inject ReleaseVersionService releaseVersionService;

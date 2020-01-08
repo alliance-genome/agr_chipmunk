@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.jws.WebService;
 
 import org.alliancegenome.agr_submission.BaseController;
 import org.alliancegenome.agr_submission.entities.SnapShot;
@@ -14,7 +13,6 @@ import org.alliancegenome.agr_submission.responces.SnapShotResponce;
 import org.alliancegenome.agr_submission.services.SnapShotService;
 
 @RequestScoped
-@WebService
 public class SnapShotController extends BaseController implements SnapShotControllerInterface {
 
 	@Inject SnapShotService snapShotService;
