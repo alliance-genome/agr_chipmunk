@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.jws.WebService;
+import javax.json.JsonPatch;
 
 import org.alliancegenome.agr_submission.BaseController;
 import org.alliancegenome.agr_submission.entities.DataFile;
@@ -12,7 +12,6 @@ import org.alliancegenome.agr_submission.interfaces.server.DataFileControllerInt
 import org.alliancegenome.agr_submission.services.DataFileService;
 
 @RequestScoped
-@WebService
 public class DataFileController extends BaseController implements DataFileControllerInterface {
 
 	@Inject DataFileService dataFileService;
@@ -39,6 +38,11 @@ public class DataFileController extends BaseController implements DataFileContro
 	@Override
 	public DataFile delete(Long id) {
 		return dataFileService.delete(id);
+	}
+	
+	@Override
+	public JsonPatch diffDataFiles(String id1, String id2) {
+		return dataFileService.diff(id1, id2);
 	}
 	
 	@Override

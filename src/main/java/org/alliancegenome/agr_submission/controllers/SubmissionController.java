@@ -9,7 +9,6 @@ import java.util.Map;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.jws.WebService;
 
 import org.alliancegenome.agr_submission.BaseController;
 import org.alliancegenome.agr_submission.exceptions.GenericException;
@@ -25,7 +24,6 @@ import lombok.extern.jbosslog.JBossLog;
 
 @JBossLog
 @RequestScoped
-@WebService
 public class SubmissionController extends BaseController implements SubmissionControllerInterface {
 
 	@Inject

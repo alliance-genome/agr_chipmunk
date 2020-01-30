@@ -2,6 +2,7 @@ package org.alliancegenome.agr_submission.interfaces.server;
 
 import java.util.List;
 
+import javax.json.JsonPatch;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
@@ -70,6 +71,14 @@ public interface DataFileControllerInterface {
 	@Path("/all")
 	@JsonView(View.DataFileView.class)
 	public List<DataFile> getDataFiles();
+	
+	@GET
+	@Path("/diff/{id1}/{id2}")
+	@JsonView(View.DataFileView.class)
+	public JsonPatch diffDataFiles(
+		@Parameter(in=ParameterIn.PATH, name="id1", description = "Long Id or md5Sum", required=true, schema = @Schema(type = SchemaType.STRING)) @PathParam("id1") String id1,
+		@Parameter(in=ParameterIn.PATH, name="id2", description = "Long Id or md5Sum", required=true, schema = @Schema(type = SchemaType.STRING)) @PathParam("id2") String id2
+	);
 	
 	@POST @Secured
 	@Path("/assign/{releaseVersion1}/{releaseVersion2}")

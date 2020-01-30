@@ -1,11 +1,19 @@
 package org.alliancegenome.agr_submission.services;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.json.Json;
+import javax.json.JsonPatch;
+import javax.json.JsonValue;
 import javax.transaction.Transactional;
 
 import org.alliancegenome.agr_submission.BaseService;
@@ -83,6 +91,33 @@ public class DataFileService extends BaseService<DataFile> {
 		dbEntity.setValid(entity.getValid());
 		dbEntity.setUploadDate(entity.getUploadDate());
 		return dao.merge(dbEntity);
+	}
+	
+	@Transactional
+	public JsonPatch diff(String id1, String id2) {
+
+		try {
+			
+			//https://download.alliancegenome.org/2.3.0/BGI/MGI/1.0.0.9_BGI_MGI_0.json
+			//https://download.alliancegenome.org/2.3.0/BGI/MGI/1.0.0.9_BGI_MGI_1.json
+			
+			InputStream input1 = new URL("http://www.somewebsite.com/a.txt").openStream();
+			InputStream input2 = new URL("http://www.somewebsite.com/a.txt").openStream();
+
+			JsonValue source = Json.createReader(new StringReader("")).readValue();
+			JsonValue target = Json.createReader(new StringReader("")).readValue();
+
+			return Json.createDiff(source.asJsonObject(), target.asJsonObject());
+			
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 
 	@Override
@@ -195,7 +230,7 @@ public class DataFileService extends BaseService<DataFile> {
 				
 				DataFile dataFile = map.get(key);
 				
-				if(dataFile == null || (df.getUploadDate().after(dataFile.getUploadDate()) && df.isValid())) {
+				if((dataFile == null || df.getUploadDate().after(dataFile.getUploadDate())) && df.isValid()) {
 					dataFile = df;
 				}
 				map.put(key, dataFile);
@@ -209,18 +244,32 @@ public class DataFileService extends BaseService<DataFile> {
 
 	public List<DataFile> getReleaseDataTypeSubTypeFiles(String releaseVersion, String dataType, String dataSubtype, Boolean latest) {
 		ReleaseVersion releaseVersionLookup = releaseDAO.findByField("releaseVersion", releaseVersion);
-		List<DataFile> files = getDataTypeSubTypeFiles(dataType, dataSubtype, latest);
-		ArrayList<DataFile> ret = new ArrayList<DataFile>();
 		
+		DataType type = dataTypeDAO.findByField("name", dataType);
+		DataSubType dataSubType = dataSubTypeDAO.findByField("name", dataSubtype);
+		Map<String, Object> params = new HashMap<>();
+		params.put("dataType.id", type.getId().toString());
+		params.put("dataSubType.id", dataSubType.getId().toString());
+		List<DataFile> files = dao.search(params, "uploadDate");
+		
+		ArrayList<DataFile> ret = new ArrayList<DataFile>();
+
+		DataFile latestFile = null;
 		for(DataFile df: files) {
 			for(ReleaseVersion rv: df.getReleaseVersions()) {
 				if(rv.getReleaseVersion().equals(releaseVersionLookup.getReleaseVersion())) {
-					ret.add(df);
-					break;
+					if(latest) {
+						if((latestFile == null || df.getUploadDate().after(latestFile.getUploadDate())) && df.isValid()) {
+							latestFile = df;
+							ret.clear();
+							ret.add(df);
+						}
+					} else {
+						ret.add(df);
+					}
 				}
 			}
 		}
-		
 		return ret;
 	}
 
