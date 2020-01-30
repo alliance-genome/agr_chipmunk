@@ -230,7 +230,7 @@ public class DataFileService extends BaseService<DataFile> {
 				
 				DataFile dataFile = map.get(key);
 				
-				if(dataFile == null || (df.getUploadDate().after(dataFile.getUploadDate()) && df.isValid())) {
+				if((dataFile == null || df.getUploadDate().after(dataFile.getUploadDate())) && df.isValid()) {
 					dataFile = df;
 				}
 				map.put(key, dataFile);
@@ -244,18 +244,32 @@ public class DataFileService extends BaseService<DataFile> {
 
 	public List<DataFile> getReleaseDataTypeSubTypeFiles(String releaseVersion, String dataType, String dataSubtype, Boolean latest) {
 		ReleaseVersion releaseVersionLookup = releaseDAO.findByField("releaseVersion", releaseVersion);
-		List<DataFile> files = getDataTypeSubTypeFiles(dataType, dataSubtype, latest);
-		ArrayList<DataFile> ret = new ArrayList<DataFile>();
 		
+		DataType type = dataTypeDAO.findByField("name", dataType);
+		DataSubType dataSubType = dataSubTypeDAO.findByField("name", dataSubtype);
+		Map<String, Object> params = new HashMap<>();
+		params.put("dataType.id", type.getId().toString());
+		params.put("dataSubType.id", dataSubType.getId().toString());
+		List<DataFile> files = dao.search(params, "uploadDate");
+		
+		ArrayList<DataFile> ret = new ArrayList<DataFile>();
+
+		DataFile latestFile = null;
 		for(DataFile df: files) {
 			for(ReleaseVersion rv: df.getReleaseVersions()) {
 				if(rv.getReleaseVersion().equals(releaseVersionLookup.getReleaseVersion())) {
-					ret.add(df);
-					break;
+					if(latest) {
+						if((latestFile == null || df.getUploadDate().after(latestFile.getUploadDate())) && df.isValid()) {
+							latestFile = df;
+							ret.clear();
+							ret.add(df);
+						}
+					} else {
+						ret.add(df);
+					}
 				}
 			}
 		}
-		
 		return ret;
 	}
 
