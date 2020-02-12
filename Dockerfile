@@ -17,3 +17,4 @@ WORKDIR /workdir/agr_fms_software
 
 RUN mvn -T 6 -B clean package
 
+EXPOSE 8080
