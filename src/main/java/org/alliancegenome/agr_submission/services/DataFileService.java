@@ -127,6 +127,7 @@ public class DataFileService extends BaseService<DataFile> {
 		return dao.remove(id);
 	}
 	
+	@Transactional
 	public DataFile changeDataType(String id, String dataType) {
 		DataFile dbEntity = get(id);
 		DataType type = dataTypeDAO.findByField("name", dataType);
