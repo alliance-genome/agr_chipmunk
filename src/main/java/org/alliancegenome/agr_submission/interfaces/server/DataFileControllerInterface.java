@@ -81,6 +81,14 @@ public interface DataFileControllerInterface {
 	);
 	
 	@POST @Secured
+	@Path("/change/{id}/{dataType}")
+	@JsonView(View.DataFileCreate.class)
+	public DataFile changeDataType(
+		@Parameter(in=ParameterIn.PATH, name="id", description = "DataFile Id", required=true, schema = @Schema(type = SchemaType.STRING)) @PathParam("id") String id,
+		@Parameter(in=ParameterIn.PATH, name="dataType", description = "New Data Type by Name", required=true, schema = @Schema(type = SchemaType.STRING)) @PathParam("dataType") String dataType
+	);
+	
+	@POST @Secured
 	@Path("/assign/{releaseVersion1}/{releaseVersion2}")
 	@JsonView(View.DataFileCreate.class)
 	public List<DataFile> assignDataFilesFromRelease1ToRelease2(

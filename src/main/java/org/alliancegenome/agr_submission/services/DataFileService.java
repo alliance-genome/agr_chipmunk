@@ -126,6 +126,13 @@ public class DataFileService extends BaseService<DataFile> {
 		log.info("DataFileService: delete: " + id);
 		return dao.remove(id);
 	}
+	
+	public DataFile changeDataType(String id, String dataType) {
+		DataFile dbEntity = get(id);
+		DataType type = dataTypeDAO.findByField("name", dataType);
+		dbEntity.setDataType(type);
+		return dao.merge(dbEntity);
+	}
 
 	@Transactional
 	public List<DataFile> assignDataFilesFromRelease1ToRelease2(String releaseVersion1, String releaseVersion2) {

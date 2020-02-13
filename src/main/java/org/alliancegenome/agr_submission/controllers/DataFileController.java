@@ -46,6 +46,11 @@ public class DataFileController extends BaseController implements DataFileContro
 	}
 	
 	@Override
+	public DataFile changeDataType(String id, String dataType) {
+		return dataFileService.changeDataType(id, dataType);
+	}
+	
+	@Override
 	public List<DataFile> assignDataFilesFromRelease1ToRelease2(String releaseVersion1, String releaseVersion2) {
 		return dataFileService.assignDataFilesFromRelease1ToRelease2(releaseVersion1, releaseVersion2);
 	}
