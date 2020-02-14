@@ -1,6 +1,6 @@
 swarm.logging=INFO
 
-swarm.logging.loggers.[org.alliancegenome].level=DEBUG
+#swarm.logging.loggers.[org.alliancegenome].level=DEBUG
 
 swarm.ds.connection.url=jdbc:h2:/data/agr_chipmunk
 

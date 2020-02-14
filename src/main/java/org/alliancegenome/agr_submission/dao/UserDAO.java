@@ -17,19 +17,6 @@ public class UserDAO extends BaseSQLDAO<User> {
 	
 	@Transactional
 	public User findUserByApiKey(String apiKey) {
-		
-		if(findAll().size() == 0) {
-			User u = new User();
-			u.setName("Olin Blodgett");
-			u.setPassword("password");
-			u.setUsername("oblodgett");
-			try {
-				u.setApiKey(AESUtil.encrypt(u.getName(), ConfigHelper.getEncryptionPasswordKey()));
-				persist(u);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
 		return findByField("apiKey", apiKey);
 	}
 

@@ -29,6 +29,7 @@ public class AuthenticationController implements AuthenticationControllerInterfa
 	private void authenticate(String username, String password) throws Exception {
 		// Authenticate against a database, LDAP, file or whatever
 		// Throw an Exception if the credentials are invalid
+		// Look userDAO
 	}
 
 	private AuthToken issueToken(String username) {
@@ -36,7 +37,7 @@ public class AuthenticationController implements AuthenticationControllerInterfa
 		// The issued token must be associated to a user
 		// Return the issued token
 		AuthToken token = new AuthToken();
-		token.setToken("Bearer This is a test");
+		token.setApiKey("Bearer This is a test");
 		return token;
 	}
 }
