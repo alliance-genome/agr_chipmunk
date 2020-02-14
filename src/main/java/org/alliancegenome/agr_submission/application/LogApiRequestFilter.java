@@ -13,6 +13,9 @@ import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.ext.Provider;
 
+import org.alliancegenome.agr_submission.auth.AuthedUser;
+import org.alliancegenome.agr_submission.auth.AuthenticatedUser;
+import org.alliancegenome.agr_submission.entities.User;
 import org.alliancegenome.agr_submission.entities.log.LogApiDTO;
 
 @Provider
@@ -23,10 +26,17 @@ public class LogApiRequestFilter implements ContainerRequestFilter {
 	
 	@Inject @Any Event<LogApiDTO> apiEvent;
 
+	@Inject
+	@AuthenticatedUser
+	AuthedUser authenticatedUser;
+
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {
 		LogApiDTO info = new  LogApiDTO();
-		
+
+		if(authenticatedUser.getUser() != null) {
+			info.setUser(authenticatedUser.getUser());
+		}
 		info.setRequestMethod(requestContext.getMethod());
 		
 		HashMap<String, List<String>> headerMap = new HashMap<String, List<String>>(requestContext.getHeaders());

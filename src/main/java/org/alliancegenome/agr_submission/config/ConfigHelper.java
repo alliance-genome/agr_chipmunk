@@ -1,5 +1,9 @@
 package org.alliancegenome.agr_submission.config;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -44,6 +48,8 @@ public class ConfigHelper {
 		
 		defaults.put("FMS_HOST", "localhost:8080");
 		
+		defaults.put("ENC_PASS_FILE", "/data/encryptionPasswordKey");
+		
 		allKeys = defaults.keySet();
 
 		if (configProperties.size() == 0) {
@@ -72,6 +78,13 @@ public class ConfigHelper {
 		printProperties();
 		init = true;
 	}
+	
+	public static void printProperties() {
+		log.info("Running with Properties:");
+		for (String key : allKeys) {
+			log.info("\t" + key + ": " + config.get(key));
+		}
+	}
 
 	private static String loadSystemProperty(String key) {
 		String ret = System.getProperty(key);
@@ -97,10 +110,8 @@ public class ConfigHelper {
 		return ret;
 	}
 	
+	// Accessor methods 
 	
-
-
-
 	public static String getAWSAccessKey() {
 		if(!init) init();
 		return config.get("AWS_ACCESS_KEY");
@@ -108,10 +119,6 @@ public class ConfigHelper {
 	public static String getAWSSecretKey() {
 		if(!init) init();
 		return config.get("AWS_SECRET_KEY");
-	}
-	public static String getApiAccessToken() {
-		if(!init) init();
-		return config.get("API_ACCESS_TOKEN");
 	}
 	public static boolean getDebug() {
 		if(!init) init();
@@ -125,7 +132,6 @@ public class ConfigHelper {
 		if(!init) init();
 		return config.get("FMS_HOST");
 	}
-	
 	public static String getJavaLineSeparator() {
 		if(!init) init();
 		return System.getProperty("line.separator");
@@ -139,15 +145,13 @@ public class ConfigHelper {
 		return getJavaTmpDir();
 	}
 	
-	public static void setNameValue(String key, String value) {
-		config.put(key, value);
-	}
-	
-	public static void printProperties() {
-		log.info("Running with Properties:");
-		for (String key : allKeys) {
-			log.info("\t" + key + ": " + config.get(key));
-		}
+	public static String getEncryptionPasswordKey() throws Exception {
+		if(!init) init();
+		String filePath = config.get("ENC_PASS_FILE");
+		BufferedReader reader = new BufferedReader(new FileReader(new File(filePath)));
+		String password = reader.readLine();
+		reader.close();
+		return password;
 	}
 
 }

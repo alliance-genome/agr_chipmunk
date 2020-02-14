@@ -13,6 +13,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
 import org.alliancegenome.agr_submission.config.ConfigHelper;
+import org.alliancegenome.agr_submission.dao.UserDAO;
+import org.alliancegenome.agr_submission.entities.User;
+import org.alliancegenome.agr_submission.util.AESUtil;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -24,7 +27,9 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
 	@Inject
 	@AuthenticatedUser
-	Event<String> userAuthenticatedEvent;
+	Event<AuthedUser> userAuthenticatedEvent;
+	
+	@Inject UserDAO userDAO;
 	
 	private static final String REALM = "AGR";
 	private static final String AUTHENTICATION_SCHEME = "Bearer";
@@ -37,24 +42,21 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
 		log.debug("Authorization Header: " + authorizationHeader);
 
-		if(ConfigHelper.getApiAccessToken() != null && ConfigHelper.getApiAccessToken().length() > 0) {
-			log.debug("Checking API Access token: " + ConfigHelper.getApiAccessToken());
-			if (!isTokenBasedAuthentication(authorizationHeader)) {
-				abortWithUnauthorized(requestContext);
-				return;
-			}
-	
-			// Extract the token from the Authorization header
-			String token = authorizationHeader.substring(AUTHENTICATION_SCHEME.length()).trim();
-	
-			try {
-				validateToken(token);
-			} catch (Exception e) {
-				abortWithUnauthorized(requestContext);
-			}
-		} else {
-			log.debug("API Access Token is null allowing everyone: " + ConfigHelper.getApiAccessToken());
+		if (!isTokenBasedAuthentication(authorizationHeader)) {
+			abortWithUnauthorized(requestContext);
+			return;
 		}
+
+		// Extract the token from the Authorization header
+		String token = authorizationHeader.substring(AUTHENTICATION_SCHEME.length()).trim();
+
+		try {
+			validateToken(token);
+		} catch (Exception e) {
+			e.printStackTrace();
+			abortWithUnauthorized(requestContext);
+		}
+
 	}
 
 	private boolean isTokenBasedAuthentication(String authorizationHeader) {
@@ -76,11 +78,17 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 		// Throw an Exception if the token is invalid
 		//log.debug("API Access Token: " + ConfigHelper.getApiAccessToken());
 		//log.debug("Validating Token: " + token);
-		if(!token.equals(ConfigHelper.getApiAccessToken())) {
+		
+		User user = userDAO.findUserByApiKey(token);
+		AuthedUser authedUser = new AuthedUser();
+		authedUser.setUser(user);
+		userAuthenticatedEvent.fire(authedUser);
+		
+		if(user == null) {
 			log.warn("Authentication Unsuccessful: " + token);
-			throw new Exception("Authentication Unsuccessful: " + token + " != " + ConfigHelper.getApiAccessToken());
+			throw new Exception("Authentication Unsuccessful: " + token);
 		}
-		log.info("Authentication Successful: " + token);
-		//userAuthenticatedEvent.fire(username);
+		log.info("Authentication Successful for: " + AESUtil.decrypt(token, ConfigHelper.getEncryptionPasswordKey()));
+		
 	}
 }

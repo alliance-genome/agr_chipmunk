@@ -9,6 +9,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
 import org.alliancegenome.agr_submission.BaseEntity;
+import org.alliancegenome.agr_submission.entities.User;
 import org.alliancegenome.agr_submission.views.View;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -39,6 +40,9 @@ public class LogApiRequest extends BaseEntity {
 	
 	@JsonView({View.API.class})
 	private Date timeStamp = new Date();
+	
+	@ManyToOne
+	private User user;
 	
 	@ManyToOne
 	private LogUserAgent userAgent;

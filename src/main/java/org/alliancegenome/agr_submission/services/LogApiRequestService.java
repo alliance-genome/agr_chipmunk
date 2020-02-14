@@ -34,7 +34,7 @@ public class LogApiRequestService extends BaseService<LogApiRequest> {
 		apiLog.setHeaderString(info.getHeadersString());
 		apiLog.setQueryParametersString(info.getQueryParameters().toString());
 		apiLog.setPathParametersString(info.getPathParameters().toString());
-		
+		apiLog.setUser(info.getUser());
 		apiLog.setUserAgent(userAgentDAO.save(info.getUserAgent().toString()));
 		apiLog.setRequestMethod(requestMethodDAO.save(info.getRequestMethod()));
 		apiLog.setAddress(logAddressDAO.save(info.getAddress()));

@@ -1,16 +1,20 @@
 package org.alliancegenome.agr_submission.controllers;
 
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 
 import org.alliancegenome.agr_submission.auth.AuthToken;
 import org.alliancegenome.agr_submission.auth.Credentials;
+import org.alliancegenome.agr_submission.dao.UserDAO;
 import org.alliancegenome.agr_submission.interfaces.server.AuthenticationControllerInterface;
 
 
 @RequestScoped
 public class AuthenticationController implements AuthenticationControllerInterface {
 
+	@Inject UserDAO userDAO;
+	
 	public Response authenticateUser(Credentials creds) {
 		try {
 			authenticate(creds.getUsername(), creds.getPassword());

@@ -3,7 +3,6 @@ package org.alliancegenome.agr_submission.views;
 
 public class View {
 	
-
 	public class Default { }
 	public class API extends Default { }
 
@@ -48,5 +47,12 @@ public class View {
 	public class SchemaFileRead extends SchemaFileView { }
 	public class SchemaFileUpdate extends SchemaFileView { }
 	public class SchemaFileDelete extends SchemaFileView { }
+	
+	public class UserView extends API { }
+	public class UserCreate extends UserView { }
+	public class UserRead extends UserView { }
+	public class UserUpdate extends UserView { }
+	public class UserDelete extends UserView { }
+	
 	
 }
