@@ -204,7 +204,7 @@ public class SubmissionService {
 				boolean found = false;
 				for(ReleaseVersion r: df.getReleaseVersions()) {
 					log.trace("Release: " + r.getReleaseVersion() + " Release Lookup: " + releaseVersion.getReleaseVersion());
-					if(r.getReleaseVersion().contentEquals(releaseVersion.getReleaseVersion())) {
+					if(r.getReleaseVersion().equals(releaseVersion.getReleaseVersion())) {
 						log.debug("DataFile already under release: " + releaseVersion.getReleaseVersion());
 						found = true;
 						break;
