@@ -19,12 +19,9 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import io.swagger.annotations.Api;
-
 @Path("/user")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Api(hidden = true)
 @Tag(name = "User Endpoints")
 public interface UserControllerInterface {
 
