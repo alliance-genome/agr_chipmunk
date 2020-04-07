@@ -14,6 +14,7 @@ import javax.persistence.Transient;
 import org.alliancegenome.agr_submission.BaseEntity;
 import org.alliancegenome.agr_submission.views.View;
 import org.apache.commons.collections4.keyvalue.MultiKey;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
@@ -25,6 +26,7 @@ import lombok.ToString;
 
 @Entity
 @Getter @Setter @ToString(of= {"id", "snapShotDate"})
+@Schema(name="SnapShot", description="SchemaVersion model")
 public class SnapShot extends BaseEntity {
 
 	@Id @GeneratedValue
@@ -35,11 +37,13 @@ public class SnapShot extends BaseEntity {
 
 	@ManyToOne
 	@JsonView({ View.SnapShotView.class, View.SnapShotMultipleView.class })
+	@Schema(implementation = ReleaseVersion.class)
 	private ReleaseVersion releaseVersion;
 	
 	@Transient
 	@JsonProperty(access = Access.READ_ONLY)
 	@JsonView({View.SnapShotView.class, View.ReleaseVersionView.class})
+	@Schema(implementation = DataFile.class)
 	public ArrayList<DataFile> getDataFiles() {
 		ArrayList<DataFile> dataFiles = new ArrayList<DataFile>();
 		HashMap<MultiKey<String>, DataFile> currentFiles = new HashMap<>();

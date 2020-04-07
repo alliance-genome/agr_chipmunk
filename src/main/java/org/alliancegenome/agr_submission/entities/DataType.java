@@ -15,6 +15,7 @@ import javax.persistence.Transient;
 
 import org.alliancegenome.agr_submission.BaseEntity;
 import org.alliancegenome.agr_submission.views.View;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -24,6 +25,7 @@ import lombok.ToString;
 
 @Entity
 @Getter @Setter @ToString
+@Schema(name="DataType", description="DataType model")
 public class DataType extends BaseEntity {
 
 	@Id @GeneratedValue
@@ -43,10 +45,12 @@ public class DataType extends BaseEntity {
 
 	@ManyToMany(fetch=FetchType.EAGER)
 	@JsonView({View.DataTypeView.class})
+	@Schema(implementation = DataSubType.class)
 	private Set<DataSubType> dataSubTypes;
 
 	@OneToMany(mappedBy = "dataType", fetch=FetchType.EAGER)
 	@JsonView({View.DataTypeView.class})
+	@Schema(implementation = SchemaFile.class)
 	private Set<SchemaFile> schemaFiles;
 
 	@Transient

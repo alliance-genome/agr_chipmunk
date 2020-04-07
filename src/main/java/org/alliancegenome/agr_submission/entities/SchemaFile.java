@@ -7,6 +7,7 @@ import javax.persistence.ManyToOne;
 
 import org.alliancegenome.agr_submission.BaseEntity;
 import org.alliancegenome.agr_submission.views.View;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -15,6 +16,7 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter
+@Schema(name="SchemaFile", description="SchemaFile model")
 public class SchemaFile extends BaseEntity {
 
 	@Id @GeneratedValue
@@ -25,9 +27,11 @@ public class SchemaFile extends BaseEntity {
 	
 	@ManyToOne
 	@JsonView({View.SchemaFileView.class, View.DataTypeView.class})
+	@Schema(implementation = SchemaVersion.class)
 	private SchemaVersion schemaVersion;
 	
 	@ManyToOne
+	@Schema(implementation = DataType.class)
 	private DataType dataType;
 
 }

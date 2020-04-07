@@ -12,6 +12,7 @@ import javax.persistence.OneToOne;
 
 import org.alliancegenome.agr_submission.BaseEntity;
 import org.alliancegenome.agr_submission.views.View;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -20,6 +21,7 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter
+@Schema(name="SchemaVersion", description="SnapShot model")
 public class SchemaVersion extends BaseEntity {
 
 	@Id @GeneratedValue
@@ -31,14 +33,17 @@ public class SchemaVersion extends BaseEntity {
 	
 	@OneToMany(mappedBy="schemaVersion", fetch=FetchType.EAGER)
 	@JsonView({View.SchemaVersionView.class})
+	@Schema(implementation = SchemaFile.class)
 	private Set<SchemaFile> schemaFiles;
 	
 	@OneToOne(mappedBy="defaultSchemaVersion")
 	@JsonView({View.SchemaVersionView.class})
+	@Schema(implementation = ReleaseVersion.class)
 	private ReleaseVersion releaseVersion;
 	
 	@OneToMany(mappedBy="schemaVersion", fetch=FetchType.EAGER)
 	@JsonView({View.SchemaVersionView.class})
+	@Schema(implementation = DataFile.class)
 	private Set<DataFile> dataFiles;
 
 }
