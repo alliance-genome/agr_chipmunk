@@ -15,7 +15,6 @@ import javax.ws.rs.ext.Provider;
 
 import org.alliancegenome.agr_submission.auth.AuthedUser;
 import org.alliancegenome.agr_submission.auth.AuthenticatedUser;
-import org.alliancegenome.agr_submission.entities.User;
 import org.alliancegenome.agr_submission.entities.log.LogApiDTO;
 
 @Provider

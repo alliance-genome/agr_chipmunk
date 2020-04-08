@@ -63,6 +63,7 @@ public class SnapShotService extends BaseService<SnapShot> {
 					latest = s;
 				}
 			}
+			latest.getDataFiles();
 			return latest;
 		}
 		return null;
@@ -76,7 +77,10 @@ public class SnapShotService extends BaseService<SnapShot> {
 		if(rv != null) {
 			s.setReleaseVersion(rv);
 			s.setSnapShotDate(new Date());
-			return dao.persist(s);
+			
+			SnapShot ret = dao.persist(s);
+			ret.getDataFiles();
+			return ret;
 		}
 		return null;
 	}

@@ -229,16 +229,19 @@ public class DataFileService extends BaseService<DataFile> {
 	
 	@Transactional
 	public List<DataFile> getDataFilesByRelease(String releaseVersion, Boolean latest) {
+
 		ReleaseVersion releaseVersionLookup = releaseDAO.findByField("releaseVersion", releaseVersion);
-	
+
 		if(latest) {
 			MultiKeyMap<String, DataFile> map = new MultiKeyMap<>();
 			for(DataFile df: releaseVersionLookup.getDataFiles()) {
 				MultiKey<String> key = new MultiKey<String>(df.getDataType().getName(), df.getDataSubType().getName());
 				
-				DataFile dataFile = map.get(key);
+				if(!df.isValid()) continue;
 				
-				if((dataFile == null || df.getUploadDate().after(dataFile.getUploadDate())) && df.isValid()) {
+				DataFile dataFile = map.get(key);
+
+				if(dataFile == null || df.getUploadDate().after(dataFile.getUploadDate())) {
 					dataFile = df;
 				}
 				map.put(key, dataFile);
