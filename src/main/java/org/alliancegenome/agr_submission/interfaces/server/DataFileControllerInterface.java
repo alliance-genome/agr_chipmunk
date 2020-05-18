@@ -2,7 +2,6 @@ package org.alliancegenome.agr_submission.interfaces.server;
 
 import java.util.List;
 
-import javax.json.JsonPatch;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
@@ -37,11 +36,11 @@ public interface DataFileControllerInterface {
 	@Path("/{releaseVersion}/{dataType}/{dataSubtype}")
 	@JsonView(View.DataFileCreate.class)
 	public DataFile create(
-			@PathParam("releaseVersion") String releaseVersion,
-			@PathParam("dataType") String dataType,
-			@PathParam("dataSubtype") String dataSubtype,
-			DataFile entity
-			);
+		@PathParam("releaseVersion") String releaseVersion,
+		@PathParam("dataType") String dataType,
+		@PathParam("dataSubtype") String dataSubtype,
+		DataFile entity
+	);
 
 	@GET
 	@Path("/{id}")
@@ -61,33 +60,57 @@ public interface DataFileControllerInterface {
 	public DataFile validateToggle(
 		@Parameter(in=ParameterIn.PATH, name="id", description = "Long Id or md5Sum", required=true, schema = @Schema(type = SchemaType.STRING)) @PathParam("id") String id
 	);
-	
+
 	@DELETE @Secured
 	@Path("/{id}")
 	@JsonView(View.DataFileDelete.class)
 	public DataFile delete(@PathParam("id") Long id);
-	
+
 	@GET
 	@Path("/all")
 	@JsonView(View.DataFileView.class)
 	public List<DataFile> getDataFiles();
-	
-	@GET
-	@Path("/diff/{id1}/{id2}")
-	@JsonView(View.DataFileView.class)
-	public JsonPatch diffDataFiles(
-		@Parameter(in=ParameterIn.PATH, name="id1", description = "Long Id or md5Sum", required=true, schema = @Schema(type = SchemaType.STRING)) @PathParam("id1") String id1,
-		@Parameter(in=ParameterIn.PATH, name="id2", description = "Long Id or md5Sum", required=true, schema = @Schema(type = SchemaType.STRING)) @PathParam("id2") String id2
-	);
-	
+
+//	@GET
+//	@Path("/diff/{id1}/{id2}")
+//	@JsonView(View.DataFileView.class)
+//	@APIResponse(
+//			responseCode = "200",
+//			description = "Json Patch to show the difference between two files",
+//			content = @Content(
+//					schema = @Schema(
+//							type = SchemaType.OBJECT,
+//							implementation = JsonPatch.class)))
+//	public JsonPatch diffDataFiles(
+//		@Parameter(in=ParameterIn.PATH, name="id1", description = "Long Id or md5Sum", required=true, schema = @Schema(type = SchemaType.STRING)) @PathParam("id1") String id1,
+//		@Parameter(in=ParameterIn.PATH, name="id2", description = "Long Id or md5Sum", required=true, schema = @Schema(type = SchemaType.STRING)) @PathParam("id2") String id2
+//	);
+
 	@POST @Secured
-	@Path("/change/{id}/{dataType}")
+	@Path("/change_datatype/{id}/{dataType}")
 	@JsonView(View.DataFileCreate.class)
 	public DataFile changeDataType(
 		@Parameter(in=ParameterIn.PATH, name="id", description = "DataFile Id", required=true, schema = @Schema(type = SchemaType.STRING)) @PathParam("id") String id,
 		@Parameter(in=ParameterIn.PATH, name="dataType", description = "New Data Type by Name", required=true, schema = @Schema(type = SchemaType.STRING)) @PathParam("dataType") String dataType
 	);
-	
+
+	@POST @Secured
+	@Path("/change_datasubtype/{id}/{dataSubType}")
+	@JsonView(View.DataFileCreate.class)
+	public DataFile changeDataSubType(
+		@Parameter(in=ParameterIn.PATH, name="id", description = "DataFile Id", required=true, schema = @Schema(type = SchemaType.STRING)) @PathParam("id") String id,
+		@Parameter(in=ParameterIn.PATH, name="dataSubType", description = "New Data SubType by Name", required=true, schema = @Schema(type = SchemaType.STRING)) @PathParam("dataSubType") String dataSubType
+	);
+
+	@POST @Secured
+	@Path("/change/{id}/{dataType}/{dataSubType}")
+	@JsonView(View.DataFileCreate.class)
+	public DataFile changeDataTypeAndDataSubType(
+		@Parameter(in=ParameterIn.PATH, name="id", description = "DataFile Id", required=true, schema = @Schema(type = SchemaType.STRING)) @PathParam("id") String id,
+		@Parameter(in=ParameterIn.PATH, name="dataType", description = "New Data Type by Name", required=true, schema = @Schema(type = SchemaType.STRING)) @PathParam("dataType") String dataType,
+		@Parameter(in=ParameterIn.PATH, name="dataSubType", description = "New Data SubType by Name", required=true, schema = @Schema(type = SchemaType.STRING)) @PathParam("dataSubType") String dataSubType
+	);
+
 	@POST @Secured
 	@Path("/assign/{releaseVersion1}/{releaseVersion2}")
 	@JsonView(View.DataFileCreate.class)
@@ -104,7 +127,7 @@ public interface DataFileControllerInterface {
 		@DefaultValue("false")
 		@Parameter(in=ParameterIn.QUERY, name="latest", description = "Latest File or All", required=false, schema = @Schema(type = SchemaType.BOOLEAN)) @QueryParam("latest") Boolean latest
 	);
-	
+
 	@GET
 	@Path("/by/release/{releaseVersion}")
 	@JsonView(View.DataFileView.class)
@@ -113,7 +136,7 @@ public interface DataFileControllerInterface {
 		@DefaultValue("false")
 		@Parameter(in=ParameterIn.QUERY, name="latest", description = "Latest File or All", required=false, schema = @Schema(type = SchemaType.BOOLEAN)) @QueryParam("latest") Boolean latest
 	);
-	
+
 	@GET
 	@Path("/by/{dataType}/{dataSubtype}")
 	@JsonView(View.DataFileView.class)

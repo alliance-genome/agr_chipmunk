@@ -1,19 +1,11 @@
 package org.alliancegenome.agr_submission.services;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.json.Json;
-import javax.json.JsonPatch;
-import javax.json.JsonValue;
 import javax.transaction.Transactional;
 
 import org.alliancegenome.agr_submission.BaseService;
@@ -91,33 +83,6 @@ public class DataFileService extends BaseService<DataFile> {
 		dbEntity.setValid(entity.getValid());
 		dbEntity.setUploadDate(entity.getUploadDate());
 		return dao.merge(dbEntity);
-	}
-	
-	@Transactional
-	public JsonPatch diff(String id1, String id2) {
-
-		try {
-			
-			//https://download.alliancegenome.org/2.3.0/BGI/MGI/1.0.0.9_BGI_MGI_0.json
-			//https://download.alliancegenome.org/2.3.0/BGI/MGI/1.0.0.9_BGI_MGI_1.json
-			
-			InputStream input1 = new URL("http://www.somewebsite.com/a.txt").openStream();
-			InputStream input2 = new URL("http://www.somewebsite.com/a.txt").openStream();
-
-			JsonValue source = Json.createReader(new StringReader("")).readValue();
-			JsonValue target = Json.createReader(new StringReader("")).readValue();
-
-			return Json.createDiff(source.asJsonObject(), target.asJsonObject());
-			
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return null;
 	}
 
 	@Override
@@ -291,4 +256,21 @@ public class DataFileService extends BaseService<DataFile> {
 		return dao.merge(dbEntity);
 	}
 
+	@Transactional
+	public DataFile changeDataSubType(String id, String dataSubType) {
+		DataFile dbEntity = get(id);
+		DataSubType subtype = dataSubTypeDAO.findByField("name", dataSubType);
+		dbEntity.setDataSubType(subtype);
+		return dao.merge(dbEntity);
+	}
+
+	@Transactional
+	public DataFile changeDataTypeAndDataSubType(String id, String dataType, String dataSubType) {
+		DataFile dbEntity = get(id);
+		DataType type = dataTypeDAO.findByField("name", dataType);
+		DataSubType subtype = dataSubTypeDAO.findByField("name", dataSubType);
+		dbEntity.setDataType(type);
+		dbEntity.setDataSubType(subtype);
+		return dao.merge(dbEntity);
+	}
 }
