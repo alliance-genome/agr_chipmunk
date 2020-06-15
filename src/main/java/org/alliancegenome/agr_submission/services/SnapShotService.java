@@ -48,8 +48,13 @@ public class SnapShotService extends BaseService<SnapShot> {
 		return dao.remove(id);
 	}
 
+	@Transactional
 	public List<SnapShot> getSnapShots() {
-		return dao.findAll();
+		List<SnapShot> list = dao.findAll();
+		for(SnapShot s: list) {
+			s.getDataFiles();
+		}
+		return list;
 	}
 	
 	@Transactional

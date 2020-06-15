@@ -44,6 +44,7 @@ public class ReleaseVersion extends BaseEntity {
 	private SchemaVersion defaultSchemaVersion;
 
 	// fetch=FetchType.EAGER is needed for take snapshot
+	// fetch=FetchType.EAGER is needed for /api/releaseversion/all
 	// fetch=FetchType.EAGER is NOT needed for /api/releaseversion/{id}
 	@ManyToMany(mappedBy = "releaseVersions")
 	//@JsonView({View.ReleaseVersionView.class})
