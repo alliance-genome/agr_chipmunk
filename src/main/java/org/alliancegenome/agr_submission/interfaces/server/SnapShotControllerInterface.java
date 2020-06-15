@@ -75,7 +75,7 @@ public interface SnapShotControllerInterface {
 
 	@GET
 	@Path("/all")
-	@JsonView(View.SnapShotView.class)
+	@JsonView(View.SnapShotMultipleView.class)
 	public List<SnapShot> getSnapShots();
 
 }

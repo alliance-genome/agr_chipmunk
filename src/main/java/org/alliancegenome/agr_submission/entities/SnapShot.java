@@ -34,7 +34,7 @@ public class SnapShot extends BaseEntity {
 	private Date snapShotDate;
 
 	@ManyToOne
-	@JsonView(View.SnapShotView.class)
+	@JsonView({ View.SnapShotView.class, View.SnapShotMultipleView.class })
 	private ReleaseVersion releaseVersion;
 	
 	@Transient

@@ -50,11 +50,7 @@ public class SnapShotService extends BaseService<SnapShot> {
 
 	@Transactional
 	public List<SnapShot> getSnapShots() {
-		List<SnapShot> list = dao.findAll();
-		for(SnapShot s: list) {
-			s.getDataFiles();
-		}
-		return list;
+		return dao.findAll();
 	}
 	
 	@Transactional
