@@ -9,3 +9,5 @@ audit.log
 /bin/
 *.db
 userdata.sh
+.history
+.cache
