@@ -13,6 +13,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 import org.alliancegenome.agr_submission.BaseEntity;
+import org.alliancegenome.agr_submission.config.ConfigHelper;
 import org.alliancegenome.agr_submission.views.View;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -56,6 +57,17 @@ public class DataFile extends BaseEntity implements Comparable<DataFile> {
 	@JsonView({View.DataFileView.class, View.SchemaVersionView.class, View.SnapShotView.class, View.ReleaseVersionView.class})
 	private DataSubType dataSubType;
 
+	@JsonView({View.API.class})
+	public String getStableURL() {
+		if(ConfigHelper.getAWSBucketName().equals("mod-datadumps")) {
+			return "https://fms.alliancegenome.org/api/data/download/" + dataType.getName() + "_" + dataSubType.getName() + "." + dataType.getFileExtension();
+		} else if(ConfigHelper.getAWSBucketName().contentEquals("mod-datadumps-dev")) {
+			return "https://fmsdev.alliancegenome.org/api/data/download/" + dataType.getName() + "_" + dataSubType.getName() + "." + dataType.getFileExtension();
+		} else {
+			return null;
+		}
+	}
+	
 	public boolean isValid() {
 		return (valid == null || valid);
 	}
