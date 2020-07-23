@@ -112,9 +112,9 @@ public class SubmissionController extends BaseController implements SubmissionCo
 			}
 		} else if(fileName.endsWith(type.getFileExtension())) {
 			try {
-				InputStream is = new URL("http://download.alliancegenome.org/3.1.1/BGI/RGD/1.0.1.2_BGI_RGD_0.json.gz").openStream();
-				GZIPInputStream gis = new GZIPInputStream(is);
-				responseBuilder = Response.ok(gis);
+				InputStream is = new URL("http://download.alliancegenome.org/3.1.1/BGI/RGD/1.0.1.2_BGI_RGD_0.json").openStream();
+				//GZIPInputStream gis = new GZIPInputStream(is);
+				responseBuilder = Response.ok(is);
 			} catch (IOException e) {
 				responseBuilder = Response.noContent();
 				e.printStackTrace();
