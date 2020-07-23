@@ -11,7 +11,6 @@ import org.alliancegenome.agr_submission.interfaces.server.DataSubTypeController
 import org.alliancegenome.agr_submission.services.DataSubTypeService;
 
 @RequestScoped
-
 public class DataSubTypeController extends BaseController implements DataSubTypeControllerInterface {
 
 	@Inject DataSubTypeService dataSubTypeService;

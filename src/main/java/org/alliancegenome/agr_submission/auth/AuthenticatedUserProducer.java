@@ -4,8 +4,6 @@ import javax.enterprise.context.RequestScoped;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Produces;
 
-import org.alliancegenome.agr_submission.entities.User;
-
 @RequestScoped
 public class AuthenticatedUserProducer {
 

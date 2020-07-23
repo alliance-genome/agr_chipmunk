@@ -15,8 +15,6 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.alliancegenome.agr_submission.entities.log.LogRequestMethod;
-
 import lombok.extern.jbosslog.JBossLog;
 
 @JBossLog

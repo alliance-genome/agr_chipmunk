@@ -1,7 +1,6 @@
 package org.alliancegenome.agr_submission.main;
 
 import org.alliancegenome.agr_submission.util.AESUtil;
-import org.alliancegenome.agr_submission.util.github.GitHelper;
 
 import lombok.extern.log4j.Log4j2;
 

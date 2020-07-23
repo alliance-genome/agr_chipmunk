@@ -8,9 +8,9 @@ import javax.enterprise.context.ApplicationScoped;
 import org.alliancegenome.agr_submission.BaseSQLDAO;
 import org.alliancegenome.agr_submission.entities.ReleaseVersion;
 
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.jbosslog.JBossLog;
 
-@Log4j2
+@JBossLog
 @ApplicationScoped
 public class ReleaseVersionDAO extends BaseSQLDAO<ReleaseVersion> {
 

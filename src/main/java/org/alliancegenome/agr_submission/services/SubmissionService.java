@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
@@ -38,7 +37,6 @@ import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import lombok.extern.jbosslog.JBossLog;
 
 @JBossLog
-@RequestScoped
 public class SubmissionService {
 
 	//@Inject private SnapShotDAO snapShotDAO;
