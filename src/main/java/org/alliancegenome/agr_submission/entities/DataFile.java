@@ -60,9 +60,20 @@ public class DataFile extends BaseEntity implements Comparable<DataFile> {
 	@JsonView({View.API.class})
 	public String getStableURL() {
 		if(ConfigHelper.getAWSBucketName().equals("mod-datadumps")) {
-			return "https://fms.alliancegenome.org/api/data/download/" + dataType.getName() + "_" + dataSubType.getName() + "." + dataType.getFileExtension();
+			return "https://fms.alliancegenome.org/download/" + dataType.getName() + "_" + dataSubType.getName() + "." + dataType.getFileExtension();
 		} else if(ConfigHelper.getAWSBucketName().contentEquals("mod-datadumps-dev")) {
-			return "https://fmsdev.alliancegenome.org/api/data/download/" + dataType.getName() + "_" + dataSubType.getName() + "." + dataType.getFileExtension();
+			return "https://fmsdev.alliancegenome.org/download/" + dataType.getName() + "_" + dataSubType.getName() + "." + dataType.getFileExtension();
+		} else {
+			return null;
+		}
+	}
+	
+	@JsonView({View.API.class})
+	public String getS3Url() {
+		if(ConfigHelper.getAWSBucketName().equals("mod-datadumps")) {
+			return "https://download.alliancegenome.org/" + s3Path;
+		} else if(ConfigHelper.getAWSBucketName().contentEquals("mod-datadumps-dev")) {
+			return "https://downloaddev.alliancegenome.org/" + s3Path;
 		} else {
 			return null;
 		}

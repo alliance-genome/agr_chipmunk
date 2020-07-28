@@ -1,6 +1,7 @@
 package org.alliancegenome.agr_submission.controllers;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -14,11 +15,21 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.alliancegenome.agr_submission.BaseController;
+import org.alliancegenome.agr_submission.config.ConfigHelper;
+import org.alliancegenome.agr_submission.dao.DataFileDAO;
+import org.alliancegenome.agr_submission.dao.DataSubTypeDAO;
+import org.alliancegenome.agr_submission.dao.DataTypeDAO;
+import org.alliancegenome.agr_submission.entities.DataFile;
+import org.alliancegenome.agr_submission.entities.DataSubType;
 import org.alliancegenome.agr_submission.entities.DataType;
+import org.alliancegenome.agr_submission.entities.ReleaseVersion;
 import org.alliancegenome.agr_submission.exceptions.GenericException;
+import org.alliancegenome.agr_submission.exceptions.SchemaDataTypeException;
 import org.alliancegenome.agr_submission.interfaces.server.SubmissionControllerInterface;
 import org.alliancegenome.agr_submission.responces.APIResponce;
 import org.alliancegenome.agr_submission.responces.SubmissionResponce;
+import org.alliancegenome.agr_submission.services.DataFileService;
+import org.alliancegenome.agr_submission.services.ReleaseVersionService;
 import org.alliancegenome.agr_submission.services.SubmissionService;
 import org.apache.commons.io.FileUtils;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
@@ -32,8 +43,11 @@ import lombok.extern.jbosslog.JBossLog;
 @RequestScoped
 public class SubmissionController extends BaseController implements SubmissionControllerInterface {
 
-	@Inject
-	private SubmissionService metaDataService;
+	@Inject private SubmissionService metaDataService;
+	@Inject private ReleaseVersionService releaseService;
+	@Inject private DataFileService dataFileService;
+	@Inject private DataTypeDAO dataTypeDAO;
+	@Inject private DataSubTypeDAO dataSubTypeDAO;
 
 	@Override
 	public APIResponce submitData(MultipartFormDataInput input) {
@@ -56,18 +70,27 @@ public class SubmissionController extends BaseController implements SubmissionCo
 
 			Date d = new Date();
 			String outFileName = "tmp.data_" + d.getTime();
-			File outfile = new File(outFileName);
+			File saveFilePath = new File(outFileName);
 
 			try {
 				InputStream is = inputPart.getBody(InputStream.class, null);
 
-				log.info("Saving file to local filesystem: " + outfile.getAbsolutePath());
-				FileUtils.copyInputStreamToFile(is, outfile);
+				log.info("Saving file to local filesystem: " + saveFilePath.getAbsolutePath());
+				FileUtils.copyInputStreamToFile(is, saveFilePath);
 				log.info("Save file to local filesystem complete");
 				
-				// Check for Valid GZIP header on the file.
+				InputStream saveFileInput = new FileInputStream(saveFilePath);
+				
+				try {
+			        GZIPInputStream gs = new GZIPInputStream(saveFileInput);
+			        saveFileInput = gs;
+			    } catch (IOException e) {
+			        log.info("Input stream not in the GZIP format, using standard format");
+			        // Create GZIP File from input stream
+			        // Check for Valid GZIP header on the file.
+			    }
 
-				boolean passed = metaDataService.submitAndValidateDataFile(key, outfile, saveFile);
+				boolean passed = metaDataService.submitAndValidateDataFile(key, saveFilePath, saveFile);
 
 				if(passed) {
 					res.getFileStatus().put(key, "success");
@@ -77,7 +100,7 @@ public class SubmissionController extends BaseController implements SubmissionCo
 				}
 			} catch (GenericException | IOException e) {
 				log.error(e.getMessage());
-				outfile.delete();
+				saveFilePath.delete();
 				res.getFileStatus().put(key, e.getMessage());
 				//e.printStackTrace();
 				success = false;
@@ -93,40 +116,70 @@ public class SubmissionController extends BaseController implements SubmissionCo
 	}
 
 	@Override
-	public Response getStableFile(String fileName) {
+	public Response getStableFile(String fileName) throws GenericException {
+
+		String[] array = fileName.split("[_\\.]");
+
+		DataType dataType = dataTypeDAO.findByField("name", array[0]);
+		if(dataType == null) {
+			throw new SchemaDataTypeException("Could not Find dataType: " + array[0]);
+		}
+		log.debug("Data Type: " + dataType);
+
+		DataSubType dataSubType = dataSubTypeDAO.findByField("name", array[1]);
+
+		if(dataSubType == null) {
+			throw new SchemaDataTypeException("Could not Find dataSubType: " + array[1]);
+		}
+		log.debug("Data Sub Type: " + dataSubType);
 		
-		DataType type = new DataType();
-		// Lookup The latest reelase version
-		// get the dataType and dataSubtype
-		// get the latest URL 
-		// craft download url: 
+		ReleaseVersion releaseVersion = releaseService.getCurrentRelease();
+		log.debug("Current Release: " + releaseVersion);
+		
+		List<DataFile> dataFiles = dataFileService.getReleaseDataTypeSubTypeFiles(releaseVersion.getReleaseVersion(), dataType.getName(), dataSubType.getName(), true);
 		
 		Response.ResponseBuilder responseBuilder = null;
-		if(fileName.endsWith(".gz")) {
-			try {
-				InputStream is = new URL("http://download.alliancegenome.org/3.1.1/BGI/RGD/1.0.1.2_BGI_RGD_0.json.gz").openStream();
-				responseBuilder = Response.ok(is);
-			} catch (IOException e) {
-				responseBuilder = Response.noContent();
-				e.printStackTrace();
+		if(dataFiles.size() == 1) {
+			DataFile dataFile = dataFiles.get(0);
+			
+			String downloadHost = "";
+			if(ConfigHelper.getAWSBucketName().equals("mod-datadumps")) {
+				downloadHost = "http://download.alliancegenome.org/";
+			} else if(ConfigHelper.getAWSBucketName().contentEquals("mod-datadumps-dev")) {
+				downloadHost = "http://downloaddev.alliancegenome.org/";
+			} else {
+				downloadHost = "http://localhost:8080/";
 			}
-		} else if(fileName.endsWith(type.getFileExtension())) {
-			try {
-				InputStream is = new URL("http://download.alliancegenome.org/3.1.1/BGI/RGD/1.0.1.2_BGI_RGD_0.json").openStream();
-				//GZIPInputStream gis = new GZIPInputStream(is);
-				responseBuilder = Response.ok(is);
-			} catch (IOException e) {
-				responseBuilder = Response.noContent();
-				e.printStackTrace();
+			
+			if(fileName.endsWith(".gz")) {
+				try {
+					InputStream is = new URL(downloadHost + dataFile.getS3Path()).openStream();
+					responseBuilder = Response.ok(is);
+				} catch (IOException e) {
+					responseBuilder = Response.noContent();
+					e.printStackTrace();
+				}
+			} else if(fileName.endsWith(dataType.getFileExtension())) {
+				try {
+					InputStream is = new URL(downloadHost + dataFile.getS3Path()).openStream();
+					//GZIPInputStream gis = new GZIPInputStream(is);
+					responseBuilder = Response.ok(is);
+				} catch (IOException e) {
+					responseBuilder = Response.noContent();
+					e.printStackTrace();
+				}
+			} else {
+				// Unknown format
 			}
+
 		} else {
-			// Unknown format
+			responseBuilder = Response.noContent();
 		}
 		
 		responseBuilder.header("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
 		responseBuilder.type(MediaType.APPLICATION_OCTET_STREAM);
-		return responseBuilder.build();
-		
+		return responseBuilder.build();		
+
 	}
 
 }

@@ -10,6 +10,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.alliancegenome.agr_submission.auth.Secured;
+import org.alliancegenome.agr_submission.exceptions.GenericException;
 import org.alliancegenome.agr_submission.responces.APIResponce;
 import org.alliancegenome.agr_submission.views.View;
 import org.eclipse.microprofile.openapi.annotations.enums.ParameterIn;
@@ -47,6 +48,6 @@ public interface SubmissionControllerInterface {
 	public Response getStableFile(
 		@Parameter(in=ParameterIn.PATH, name = "fileName", description = "File Name for Downloading stable URL", required=true, schema = @Schema(type = SchemaType.STRING))
 		@PathParam("fileName") String fileName
-	);
+	) throws GenericException;
 
 }

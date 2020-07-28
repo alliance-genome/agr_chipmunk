@@ -93,5 +93,17 @@ public class ReleaseVersionService extends BaseService<ReleaseVersion> {
 		}
 		return nextRelease;
 	}
+	
+	public ReleaseVersion getCurrentRelease() {
+		List<ReleaseVersion> releaseVersions = getReleaseVersions();
+		ReleaseVersion nextRelease = null;
+		Date now = new Date();
+		for(ReleaseVersion rv: releaseVersions) {
+			if(now.after(rv.getReleaseDate()) && (nextRelease == null || rv.getReleaseDate().after(nextRelease.getReleaseDate()))) {
+				nextRelease = rv;
+			}
+		}
+		return nextRelease;
+	}
 
 }
