@@ -1,22 +1,8 @@
 package org.alliancegenome.agr_submission.controllers;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
+import lombok.extern.jbosslog.JBossLog;
 import org.alliancegenome.agr_submission.BaseController;
 import org.alliancegenome.agr_submission.config.ConfigHelper;
-import org.alliancegenome.agr_submission.dao.DataFileDAO;
 import org.alliancegenome.agr_submission.dao.DataSubTypeDAO;
 import org.alliancegenome.agr_submission.dao.DataTypeDAO;
 import org.alliancegenome.agr_submission.entities.DataFile;
@@ -35,9 +21,17 @@ import org.apache.commons.io.FileUtils;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
-import com.jcraft.jzlib.GZIPInputStream;
-
-import lombok.extern.jbosslog.JBossLog;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.io.*;
+import java.net.URL;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 @JBossLog
 @RequestScoped
@@ -78,17 +72,24 @@ public class SubmissionController extends BaseController implements SubmissionCo
 				log.info("Saving file to local filesystem: " + saveFilePath.getAbsolutePath());
 				FileUtils.copyInputStreamToFile(is, saveFilePath);
 				log.info("Save file to local filesystem complete");
-				
-				InputStream saveFileInput = new FileInputStream(saveFilePath);
-				
+
+				// if input stream is not gzipped, gzip-it
 				try {
-			        GZIPInputStream gs = new GZIPInputStream(saveFileInput);
-			        saveFileInput = gs;
-			    } catch (IOException e) {
-			        log.info("Input stream not in the GZIP format, using standard format");
-			        // Create GZIP File from input stream
-			        // Check for Valid GZIP header on the file.
-			    }
+					GZIPInputStream gs = new GZIPInputStream(new FileInputStream(saveFilePath));
+				} catch (IOException e) {
+					log.info("Input stream not in the GZIP format, GZIP it");
+
+					String gzFileName = outFileName + ".gz";
+					if( !compressGzipFile(saveFilePath, gzFileName) ) {
+						throw new GenericException("failed to gzip file");
+					}
+					log.info("gzipped to "+gzFileName);
+
+					// delete original uncompressed file
+					saveFilePath.delete();
+					outFileName = gzFileName;
+					saveFilePath = new File(gzFileName);
+				}
 
 				boolean passed = metaDataService.submitAndValidateDataFile(key, saveFilePath, saveFile);
 
@@ -113,6 +114,22 @@ public class SubmissionController extends BaseController implements SubmissionCo
 			res.setStatus("failed");
 		}
 		return res;
+	}
+
+	private boolean compressGzipFile(File inFile, String gzipFile) {
+		try ( FileInputStream fis = new FileInputStream(inFile);
+			GZIPOutputStream gzipOS = new GZIPOutputStream(new FileOutputStream(gzipFile)) ) {
+
+			byte[] buffer = new byte[4096];
+			int len;
+			while ((len = fis.read(buffer)) != -1) {
+				gzipOS.write(buffer, 0, len);
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 
 	@Override

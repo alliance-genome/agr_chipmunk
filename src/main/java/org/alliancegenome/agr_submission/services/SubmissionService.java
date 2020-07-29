@@ -2,12 +2,14 @@ package org.alliancegenome.agr_submission.services;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.zip.GZIPInputStream;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -156,9 +158,10 @@ public class SubmissionService {
 		try {
 
 			JsonSchema schemaNode = JsonSchemaFactory.byDefault().getJsonSchema(schemaFile.toURI().toString());
-			JsonNode jsonNode = JsonLoader.fromFile(inFile);
-
+			Reader reader = new InputStreamReader(new GZIPInputStream(new FileInputStream(inFile)));
+			JsonNode jsonNode = JsonLoader.fromReader(reader);
 			ProcessingReport report = schemaNode.validate(jsonNode);
+			reader.close();
 
 			if(!report.isSuccess()) {
 				for(ProcessingMessage message: report) {
@@ -191,9 +194,9 @@ public class SubmissionService {
 		log.debug("File Save Path: " + filePath);
 
 		try {
-			FileInputStream fis = new FileInputStream(inFile);
-			String md5Sum = DigestUtils.md5Hex(fis);
-			fis.close();
+			InputStream is = new GZIPInputStream(new FileInputStream(inFile));
+			String md5Sum = DigestUtils.md5Hex(is);
+			is.close();
 
 			log.info("MD5 Sum: " + md5Sum);
 
@@ -228,6 +231,7 @@ public class SubmissionService {
 				df.setMd5Sum(md5Sum);
 				df.setUploadDate(new Date());
 				log.info("Saving New File: " + filePath);
+				// gzip compress the input stream on the fly and save it to s3
 				s3Helper.saveFile(filePath, inFile);
 			}
 			dataFileDao.merge(df);
