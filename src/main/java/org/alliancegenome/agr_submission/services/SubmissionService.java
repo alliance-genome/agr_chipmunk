@@ -186,10 +186,15 @@ public class SubmissionService {
 
 		String filePath = null;
 
+		String suffix = "";
+		if(!dataType.getFileExtension().contains(".gz")) {
+			suffix = ".gz";
+		}
+		
 		if(schemaVersion != null) {
-			filePath = dir + schemaVersion.getSchema() + "_" + dataType.getName() + "_" + dataSubType.getName() + "_" + fileIndex + "." + dataType.getFileExtension();
+			filePath = dir + schemaVersion.getSchema() + "_" + dataType.getName() + "_" + dataSubType.getName() + "_" + fileIndex + "." + dataType.getFileExtension() + suffix;
 		} else {
-			filePath = dir + dataType.getName() + "_" + dataSubType.getName() + "_" + fileIndex + "." + dataType.getFileExtension();
+			filePath = dir + dataType.getName() + "_" + dataSubType.getName() + "_" + fileIndex + "." + dataType.getFileExtension() + suffix;
 		}
 		log.debug("File Save Path: " + filePath);
 

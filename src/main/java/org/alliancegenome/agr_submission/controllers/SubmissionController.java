@@ -168,25 +168,17 @@ public class SubmissionController extends BaseController implements SubmissionCo
 				downloadHost = "http://localhost:8080/";
 			}
 			
-			if(fileName.endsWith(".gz")) {
-				try {
+			try {
+				if(array.length == 4 && array[3].equals("gz")) {
 					InputStream is = new URL(downloadHost + dataFile.getS3Path()).openStream();
 					responseBuilder = Response.ok(is);
-				} catch (IOException e) {
-					responseBuilder = Response.noContent();
-					e.printStackTrace();
+				} else {
+					GZIPInputStream gis = new GZIPInputStream(new URL(downloadHost + dataFile.getS3Path()).openStream());
+					responseBuilder = Response.ok(gis);
 				}
-			} else if(fileName.endsWith(dataType.getFileExtension())) {
-				try {
-					InputStream is = new URL(downloadHost + dataFile.getS3Path()).openStream();
-					//GZIPInputStream gis = new GZIPInputStream(is);
-					responseBuilder = Response.ok(is);
-				} catch (IOException e) {
-					responseBuilder = Response.noContent();
-					e.printStackTrace();
-				}
-			} else {
-				// Unknown format
+			} catch (IOException e) {
+				responseBuilder = Response.noContent();
+				e.printStackTrace();
 			}
 
 		} else {
