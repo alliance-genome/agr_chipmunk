@@ -8,8 +8,12 @@ ADD . .
 
 WORKDIR /workdir/agr_fms_software/src/main/cliapp
 
-RUN npm install
-RUN npm run-script build
+RUN /bin/bash -c '. $HOME/.nvm/nvm.sh --no-use && \
+  nvm install && \
+  nvm use && \
+  npm install'
+
+RUN /bin/bash -c '. $HOME/.nvm/nvm.sh && npm run-script build'
 
 RUN mv build/* ../webapp
 
