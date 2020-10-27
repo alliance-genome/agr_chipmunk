@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
@@ -23,6 +24,7 @@ import org.apache.commons.collections4.map.MultiKeyMap;
 
 import lombok.extern.jbosslog.JBossLog;
 
+@RequestScoped
 @JBossLog
 public class DataFileService extends BaseService<DataFile> {
 

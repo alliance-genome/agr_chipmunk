@@ -8,6 +8,8 @@ build:
 
 apirun: build run
 
+dockerbuild:
+	docker build --no-cache -t agrdocker/agr_fms_software .
 
 apidebug: build debug
 

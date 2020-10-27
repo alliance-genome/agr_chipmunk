@@ -13,6 +13,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 import org.alliancegenome.agr_submission.BaseEntity;
+import org.alliancegenome.agr_submission.config.ConfigHelper;
 import org.alliancegenome.agr_submission.views.View;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -56,6 +57,43 @@ public class DataFile extends BaseEntity implements Comparable<DataFile> {
 	@JsonView({View.DataFileView.class, View.SchemaVersionView.class, View.SnapShotView.class, View.ReleaseVersionView.class})
 	private DataSubType dataSubType;
 
+	@JsonView({View.API.class})
+	public String getStableURL() {
+		if(ConfigHelper.getAWSBucketName().equals("mod-datadumps")) {
+			return "https://fms.alliancegenome.org/download/" + dataType.getName() + "_" + dataSubType.getName() + "." + dataType.getFileExtension();
+		} else if(ConfigHelper.getAWSBucketName().contentEquals("mod-datadumps-dev")) {
+			return "https://fmsdev.alliancegenome.org/download/" + dataType.getName() + "_" + dataSubType.getName() + "." + dataType.getFileExtension();
+		} else {
+			return null;
+		}
+	}
+	
+	@JsonView({View.API.class})
+	public String getStableGzipURL() {
+		String suffix = "";
+		if(!dataType.getFileExtension().contains(".gz")) {
+			suffix = ".gz";
+		}
+		if(ConfigHelper.getAWSBucketName().equals("mod-datadumps")) {
+			return "https://fms.alliancegenome.org/download/" + dataType.getName() + "_" + dataSubType.getName() + "." + dataType.getFileExtension() + suffix;
+		} else if(ConfigHelper.getAWSBucketName().contentEquals("mod-datadumps-dev")) {
+			return "https://fmsdev.alliancegenome.org/download/" + dataType.getName() + "_" + dataSubType.getName() + "." + dataType.getFileExtension() + suffix;
+		} else {
+			return null;
+		}
+	}
+	
+	@JsonView({View.API.class})
+	public String getS3Url() {
+		if(ConfigHelper.getAWSBucketName().equals("mod-datadumps")) {
+			return "https://download.alliancegenome.org/" + s3Path;
+		} else if(ConfigHelper.getAWSBucketName().contentEquals("mod-datadumps-dev")) {
+			return "https://downloaddev.alliancegenome.org/" + s3Path;
+		} else {
+			return null;
+		}
+	}
+	
 	public boolean isValid() {
 		return (valid == null || valid);
 	}
