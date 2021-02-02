@@ -1,3 +1,16 @@
+REG := 100225593120.dkr.ecr.us-east-1.amazonaws.com
+ALLIANCE_RELEASE := latest
+
+registry-docker-login:
+ifneq ($(shell echo ${REG} | egrep "ecr\..+\.amazonaws\.com"),)
+	@$(eval DOCKER_LOGIN_CMD=aws)
+ifneq (${AWS_PROFILE},)
+	@$(eval DOCKER_LOGIN_CMD=${DOCKER_LOGIN_CMD} --profile ${AWS_PROFILE})
+endif
+	@$(eval DOCKER_LOGIN_CMD=${DOCKER_LOGIN_CMD} ecr get-login-password | docker login -u AWS --password-stdin https://${REG})
+	${DOCKER_LOGIN_CMD}
+endif
+
 all: build
 
 run:
@@ -8,8 +21,8 @@ build:
 
 apirun: build run
 
-dockerbuild:
-	docker build --no-cache -t agrdocker/agr_fms_software .
+dockerbuild: registry-docker-login
+	docker build --no-cache -t ${REG}/agr_fms_software:${ALLIANCE_RELEASE} --build-arg REG=${REG} .
 
 apidebug: build debug
 
