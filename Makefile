@@ -22,7 +22,7 @@ build:
 apirun: build run
 
 dockerbuild: registry-docker-login
-	docker build --no-cache -t ${REG}/agr_fms_software:${DOCKER_IMAGE_TAG} --build-arg REG=${REG} .
+	docker build --no-cache -t ${REG}/agr_fms_software:${DOCKER_IMAGE_TAG} --build-arg REG=${REG} --build-arg DOCKER_IMAGE_TAG=${DOCKER_IMAGE_TAG} .
 
 apidebug: build debug
 
