@@ -1,5 +1,5 @@
 REG := 100225593120.dkr.ecr.us-east-1.amazonaws.com
-ALLIANCE_RELEASE := latest
+DOCKER_IMAGE_TAG:= latest
 
 registry-docker-login:
 ifneq ($(shell echo ${REG} | egrep "ecr\..+\.amazonaws\.com"),)
@@ -22,7 +22,7 @@ build:
 apirun: build run
 
 dockerbuild: registry-docker-login
-	docker build --no-cache -t ${REG}/agr_fms_software:${ALLIANCE_RELEASE} --build-arg REG=${REG} .
+	docker build --no-cache -t ${REG}/agr_fms_software:${DOCKER_IMAGE_TAG} --build-arg REG=${REG} .
 
 apidebug: build debug
 
