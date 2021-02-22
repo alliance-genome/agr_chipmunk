@@ -4,19 +4,13 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 import org.alliancegenome.agr_submission.BaseEntity;
 import org.alliancegenome.agr_submission.config.ConfigHelper;
 import org.alliancegenome.agr_submission.views.View;
 
-import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.*;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -57,29 +51,34 @@ public class DataFile extends BaseEntity implements Comparable<DataFile> {
 	@JsonView({View.DataFileView.class, View.SchemaVersionView.class, View.SnapShotView.class, View.ReleaseVersionView.class})
 	private DataSubType dataSubType;
 
+	
+	@Transient
+	@JsonIgnore
+	private String currentRelease = null;
+	@Transient
+	@JsonIgnore
+	private String requestRelease = null;
+	
+	@Transient
+	@JsonIgnore
+	public void setStableURL(String currentRelease, String requestRelease) {
+		this.currentRelease = currentRelease;
+		this.requestRelease = requestRelease;
+	}
+
 	@JsonView({View.API.class})
 	public String getStableURL() {
-		if(ConfigHelper.getAWSBucketName().equals("mod-datadumps")) {
-			return "https://fms.alliancegenome.org/download/" + dataType.getName() + "_" + dataSubType.getName() + "." + dataType.getFileExtension();
-		} else if(ConfigHelper.getAWSBucketName().contentEquals("mod-datadumps-dev")) {
-			return "https://fmsdev.alliancegenome.org/download/" + dataType.getName() + "_" + dataSubType.getName() + "." + dataType.getFileExtension();
+
+		if((currentRelease == null && requestRelease == null) || requestRelease.equals(currentRelease)) {
+			if(ConfigHelper.getAWSBucketName().equals("mod-datadumps")) {
+				return "https://fms.alliancegenome.org/download/" + dataType.getName() + "_" + dataSubType.getName() + "." + dataType.getFileExtension();
+			} else if(ConfigHelper.getAWSBucketName().contentEquals("mod-datadumps-dev")) {
+				return "https://fmsdev.alliancegenome.org/download/" + dataType.getName() + "_" + dataSubType.getName() + "." + dataType.getFileExtension();
+			} else {
+				return null;
+			}
 		} else {
-			return null;
-		}
-	}
-	
-	@JsonView({View.API.class})
-	public String getStableGzipURL() {
-		String suffix = "";
-		if(!dataType.getFileExtension().contains(".gz")) {
-			suffix = ".gz";
-		}
-		if(ConfigHelper.getAWSBucketName().equals("mod-datadumps")) {
-			return "https://fms.alliancegenome.org/download/" + dataType.getName() + "_" + dataSubType.getName() + "." + dataType.getFileExtension() + suffix;
-		} else if(ConfigHelper.getAWSBucketName().contentEquals("mod-datadumps-dev")) {
-			return "https://fmsdev.alliancegenome.org/download/" + dataType.getName() + "_" + dataSubType.getName() + "." + dataType.getFileExtension() + suffix;
-		} else {
-			return null;
+			return getS3Url();
 		}
 	}
 	

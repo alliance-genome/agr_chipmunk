@@ -1,9 +1,6 @@
 package org.alliancegenome.agr_submission.services;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -32,6 +29,7 @@ public class DataFileService extends BaseService<DataFile> {
 	@Inject private DataTypeDAO dataTypeDAO;
 	@Inject private DataSubTypeDAO dataSubTypeDAO;
 	@Inject private ReleaseVersionDAO releaseDAO;
+	@Inject private ReleaseVersionService releaseService;
 
 	@Override
 	public DataFile create(DataFile entity) {
@@ -197,6 +195,7 @@ public class DataFileService extends BaseService<DataFile> {
 	@Transactional
 	public List<DataFile> getDataFilesByRelease(String releaseVersion, Boolean latest) {
 
+		ReleaseVersion currentReleaseVersion = releaseService.getCurrentRelease();
 		ReleaseVersion releaseVersionLookup = releaseDAO.findByField("releaseVersion", releaseVersion);
 
 		if(latest) {
@@ -213,11 +212,18 @@ public class DataFileService extends BaseService<DataFile> {
 				}
 				map.put(key, dataFile);
 			}
-	
-			return new ArrayList<DataFile>(map.values());
+			
+			return setStableURL(currentReleaseVersion.getReleaseVersion(), releaseVersionLookup.getReleaseVersion(), map.values());
 		} else {
-			return new ArrayList<DataFile>(releaseVersionLookup.getDataFiles());
+			return setStableURL(currentReleaseVersion.getReleaseVersion(), releaseVersionLookup.getReleaseVersion(), releaseVersionLookup.getDataFiles());
 		}
+	}
+	
+	public List<DataFile> setStableURL(String currentRelease, String requestRelease, Collection<DataFile> set) {
+		for(DataFile df: set) {
+			df.setStableURL(currentRelease, requestRelease);
+		}
+		return new ArrayList<DataFile>(set);
 	}
 
 	public List<DataFile> getReleaseDataTypeSubTypeFiles(String releaseVersion, String dataType, String dataSubtype, Boolean latest) {
