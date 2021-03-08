@@ -8,6 +8,7 @@ import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 
+import org.alliancegenome.agr_submission.config.ConfigHelper;
 import org.apache.commons.codec.digest.DigestUtils;
 
 public class FixMissingMD5 {
@@ -432,7 +433,7 @@ public class FixMissingMD5 {
 				File outfile = new File("output.txt");
 			
 				//log.debug("Downloading: " + file);
-				ReadableByteChannel readChannel = Channels.newChannel(new URL("https://download.alliancegenome.org/" + args[0]).openStream());
+				ReadableByteChannel readChannel = Channels.newChannel(new URL(ConfigHelper.getDownloadSite() + args[0]).openStream());
 				//log.debug("Finished Downloading: " + file);
 				FileOutputStream fileOS = new FileOutputStream(outfile);
 				FileChannel writeChannel = fileOS.getChannel();

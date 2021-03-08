@@ -32,7 +32,8 @@ public class S3Helper {
 		int count = 0;
 		try {
 			log.info("Getting S3 file listing");
-			AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(ConfigHelper.getAWSAccessKey(), ConfigHelper.getAWSSecretKey()))).withRegion(Regions.US_EAST_1).build();
+			AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(
+					new BasicAWSCredentials(ConfigHelper.getAWSAccessKey(), ConfigHelper.getAWSSecretKey()))).withRegion(Regions.US_EAST_1).build();
 			ObjectListing ol = s3.listObjects(ConfigHelper.getAWSBucketName(), prefix);
 			log.debug(ol.getObjectSummaries().size());
 			count = ol.getObjectSummaries().size();

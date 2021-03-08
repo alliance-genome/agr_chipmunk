@@ -14,8 +14,8 @@ public class S3Syncer {
 		
 		S3Helper s3 = new S3Helper();
 		
-		String srcBucket = "mod-datadumps";
-		String dstBucket = "mod-datadumps-dev";
+		String srcBucket = ConfigHelper.getAWSBucketName();
+		String dstBucket = ConfigHelper.getAWSBucketNameDev();
 
 		List<String> prod = s3.getBucketObjects(srcBucket);
 		List<String> dev = s3.getBucketObjects(dstBucket);

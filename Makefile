@@ -1,4 +1,4 @@
-REG := 100225593120.dkr.ecr.us-east-1.amazonaws.com
+REG := ${REG}
 DOCKER_PULL_TAG := latest
 DOCKER_BUILD_TAG := latest
 
