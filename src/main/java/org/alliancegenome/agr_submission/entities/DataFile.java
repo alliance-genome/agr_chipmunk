@@ -59,10 +59,10 @@ public class DataFile extends BaseEntity implements Comparable<DataFile> {
 
 	@JsonView({View.API.class})
 	public String getStableURL() {
-		if(ConfigHelper.getAWSBucketName().equals("mod-datadumps")) {
-			return "https://fms.alliancegenome.org/download/" + dataType.getName() + "_" + dataSubType.getName() + "." + dataType.getFileExtension();
-		} else if(ConfigHelper.getAWSBucketName().contentEquals("mod-datadumps-dev")) {
-			return "https://fmsdev.alliancegenome.org/download/" + dataType.getName() + "_" + dataSubType.getName() + "." + dataType.getFileExtension();
+		if(ConfigHelper.getAWSBucketName().equals(ConfigHelper.getAWSBucketName())) {
+			return ConfigHelper.getDownloadSite() + dataType.getName() + "_" + dataSubType.getName() + "." + dataType.getFileExtension();
+		} else if(ConfigHelper.getAWSBucketName().contentEquals(ConfigHelper.getAWSBucketNameDev())) {
+			return ConfigHelper.getAWSBucketNameDev() + dataType.getName() + "_" + dataSubType.getName() + "." + dataType.getFileExtension();
 		} else {
 			return null;
 		}
@@ -74,10 +74,10 @@ public class DataFile extends BaseEntity implements Comparable<DataFile> {
 		if(!dataType.getFileExtension().contains(".gz")) {
 			suffix = ".gz";
 		}
-		if(ConfigHelper.getAWSBucketName().equals("mod-datadumps")) {
-			return "https://fms.alliancegenome.org/download/" + dataType.getName() + "_" + dataSubType.getName() + "." + dataType.getFileExtension() + suffix;
-		} else if(ConfigHelper.getAWSBucketName().contentEquals("mod-datadumps-dev")) {
-			return "https://fmsdev.alliancegenome.org/download/" + dataType.getName() + "_" + dataSubType.getName() + "." + dataType.getFileExtension() + suffix;
+		if(ConfigHelper.getAWSBucketName().equals(ConfigHelper.getAWSBucketName())) {
+			return ConfigHelper.getDownloadSite() + dataType.getName() + "_" + dataSubType.getName() + "." + dataType.getFileExtension() + suffix;
+		} else if(ConfigHelper.getAWSBucketName().contentEquals(ConfigHelper.getAWSBucketNameDev())) {
+			return ConfigHelper.getAWSBucketNameDev() + dataType.getName() + "_" + dataSubType.getName() + "." + dataType.getFileExtension() + suffix;
 		} else {
 			return null;
 		}
@@ -85,10 +85,10 @@ public class DataFile extends BaseEntity implements Comparable<DataFile> {
 	
 	@JsonView({View.API.class})
 	public String getS3Url() {
-		if(ConfigHelper.getAWSBucketName().equals("mod-datadumps")) {
-			return "https://download.alliancegenome.org/" + s3Path;
-		} else if(ConfigHelper.getAWSBucketName().contentEquals("mod-datadumps-dev")) {
-			return "https://downloaddev.alliancegenome.org/" + s3Path;
+		if(ConfigHelper.getAWSBucketName().equals(ConfigHelper.getAWSBucketName())) {
+			return ConfigHelper.getDownloadSite() + s3Path;
+		} else if(ConfigHelper.getAWSBucketName().contentEquals(ConfigHelper.getAWSBucketNameDev())) {
+			return ConfigHelper.getAWSBucketNameDev() + s3Path;
 		} else {
 			return null;
 		}

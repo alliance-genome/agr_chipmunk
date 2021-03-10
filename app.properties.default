@@ -13,3 +13,9 @@ AWS_ACCESS_KEY=s3_upload_key
 AWS_SECRET_KEY=s3_upload_secret
 API_ACCESS_TOKEN=
 ENC_PASS_FILE=/data/encryptionPasswordKey
+AWS_BUCKET_NAME=
+AWS_BUCKET_NAME_DEV=
+DOWNLOAD_SITE=
+DOWNLOAD_SITE_DEV=
+REG=100225593120.dkr.ecr.us-east-1.amazonaws.com
+

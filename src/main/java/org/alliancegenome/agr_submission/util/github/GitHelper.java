@@ -29,7 +29,7 @@ public class GitHelper {
 			if(!gitRepoDir.exists() || !gitRepoDir.isDirectory()) {
 				log.debug("Cloning Repo: ");
 				Git.cloneRepository()
-					.setURI( "https://github.com/alliance-genome/agr_schemas.git" )
+					.setURI( ConfigHelper.getJSONSchemaRepo() )
 					.setDirectory(new File(localPath))
 					.call();
 			}

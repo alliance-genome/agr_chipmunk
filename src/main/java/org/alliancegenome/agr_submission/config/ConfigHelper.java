@@ -40,12 +40,15 @@ public class ConfigHelper {
 		defaults.put("API_ACCESS_TOKEN", null); // Api Value
 		
 		defaults.put("DEBUG", "false");
-
+		defaults.put("DOWNLOAD_SITE", "https://fms.alliancegenome.org/download/");
+		defaults.put("DOWNLOAD_SITE_DEV", "https://fmsdev.alliancegenome.org/download/");
+		defaults.put("AWS_BUCKET_NAME", "mod-datadumps");
 		defaults.put("AWS_ACCESS_KEY", null);
 		defaults.put("AWS_SECRET_KEY", null);
-		defaults.put("AWS_BUCKET_NAME", "mod-datadumps-dev"); // This needs to always be a dev bucket unless running in production
+		defaults.put("AWS_BUCKET_NAME_DEV", "mod-datadumps-dev"); // This needs to always be a dev bucket unless running in production
 		
 		defaults.put("FMS_HOST", "localhost:8080");
+		defaults.put("JSON_SCHEMA_REPO", "https://github.com/alliance-genome/agr_schemas.git");
 		
 		defaults.put("ENC_PASS_FILE", "/data/encryptionPasswordKey");
 		
@@ -99,7 +102,7 @@ public class ConfigHelper {
 
 	private static String loadSystemENVProperty(String key) {
 		String ret = System.getenv(key);
-		if (ret != null) log.debug("Found Enviroment ENV[" + key + "]=" + ret);
+		if (ret != null) log.debug("Found Environment ENV[" + key + "]=" + ret);
 		return ret;
 	}
 
@@ -115,17 +118,32 @@ public class ConfigHelper {
 		if(!init) init();
 		return config.get("AWS_ACCESS_KEY");
 	}
+
 	public static String getAWSSecretKey() {
 		if(!init) init();
 		return config.get("AWS_SECRET_KEY");
 	}
-	public static boolean getDebug() {
+	public static String getDownloadSite() {
 		if(!init) init();
-		return Boolean.parseBoolean(config.get("DEBUG"));
+		return config.get("DOWNLOAD_SITE");
+	}
+
+	public static String getDownloadSiteDev() {
+		if(!init) init();
+		return config.get("DOWNLOAD_SITE_DEV");
 	}
 	public static String getAWSBucketName() {
 		if(!init) init();
 		return config.get("AWS_BUCKET_NAME");
+	}
+
+	public static String getAWSBucketNameDev() {
+		if(!init) init();
+		return config.get("AWS_BUCKET_NAME_DEV");
+	}
+	public static boolean getDebug() {
+		if(!init) init();
+		return Boolean.parseBoolean(config.get("DEBUG"));
 	}
 	public static String getFMSHost() {
 		if(!init) init();
@@ -134,6 +152,10 @@ public class ConfigHelper {
 	public static String getJavaLineSeparator() {
 		if(!init) init();
 		return System.getProperty("line.separator");
+	}
+	public static String getJSONSchemaRepo() {
+		if(!init) init();
+		return System.getProperty("JSON_SCHEMA_REPO");
 	}
 	public static String getJavaTmpDir() {
 		if(!init) init();
