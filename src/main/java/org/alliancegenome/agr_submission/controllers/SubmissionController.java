@@ -169,23 +169,29 @@ public class SubmissionController extends BaseController implements SubmissionCo
 			try {
 				if(array.length == 4 && array[3].equals("gz")) {
 					// Person asked for compressed version
+					log.info("Person asked for compressed version");
 					if(dataFile.getS3Path().endsWith(".gz")) {
 						// Already compressed send straight through
+						log.info("Already compressed send straight through");
 						InputStream is = new URL(downloadHost + dataFile.getS3Path()).openStream();
 						responseBuilder = Response.ok(is);
 					} else {
 						// Not compressed, compress file and send
+						log.info("Not compressed, compress file and send");
 						GZIPCompressingInputStream gis = new GZIPCompressingInputStream(new URL(downloadHost + dataFile.getS3Path()).openStream());
 						responseBuilder = Response.ok(gis);
 					}
 				} else {
 					// Person asked for uncompressed version
+					log.info("Person asked for uncompressed version");
 					if(dataFile.getS3Path().endsWith(".gz")) {
 						// Already compressed, uncompress file and send
+						log.info("Already compressed, uncompress file and send");
 						GZIPInputStream gis = new GZIPInputStream(new URL(downloadHost + dataFile.getS3Path()).openStream());
 						responseBuilder = Response.ok(gis);
 					} else {
 						// Already uncompressed send straight through
+						log.info("Already uncompressed send straight through");
 						InputStream is = new URL(downloadHost + dataFile.getS3Path()).openStream();
 						responseBuilder = Response.ok(is);
 					}
