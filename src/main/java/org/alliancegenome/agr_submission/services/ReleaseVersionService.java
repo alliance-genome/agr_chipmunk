@@ -94,6 +94,7 @@ public class ReleaseVersionService extends BaseService<ReleaseVersion> {
 		return nextRelease;
 	}
 	
+	@Transactional
 	public ReleaseVersion getCurrentRelease() {
 		List<ReleaseVersion> releaseVersions = getReleaseVersions();
 		ReleaseVersion nextRelease = null;

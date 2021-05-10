@@ -61,6 +61,16 @@ public interface ReleaseVersionControllerInterface {
 	public ReleaseVersion delete(@PathParam("id") Long id);
 	
 	@GET
+	@Path("/current")
+	@JsonView(View.ReleaseVersionView.class)
+	public ReleaseVersion getCurrentRelease();
+	
+	@GET
+	@Path("/next")
+	@JsonView(View.ReleaseVersionView.class)
+	public ReleaseVersion getNextRelease();
+	
+	@GET
 	@Path("/all")
 	@JsonView(View.ReleaseVersionView.class)
 	public List<ReleaseVersion> getReleaseVersions();

@@ -17,7 +17,8 @@ import org.alliancegenome.agr_submission.responces.SubmissionResponce;
 import org.alliancegenome.agr_submission.services.DataFileService;
 import org.alliancegenome.agr_submission.services.ReleaseVersionService;
 import org.alliancegenome.agr_submission.services.SubmissionService;
-import org.apache.commons.io.FileUtils;
+import org.alliancegenome.agr_submission.util.GZIPCompressingInputStream;
+import org.apache.commons.io.*;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
@@ -27,11 +28,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.*;
 import java.net.URL;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
+import java.util.*;
+import java.util.zip.*;
 
 @JBossLog
 @RequestScoped
@@ -171,18 +169,18 @@ public class SubmissionController extends BaseController implements SubmissionCo
 			try {
 				if(array.length == 4 && array[3].equals("gz")) {
 					// Person asked for compressed version
-					if(dataFile.getS3Path().endsWith(".gz") {
+					if(dataFile.getS3Path().endsWith(".gz")) {
 						// Already compressed send straight through
 						InputStream is = new URL(downloadHost + dataFile.getS3Path()).openStream();
 						responseBuilder = Response.ok(is);
 					} else {
 						// Not compressed, compress file and send
-						GZIPOutputStream gos = new GZIPOutputStream(new URL(downloadHost + dataFile.getS3Path()).openStream());
-						responseBuilder = Response.ok(gos);
+						GZIPCompressingInputStream gis = new GZIPCompressingInputStream(new URL(downloadHost + dataFile.getS3Path()).openStream());
+						responseBuilder = Response.ok(gis);
 					}
 				} else {
 					// Person asked for uncompressed version
-					if(dataFile.getS3Path().endsWith(".gz") {
+					if(dataFile.getS3Path().endsWith(".gz")) {
 						// Already compressed, uncompress file and send
 						GZIPInputStream gis = new GZIPInputStream(new URL(downloadHost + dataFile.getS3Path()).openStream());
 						responseBuilder = Response.ok(gis);
@@ -206,5 +204,6 @@ public class SubmissionController extends BaseController implements SubmissionCo
 		return responseBuilder.build();		
 
 	}
+
 
 }
