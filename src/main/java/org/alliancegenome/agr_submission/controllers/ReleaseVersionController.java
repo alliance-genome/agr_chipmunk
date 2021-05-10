@@ -49,5 +49,15 @@ public class ReleaseVersionController extends BaseController implements ReleaseV
 	public ReleaseVersion setSchema(String release, String schema) {
 		return releaseVersionService.setSchema(release, schema);
 	}
+
+	@Override
+	public ReleaseVersion getCurrentRelease() {
+		return releaseVersionService.getCurrentRelease();
+	}
+
+	@Override
+	public ReleaseVersion getNextRelease() {
+		return releaseVersionService.getNextRelease();
+	}
 	
 }
