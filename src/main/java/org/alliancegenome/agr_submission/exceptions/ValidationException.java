@@ -1,9 +1,9 @@
 package org.alliancegenome.agr_submission.exceptions;
 
 @SuppressWarnings("serial")
-public class ValidataionException extends GenericException {
+public class ValidationException extends GenericException {
 
-	public ValidataionException(String message) {
+	public ValidationException(String message) {
 		super(message);
 	}
 
