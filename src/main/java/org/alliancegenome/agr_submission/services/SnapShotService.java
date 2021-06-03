@@ -31,7 +31,9 @@ public class SnapShotService extends BaseService<SnapShot> {
 	@Transactional
 	public SnapShot get(Long id) {
 		log.info("SnapShotService: get: " + id);
-		return dao.find(id);
+		SnapShot snap = dao.find(id);
+		snap.getDataFiles().size();
+		return snap;
 	}
 
 	@Override
