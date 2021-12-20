@@ -9,7 +9,7 @@
     "braces": "^2.3.2",
     "circular-json": "^0.5.9",
     "dateformat": "^3.0.3",
-    "handlebars": "^4.5.3",
+    "handlebars": "^4.7.7",
     "jquery": "^3.4.0",
     "js-yaml": "^3.13.1",
     "lodash.assign": "^4.2.0",
