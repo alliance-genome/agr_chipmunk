@@ -27,7 +27,7 @@
     "reactstrap": "^7.1.0",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
-    "tar": "^4.4.13",
+    "tar": "^4.4.18",
     "ts-pnp": "^1.1.4",
     "typescript": "^3.6.3",
     "websocket": "^1.0.30"
