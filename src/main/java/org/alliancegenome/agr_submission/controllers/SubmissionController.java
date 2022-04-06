@@ -1,35 +1,29 @@
 package org.alliancegenome.agr_submission.controllers;
 
-import lombok.extern.jbosslog.JBossLog;
-import org.alliancegenome.agr_submission.BaseController;
-import org.alliancegenome.agr_submission.config.ConfigHelper;
-import org.alliancegenome.agr_submission.dao.DataSubTypeDAO;
-import org.alliancegenome.agr_submission.dao.DataTypeDAO;
-import org.alliancegenome.agr_submission.entities.DataFile;
-import org.alliancegenome.agr_submission.entities.DataSubType;
-import org.alliancegenome.agr_submission.entities.DataType;
-import org.alliancegenome.agr_submission.entities.ReleaseVersion;
-import org.alliancegenome.agr_submission.exceptions.GenericException;
-import org.alliancegenome.agr_submission.exceptions.SchemaDataTypeException;
-import org.alliancegenome.agr_submission.interfaces.server.SubmissionControllerInterface;
-import org.alliancegenome.agr_submission.responces.APIResponce;
-import org.alliancegenome.agr_submission.responces.SubmissionResponce;
-import org.alliancegenome.agr_submission.services.DataFileService;
-import org.alliancegenome.agr_submission.services.ReleaseVersionService;
-import org.alliancegenome.agr_submission.services.SubmissionService;
-import org.alliancegenome.agr_submission.util.GZIPCompressingInputStream;
-import org.apache.commons.io.*;
-import org.jboss.resteasy.plugins.providers.multipart.InputPart;
-import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
-
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
 import java.util.zip.*;
+
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.ws.rs.core.*;
+
+import org.alliancegenome.agr_submission.BaseController;
+import org.alliancegenome.agr_submission.config.ConfigHelper;
+import org.alliancegenome.agr_submission.dao.*;
+import org.alliancegenome.agr_submission.entities.*;
+import org.alliancegenome.agr_submission.exceptions.*;
+import org.alliancegenome.agr_submission.interfaces.server.SubmissionControllerInterface;
+import org.alliancegenome.agr_submission.responces.*;
+import org.alliancegenome.agr_submission.services.*;
+import org.alliancegenome.agr_submission.util.GZIPCompressingInputStream;
+import org.apache.commons.io.FileUtils;
+import org.jboss.resteasy.plugins.providers.multipart.*;
+
+import com.google.common.base.Joiner;
+
+import lombok.extern.jbosslog.JBossLog;
 
 @JBossLog
 @RequestScoped
@@ -133,18 +127,33 @@ public class SubmissionController extends BaseController implements SubmissionCo
 	@Override
 	public Response getStableFile(String fileName) throws GenericException {
 
-		String[] array = fileName.split("[_\\.]");
+		List<String> parts = new ArrayList<String>(Arrays.asList(fileName.split("[_\\.]"))); // Takes care of any sub types with dots
 
-		DataType dataType = dataTypeDAO.findByField("name", array[0]);
+		String dataTypeString = parts.remove(0);
+
+		DataType dataType = dataTypeDAO.findByField("name", dataTypeString);
 		if(dataType == null) {
-			throw new SchemaDataTypeException("Could not Find dataType: " + array[0]);
+			throw new SchemaDataTypeException("Could not Find dataType: " + dataTypeString);
 		}
 		log.debug("Data Type: " + dataType);
+		
+		boolean gzFileRequest = false;
+		
+		if(parts.get(parts.size() - 1).equals("gz")) {
+			parts.remove(parts.size() - 1);
+			gzFileRequest = true;
+		}
+		
+		if(parts.get(parts.size() - 1).equals(dataType.getFileExtension())) {
+			parts.remove(parts.size() - 1);
+		}
+		
+		String dataSubTypeString = Joiner.on(".").join(parts);
 
-		DataSubType dataSubType = dataSubTypeDAO.findByField("name", array[1]);
+		DataSubType dataSubType = dataSubTypeDAO.findByField("name", dataSubTypeString);
 
 		if(dataSubType == null) {
-			throw new SchemaDataTypeException("Could not Find dataSubType: " + array[1]);
+			throw new SchemaDataTypeException("Could not Find dataSubType: " + dataSubTypeString);
 		}
 		log.debug("Data Sub Type: " + dataSubType);
 		
@@ -167,7 +176,7 @@ public class SubmissionController extends BaseController implements SubmissionCo
 			}
 			
 			try {
-				if(array.length == 4 && array[3].equals("gz")) {
+				if(gzFileRequest) {
 					// Person asked for compressed version
 					if(dataFile.getS3Path().endsWith(".gz")) {
 						// Already compressed send straight through
