@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.alliancegenome.agr_submission.entities.User;
+import org.alliancegenome.agr_submission.entities.LoggedInUser;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -20,7 +20,7 @@ public class LogApiDTO {
 	public HashMap<String, List<String>> queryParameters;
 	public HashMap<String, List<String>> pathParameters;
 	public String requestUri;
-	public User user;
+	public LoggedInUser user;
 
 	
 }

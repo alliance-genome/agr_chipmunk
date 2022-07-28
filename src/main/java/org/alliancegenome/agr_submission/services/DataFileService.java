@@ -25,11 +25,11 @@ import lombok.extern.jbosslog.JBossLog;
 @JBossLog
 public class DataFileService extends BaseService<DataFile> {
 
-	@Inject private DataFileDAO dao;
-	@Inject private DataTypeDAO dataTypeDAO;
-	@Inject private DataSubTypeDAO dataSubTypeDAO;
-	@Inject private ReleaseVersionDAO releaseDAO;
-	@Inject private ReleaseVersionService releaseService;
+	@Inject DataFileDAO dao;
+	@Inject DataTypeDAO dataTypeDAO;
+	@Inject DataSubTypeDAO dataSubTypeDAO;
+	@Inject ReleaseVersionDAO releaseDAO;
+	@Inject ReleaseVersionService releaseService;
 
 	@Override
 	public DataFile create(DataFile entity) {

@@ -29,11 +29,11 @@ import lombok.extern.jbosslog.JBossLog;
 @RequestScoped
 public class SubmissionController extends BaseController implements SubmissionControllerInterface {
 
-	@Inject private SubmissionService metaDataService;
-	@Inject private ReleaseVersionService releaseService;
-	@Inject private DataFileService dataFileService;
-	@Inject private DataTypeDAO dataTypeDAO;
-	@Inject private DataSubTypeDAO dataSubTypeDAO;
+	@Inject SubmissionService metaDataService;
+	@Inject ReleaseVersionService releaseService;
+	@Inject DataFileService dataFileService;
+	@Inject DataTypeDAO dataTypeDAO;
+	@Inject DataSubTypeDAO dataSubTypeDAO;
 
 	@Override
 	public APIResponce submitData(MultipartFormDataInput input) {

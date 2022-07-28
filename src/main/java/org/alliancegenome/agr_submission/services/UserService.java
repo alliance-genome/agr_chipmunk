@@ -2,26 +2,27 @@ package org.alliancegenome.agr_submission.services;
 
 import java.util.List;
 
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.alliancegenome.agr_submission.BaseService;
 import org.alliancegenome.agr_submission.config.ConfigHelper;
 import org.alliancegenome.agr_submission.dao.UserDAO;
-import org.alliancegenome.agr_submission.entities.User;
+import org.alliancegenome.agr_submission.entities.LoggedInUser;
 import org.alliancegenome.agr_submission.util.AESUtil;
 
 import lombok.extern.jbosslog.JBossLog;
 
 @JBossLog
-public class UserService extends BaseService<User> {
+@RequestScoped
+public class UserService extends BaseService<LoggedInUser> {
 	
-	@Inject
-	private UserDAO dao;
+	@Inject UserDAO dao;
 
 	@Override
 	@Transactional
-	public User create(User entity) {
+	public LoggedInUser create(LoggedInUser entity) {
 		log.info("UserService: create: ");
 		try {
 			entity.setApiKey(AESUtil.encrypt(entity.getName(), ConfigHelper.getEncryptionPasswordKey()));
@@ -33,15 +34,15 @@ public class UserService extends BaseService<User> {
 
 	@Override
 	@Transactional
-	public User get(Long id) {
+	public LoggedInUser get(Long id) {
 		log.info("UserService: get: " + id);
 		return dao.find(id);
 	}
 
 	@Override
 	@Transactional
-	public User update(User entity) {
-		User u = get(entity.getId());
+	public LoggedInUser update(LoggedInUser entity) {
+		LoggedInUser u = get(entity.getId());
 		u.setApiKey(entity.getApiKey());
 		u.setName(entity.getName());
 		u.setPassword(entity.getPassword());
@@ -52,12 +53,12 @@ public class UserService extends BaseService<User> {
 
 	@Override
 	@Transactional
-	public User delete(Long id) {
+	public LoggedInUser delete(Long id) {
 		log.info("UserService: delete: " + id);
 		return dao.remove(id);
 	}
 
-	public List<User> getUsers() {
+	public List<LoggedInUser> getUsers() {
 		return dao.findAll();
 	}
 }

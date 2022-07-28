@@ -14,7 +14,7 @@ import javax.ws.rs.ext.Provider;
 
 import org.alliancegenome.agr_submission.config.ConfigHelper;
 import org.alliancegenome.agr_submission.dao.UserDAO;
-import org.alliancegenome.agr_submission.entities.User;
+import org.alliancegenome.agr_submission.entities.LoggedInUser;
 import org.alliancegenome.agr_submission.util.AESUtil;
 
 import lombok.extern.log4j.Log4j2;
@@ -79,7 +79,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 		//log.debug("API Access Token: " + ConfigHelper.getApiAccessToken());
 		//log.debug("Validating Token: " + token);
 		
-		User user = userDAO.findUserByApiKey(token);
+		LoggedInUser user = userDAO.findUserByApiKey(token);
 		AuthedUser authedUser = new AuthedUser();
 		authedUser.setUser(user);
 		userAuthenticatedEvent.fire(authedUser);

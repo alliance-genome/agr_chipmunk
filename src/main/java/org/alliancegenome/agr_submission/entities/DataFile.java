@@ -95,7 +95,7 @@ public class DataFile extends BaseEntity implements Comparable<DataFile> {
 		}
 	}
 	
-	public boolean isValid() {
+	public Boolean isValid() {
 		return (valid == null || valid);
 	}
 

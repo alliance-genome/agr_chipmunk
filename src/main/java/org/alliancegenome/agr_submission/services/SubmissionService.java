@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
@@ -41,14 +42,15 @@ import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import lombok.extern.jbosslog.JBossLog;
 
 @JBossLog
+@RequestScoped
 public class SubmissionService {
 
 	//@Inject private SnapShotDAO snapShotDAO;
-	@Inject private ReleaseVersionService releaseService;
-	@Inject private DataFileDAO dataFileDao;
-	@Inject private SchemaVersionDAO schemaVersionDAO;
-	@Inject private DataTypeDAO dataTypeDAO;
-	@Inject private DataSubTypeDAO dataSubTypeDAO;
+	@Inject ReleaseVersionService releaseService;
+	@Inject DataFileDAO dataFileDao;
+	@Inject SchemaVersionDAO schemaVersionDAO;
+	@Inject DataTypeDAO dataTypeDAO;
+	@Inject DataSubTypeDAO dataSubTypeDAO;
 
 	private static GitHelper gitHelper = new GitHelper();
 	private static S3Helper s3Helper = new S3Helper();

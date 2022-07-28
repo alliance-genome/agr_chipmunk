@@ -6,7 +6,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
 import org.alliancegenome.agr_submission.BaseController;
-import org.alliancegenome.agr_submission.entities.User;
+import org.alliancegenome.agr_submission.entities.LoggedInUser;
 import org.alliancegenome.agr_submission.interfaces.server.UserControllerInterface;
 import org.alliancegenome.agr_submission.services.UserService;
 
@@ -16,26 +16,26 @@ public class UserController extends BaseController implements UserControllerInte
 	@Inject UserService userService;
 	
 	@Override
-	public User create(User entity) {
+	public LoggedInUser create(LoggedInUser entity) {
 		return userService.create(entity);
 	}
 
 	@Override
-	public User get(Long id) {
+	public LoggedInUser get(Long id) {
 		return userService.get(id);
 	}
 
 	@Override
-	public User update(User entity) {
+	public LoggedInUser update(LoggedInUser entity) {
 		return userService.update(entity);
 	}
 
 	@Override
-	public User delete(Long id) {
+	public LoggedInUser delete(Long id) {
 		return userService.delete(id);
 	}
 	
-	public List<User> getUsers() {
+	public List<LoggedInUser> getUsers() {
 		return userService.getUsers();
 	}
 

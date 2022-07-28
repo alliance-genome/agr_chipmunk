@@ -1,5 +1,6 @@
 package org.alliancegenome.agr_submission.services;
 
+import javax.enterprise.context.RequestScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -16,6 +17,7 @@ import org.alliancegenome.agr_submission.entities.log.LogApiRequest;
 import lombok.extern.jbosslog.JBossLog;
 
 @JBossLog
+@RequestScoped
 public class LogApiRequestService extends BaseService<LogApiRequest> {
 
 	
