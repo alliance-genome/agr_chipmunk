@@ -166,36 +166,29 @@ public class SubmissionController extends BaseController implements SubmissionCo
 		if(dataFiles.size() == 1) {
 			DataFile dataFile = dataFiles.get(0);
 			
-			String downloadHost = "";
-			if(ConfigHelper.getAWSBucketName().equals("mod-datadumps")) {
-				downloadHost = "http://download.alliancegenome.org/";
-			} else if(ConfigHelper.getAWSBucketName().contentEquals("mod-datadumps-dev")) {
-				downloadHost = "http://downloaddev.alliancegenome.org/";
-			} else {
-				downloadHost = "http://localhost:8080/";
-			}
+			String downloadHost = ConfigHelper.getAWSBucketHost();
 			
 			try {
 				if(gzFileRequest) {
 					// Person asked for compressed version
 					if(dataFile.getS3Path().endsWith(".gz")) {
 						// Already compressed send straight through
-						InputStream is = new URL(downloadHost + dataFile.getS3Path()).openStream();
+						InputStream is = new URL(downloadHost + "/" + dataFile.getS3Path()).openStream();
 						responseBuilder = Response.ok(is);
 					} else {
 						// Not compressed, compress file and send
-						GZIPCompressingInputStream gis = new GZIPCompressingInputStream(new URL(downloadHost + dataFile.getS3Path()).openStream());
+						GZIPCompressingInputStream gis = new GZIPCompressingInputStream(new URL(downloadHost + "/" + dataFile.getS3Path()).openStream());
 						responseBuilder = Response.ok(gis);
 					}
 				} else {
 					// Person asked for uncompressed version
 					if(dataFile.getS3Path().endsWith(".gz")) {
 						// Already compressed, uncompress file and send
-						GZIPInputStream gis = new GZIPInputStream(new URL(downloadHost + dataFile.getS3Path()).openStream());
+						GZIPInputStream gis = new GZIPInputStream(new URL(downloadHost + "/" + dataFile.getS3Path()).openStream());
 						responseBuilder = Response.ok(gis);
 					} else {
 						// Already uncompressed send straight through
-						InputStream is = new URL(downloadHost + dataFile.getS3Path()).openStream();
+						InputStream is = new URL(downloadHost + "/" + dataFile.getS3Path()).openStream();
 						responseBuilder = Response.ok(is);
 					}
 				}

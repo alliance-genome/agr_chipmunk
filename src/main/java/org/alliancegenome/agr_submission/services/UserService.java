@@ -1,6 +1,6 @@
 package org.alliancegenome.agr_submission.services;
 
-import java.util.List;
+import java.util.*;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -25,7 +25,7 @@ public class UserService extends BaseService<LoggedInUser> {
 	public LoggedInUser create(LoggedInUser entity) {
 		log.info("UserService: create: ");
 		try {
-			entity.setApiKey(AESUtil.encrypt(entity.getName(), ConfigHelper.getEncryptionPasswordKey()));
+			entity.setApiKey(UUID.randomUUID().toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

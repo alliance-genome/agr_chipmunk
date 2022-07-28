@@ -6,13 +6,10 @@ import javax.annotation.Priority;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.ws.rs.Priorities;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerRequestFilter;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.container.*;
+import javax.ws.rs.core.*;
 import javax.ws.rs.ext.Provider;
 
-import org.alliancegenome.agr_submission.config.ConfigHelper;
 import org.alliancegenome.agr_submission.dao.UserDAO;
 import org.alliancegenome.agr_submission.entities.LoggedInUser;
 import org.alliancegenome.agr_submission.util.AESUtil;
