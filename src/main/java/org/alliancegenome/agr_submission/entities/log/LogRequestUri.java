@@ -1,9 +1,6 @@
 package org.alliancegenome.agr_submission.entities.log;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Lob;
+import javax.persistence.*;
 
 import org.alliancegenome.agr_submission.BaseEntity;
 import org.alliancegenome.agr_submission.views.View;
@@ -23,6 +20,6 @@ public class LogRequestUri extends BaseEntity {
 	private Long id;
 	
 	@JsonView({View.API.class})
-	@Lob
+	@Column(columnDefinition="TEXT")
 	private String requestUri;
 }
