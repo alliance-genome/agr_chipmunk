@@ -114,8 +114,8 @@ jobs:
       with:
         aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        application_name: mati-app
-        environment_name: mati-beta
+        application_name: chipmunk-app
+        environment_name: chipmunk-dev
         version_label: ${{ github.event.release.tag_name }}
         deployment_package: ${{ github.event.release.tag_name }}.zip
         use_existing_version_if_available: true
