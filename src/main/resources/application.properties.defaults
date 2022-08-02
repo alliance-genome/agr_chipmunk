@@ -1,5 +1,5 @@
 quarkus.http.host=0.0.0.0
-quarkus.http.cors=false
+quarkus.http.cors=true
 
 # The max-body-size needs to be unset
 # it defaults to something too small for DQM submissions
@@ -17,59 +17,22 @@ quarkus.datasource.db-kind=postgresql
 quarkus.datasource.username=postgres
 quarkus.datasource.password=postgres
 quarkus.datasource.jdbc.max-size=128
-
-quarkus.hibernate-orm.database.generation=validate
-%dev.quarkus.hibernate-orm.database.generation=update
-
-quarkus.flyway.sql-migration-prefix=v
-quarkus.flyway.default-schema=public
-quarkus.flyway.schemas=public
-quarkus.flyway.migrate-at-start=true
-quarkus.flyway.baseline-version=0.3.0
-quarkus.flyway.baseline-on-migrate=true
-quarkus.flyway.clean-disabled=true
-
-quarkus.elasticsearch.hosts = localhost:9200
-quarkus.elasticsearch.protocol = http
-quarkus.elasticsearch.devservices.enabled = false
-quarkus.devservices.enabled = false
-
-quarkus.hibernate-search-orm.elasticsearch.version=opensearch:1.2
-quarkus.hibernate-search-orm.elasticsearch.protocol=http
-quarkus.hibernate-search-orm.elasticsearch.read-timeout=600S
-quarkus.hibernate-search-orm.schema-management.strategy=create-or-update
-quarkus.hibernate-search-orm.automatic-indexing.synchronization.strategy=write-sync
-
-quarkus.micrometer.binder.vertx.enabled=true
-quarkus.micrometer.export.json.enabled=true
-quarkus.micrometer.export.json.path=api/metrics.json
-
-quarkus.hibernate-search-orm.elasticsearch.analysis.configurer=bean:ApplicationAnalysisConfig
-quarkus.hibernate-search-orm.elasticsearch.schema-management.settings-file = hibernate/custom-index-settings.json
-
-quarkus.vertx.max-worker-execute-time=PT1H
-
-%dev.quarkus.hibernate-search-orm.elasticsearch.hosts=localhost:9200
 %dev.quarkus.datasource.jdbc.url=jdbc:postgresql://localhost:5432/curation
 
-NET = local
+quarkus.hibernate-orm.database.generation=update
 
-reports.schedulingEnabled = true
-%dev.reports.schedulingEnabled = false
-reports.s3Bucket = agr-curation-files
-reports.s3AccessKey = ""
-reports.s3SecretKey = ""
-reports.s3PathPrefix = dev/reports
+#quarkus.flyway.sql-migration-prefix=v
+#quarkus.flyway.default-schema=public
+#quarkus.flyway.schemas=public
+#quarkus.flyway.migrate-at-start=true
+#quarkus.flyway.baseline-version=0.0.1
+#quarkus.flyway.baseline-on-migrate=true
+#quarkus.flyway.clean-disabled=true
 
-bulk.data.loads.schedulingEnabled = true
-%dev.bulk.data.loads.schedulingEnabled = false
-bulk.data.loads.s3Bucket = agr-curation-files
-bulk.data.loads.s3AccessKey = ""
-bulk.data.loads.s3SecretKey = ""
-bulk.data.loads.s3PathPrefix = dev
-
-linkML.version = 1.0.0
-linkML.classes = DiseaseAnnotation,Gene,Allele,CHEBITerm,DAOTerm,DOTerm,EcoTerm,EMAPATerm,GOTerm,MATerm,MPTerm,NCBITaxonTerm,SOTerm,WBbtTerm,XcoTerm,ZecoTerm,ZfaTerm
+#quarkus.micrometer.binder.vertx.enabled=true
+#quarkus.micrometer.export.json.enabled=true
+#quarkus.micrometer.export.json.path=api/metrics.json
+#quarkus.vertx.max-worker-execute-time=PT1H
 
 okta.authentication = true
 okta.client.id = ""
@@ -84,3 +47,14 @@ okta.api.token = ""
 //%dev.quarkus.log.category."org.hibernate.SQL".level=DEBUG
 //%dev.quarkus.log.category."org.alliancegenome".level=DEBUG
 //%dev.quarkus.log.category."si.mazi.rescu".level=TRACE
+
+aws.bucket.name = mod-datadumps
+%test.aws.bucket.name = mod-datadumps-dev
+%dev.aws.bucket.name = mod-datadumps-dev
+
+aws.access.key = 
+aws.secret.key = 
+
+aws.bucket.host = http://download.alliancegenome.org
+%test.aws.bucket.host = http://downloaddev.alliancegenome.org
+%dev.aws.bucket.host = http://localhost:8080

@@ -7,10 +7,8 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.alliancegenome.agr_submission.BaseService;
-import org.alliancegenome.agr_submission.config.ConfigHelper;
 import org.alliancegenome.agr_submission.dao.UserDAO;
 import org.alliancegenome.agr_submission.entities.LoggedInUser;
-import org.alliancegenome.agr_submission.util.AESUtil;
 
 import lombok.extern.jbosslog.JBossLog;
 

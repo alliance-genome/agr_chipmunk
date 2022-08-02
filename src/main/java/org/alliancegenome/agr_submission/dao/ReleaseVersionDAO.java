@@ -1,7 +1,6 @@
 package org.alliancegenome.agr_submission.dao;
 
-import java.util.List;
-import java.util.TreeSet;
+import java.util.*;
 
 import javax.enterprise.context.ApplicationScoped;
 

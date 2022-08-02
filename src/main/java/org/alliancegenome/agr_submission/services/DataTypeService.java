@@ -7,14 +7,8 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.alliancegenome.agr_submission.BaseService;
-import org.alliancegenome.agr_submission.dao.DataSubTypeDAO;
-import org.alliancegenome.agr_submission.dao.DataTypeDAO;
-import org.alliancegenome.agr_submission.dao.SchemaFileDAO;
-import org.alliancegenome.agr_submission.dao.SchemaVersionDAO;
-import org.alliancegenome.agr_submission.entities.DataSubType;
-import org.alliancegenome.agr_submission.entities.DataType;
-import org.alliancegenome.agr_submission.entities.SchemaFile;
-import org.alliancegenome.agr_submission.entities.SchemaVersion;
+import org.alliancegenome.agr_submission.dao.*;
+import org.alliancegenome.agr_submission.entities.*;
 import org.alliancegenome.agr_submission.forms.CreateSchemaFileForm;
 
 import lombok.extern.jbosslog.JBossLog;

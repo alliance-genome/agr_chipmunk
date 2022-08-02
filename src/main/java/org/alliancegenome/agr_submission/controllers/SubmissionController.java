@@ -10,7 +10,6 @@ import javax.inject.Inject;
 import javax.ws.rs.core.*;
 
 import org.alliancegenome.agr_submission.BaseController;
-import org.alliancegenome.agr_submission.config.ConfigHelper;
 import org.alliancegenome.agr_submission.dao.*;
 import org.alliancegenome.agr_submission.entities.*;
 import org.alliancegenome.agr_submission.exceptions.*;
@@ -19,6 +18,7 @@ import org.alliancegenome.agr_submission.responces.*;
 import org.alliancegenome.agr_submission.services.*;
 import org.alliancegenome.agr_submission.util.GZIPCompressingInputStream;
 import org.apache.commons.io.FileUtils;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.resteasy.plugins.providers.multipart.*;
 
 import com.google.common.base.Joiner;
@@ -29,6 +29,8 @@ import lombok.extern.jbosslog.JBossLog;
 @RequestScoped
 public class SubmissionController extends BaseController implements SubmissionControllerInterface {
 
+	@ConfigProperty(name = "aws.bucket.host") String downloadHost;
+	
 	@Inject SubmissionService metaDataService;
 	@Inject ReleaseVersionService releaseService;
 	@Inject DataFileService dataFileService;
@@ -68,6 +70,7 @@ public class SubmissionController extends BaseController implements SubmissionCo
 				// if input stream is not gzipped, gzip-it
 				try {
 					GZIPInputStream gs = new GZIPInputStream(new FileInputStream(saveFilePath));
+					gs.close();
 				} catch (IOException e) {
 					log.info("Input stream not in the GZIP format, GZIP it");
 
@@ -165,8 +168,6 @@ public class SubmissionController extends BaseController implements SubmissionCo
 		Response.ResponseBuilder responseBuilder = null;
 		if(dataFiles.size() == 1) {
 			DataFile dataFile = dataFiles.get(0);
-			
-			String downloadHost = ConfigHelper.getAWSBucketHost();
 			
 			try {
 				if(gzFileRequest) {

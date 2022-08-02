@@ -3,9 +3,9 @@ package org.alliancegenome.agr_submission.util.aws;
 import java.io.File;
 import java.util.*;
 
-import org.alliancegenome.agr_submission.config.ConfigHelper;
 import org.alliancegenome.agr_submission.exceptions.*;
 import org.eclipse.microprofile.config.ConfigProvider;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import com.amazonaws.auth.*;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
@@ -18,14 +18,18 @@ import lombok.extern.jbosslog.JBossLog;
 
 @JBossLog
 public class S3Helper {
-
+	
+	@ConfigProperty(name = "aws.access.key") String accessKey;
+	@ConfigProperty(name = "aws.secret.key") String secretKey;
+	@ConfigProperty(name = "aws.bucket.name") String bucketName;
+	
 	public AWSCredentialsProvider getCredentials() {
 		Optional<String> aws_profile = ConfigProvider.getConfig().getOptionalValue("aws.profile", String.class);
 		if(aws_profile.isPresent() && aws_profile.get() != null) {
 			log.info("Default AWS Profile: " + aws_profile.get());
 			return new ProfileCredentialsProvider("agr");
-		} else if (ConfigHelper.getAWSAccessKey() != null) {
-			return new AWSStaticCredentialsProvider(new BasicAWSCredentials(ConfigHelper.getAWSAccessKey(), ConfigHelper.getAWSSecretKey()));
+		} else if (accessKey != null) {
+			return new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey));
 		} else {
 			return new InstanceProfileCredentialsProvider(false);
 		}
@@ -36,7 +40,7 @@ public class S3Helper {
 		try {
 			log.info("Getting S3 file listing");
 			AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(getCredentials()).withRegion(Regions.US_EAST_1).build();
-			ObjectListing ol = s3.listObjects(ConfigHelper.getAWSBucketName(), prefix);
+			ObjectListing ol = s3.listObjects(bucketName, prefix);
 			log.debug(ol.getObjectSummaries().size());
 			count = ol.getObjectSummaries().size();
 			for (S3ObjectSummary summary : ol.getObjectSummaries()) {
@@ -52,10 +56,10 @@ public class S3Helper {
 
 	public void saveFile(String path, File inFile) throws GenericException {
 		try {
-			log.info("Uploading file to S3: " + inFile.getAbsolutePath() + " -> s3://" + ConfigHelper.getAWSBucketName() + "/" + path);
+			log.info("Uploading file to S3: " + inFile.getAbsolutePath() + " -> s3://" + bucketName + "/" + path);
 			AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(getCredentials()).withRegion(Regions.US_EAST_1).build();
 			TransferManager tm = TransferManagerBuilder.standard().withS3Client(s3).build();
-			final Upload uploadFile = tm.upload(ConfigHelper.getAWSBucketName(), path, inFile);
+			final Upload uploadFile = tm.upload(bucketName, path, inFile);
 			uploadFile.waitForCompletion();
 			tm.shutdownNow();
 			inFile.delete();

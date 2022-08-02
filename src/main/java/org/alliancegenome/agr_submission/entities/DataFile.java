@@ -1,20 +1,16 @@
 package org.alliancegenome.agr_submission.entities;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import javax.persistence.*;
 
 import org.alliancegenome.agr_submission.BaseEntity;
-import org.alliancegenome.agr_submission.config.ConfigHelper;
 import org.alliancegenome.agr_submission.views.View;
+import org.eclipse.microprofile.config.*;
 
 import com.fasterxml.jackson.annotation.*;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @Getter @Setter @ToString
@@ -68,14 +64,15 @@ public class DataFile extends BaseEntity implements Comparable<DataFile> {
 
 	@JsonView({View.API.class})
 	public String getStableURL() {
+		Config config = ConfigProvider.getConfig();
+		String bucketName = config.getValue("aws.bucket.name", String.class);
+		String bucketHost = config.getValue("aws.bucket.host", String.class);
 		if((currentRelease == null && requestRelease == null) || requestRelease.equals(currentRelease)) {
 			String suffix = "";
 			if(s3Path.endsWith(".gz")) suffix = ".gz";
-			
-			if(ConfigHelper.getAWSBucketName().equals("mod-datadumps")) {
-				return "https://fms.alliancegenome.org/download/" + dataType.getName() + "_" + dataSubType.getName() + "." + dataType.getFileExtension() + suffix;
-			} else if(ConfigHelper.getAWSBucketName().contentEquals("mod-datadumps-dev")) {
-				return "https://fmsdev.alliancegenome.org/download/" + dataType.getName() + "_" + dataSubType.getName() + "." + dataType.getFileExtension() + suffix;
+
+			if(bucketName != null) {
+				return bucketHost + "/download/" + dataType.getName() + "_" + dataSubType.getName() + "." + dataType.getFileExtension() + suffix;
 			} else {
 				return null;
 			}
@@ -86,10 +83,10 @@ public class DataFile extends BaseEntity implements Comparable<DataFile> {
 	
 	@JsonView({View.API.class})
 	public String getS3Url() {
-		if(ConfigHelper.getAWSBucketName().equals("mod-datadumps")) {
-			return "https://download.alliancegenome.org/" + s3Path;
-		} else if(ConfigHelper.getAWSBucketName().contentEquals("mod-datadumps-dev")) {
-			return "https://downloaddev.alliancegenome.org/" + s3Path;
+		Config config = ConfigProvider.getConfig();
+		String bucketName = config.getValue("aws.bucket.name", String.class);
+		if(bucketName != null) {
+			return bucketName + "/" + s3Path;
 		} else {
 			return null;
 		}

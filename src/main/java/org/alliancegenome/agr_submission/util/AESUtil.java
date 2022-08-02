@@ -1,8 +1,7 @@
 package org.alliancegenome.agr_submission.util;
 
 import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.security.*;
 import java.util.Arrays;
 
 import javax.crypto.Cipher;

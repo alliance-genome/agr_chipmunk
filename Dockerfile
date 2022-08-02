@@ -1,27 +1,30 @@
-ARG REG=100225593120.dkr.ecr.us-east-1.amazonaws.com
-ARG DOCKER_PULL_TAG=latest
+FROM node:12 AS BUILD_UI_STAGE
 
-FROM ${REG}/agr_base_linux_env:${DOCKER_PULL_TAG}
-  
-RUN mkdir /data
+WORKDIR /agr_fms
 
-WORKDIR /workdir/agr_fms_software
+COPY src/main/cliapp ./cliapp
 
-ADD . .
+WORKDIR /agr_fms/cliapp
+RUN make all build
 
-WORKDIR /workdir/agr_fms_software/src/main/cliapp
+FROM maven:3.8-openjdk-11 as BUILD_API_STAGE
 
-RUN /bin/bash -c '. $HOME/.nvm/nvm.sh --no-use && \
-  nvm install && \
-  nvm use && \
-  npm install'
+COPY . .
 
-RUN /bin/bash -c '. $HOME/.nvm/nvm.sh && npm run-script build'
+RUN cp src/main/resources/application.properties.defaults src/main/resources/application.properties
 
-RUN mv build/* ../webapp
+RUN mvn -T 8 clean package -Dquarkus.package.type=uber-jar -ntp
 
-WORKDIR /workdir/agr_fms_software
 
-RUN mvn -T 6 -B clean package
+FROM openjdk:11-jre-slim
 
+WORKDIR /agr_fms
+
+COPY --from=BUILD_API_STAGE /target/agr_chipmunk-runner.jar .
+
+# Expose necessary ports
 EXPOSE 8080
+
+# Set default env variables for local docker application execution
+
+CMD ["java", "-Xmx8g", "-jar", "agr_chipmunk-runner.jar"]

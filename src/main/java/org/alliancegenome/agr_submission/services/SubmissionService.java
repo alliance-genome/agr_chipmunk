@@ -1,32 +1,16 @@
 package org.alliancegenome.agr_submission.services;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 import java.util.zip.GZIPInputStream;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
-import org.alliancegenome.agr_submission.dao.DataFileDAO;
-import org.alliancegenome.agr_submission.dao.DataSubTypeDAO;
-import org.alliancegenome.agr_submission.dao.DataTypeDAO;
-import org.alliancegenome.agr_submission.dao.SchemaVersionDAO;
-import org.alliancegenome.agr_submission.entities.DataFile;
-import org.alliancegenome.agr_submission.entities.DataSubType;
-import org.alliancegenome.agr_submission.entities.DataType;
-import org.alliancegenome.agr_submission.entities.ReleaseVersion;
-import org.alliancegenome.agr_submission.entities.SchemaVersion;
-import org.alliancegenome.agr_submission.exceptions.GenericException;
-import org.alliancegenome.agr_submission.exceptions.SchemaDataTypeException;
-import org.alliancegenome.agr_submission.exceptions.ValidataionException;
+import org.alliancegenome.agr_submission.dao.*;
+import org.alliancegenome.agr_submission.entities.*;
+import org.alliancegenome.agr_submission.exceptions.*;
 import org.alliancegenome.agr_submission.util.aws.S3Helper;
 import org.alliancegenome.agr_submission.util.github.GitHelper;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -34,10 +18,8 @@ import org.apache.commons.codec.digest.DigestUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jackson.JsonLoader;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
-import com.github.fge.jsonschema.core.report.ProcessingMessage;
-import com.github.fge.jsonschema.core.report.ProcessingReport;
-import com.github.fge.jsonschema.main.JsonSchema;
-import com.github.fge.jsonschema.main.JsonSchemaFactory;
+import com.github.fge.jsonschema.core.report.*;
+import com.github.fge.jsonschema.main.*;
 
 import lombok.extern.jbosslog.JBossLog;
 

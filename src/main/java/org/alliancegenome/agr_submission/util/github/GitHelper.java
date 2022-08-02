@@ -1,16 +1,11 @@
 package org.alliancegenome.agr_submission.util.github;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import org.alliancegenome.agr_submission.config.ConfigHelper;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ListBranchCommand.ListMode;
-import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.*;
 import org.eclipse.jgit.transport.TagOpt;
 
 import lombok.extern.log4j.Log4j2;
@@ -18,10 +13,10 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class GitHelper {
 
-	private String prefix = "/git";
+	private String localGitPath = "/tmp/git";
 
 	public void setupSchemaRelease(String schemaRelease) {
-		String localPath = ConfigHelper.getValidationSoftwarePath() + prefix + "/" + schemaRelease;
+		String localPath = localGitPath + "/" + schemaRelease;
 
 		File gitRepoDir = new File(localPath);
 
@@ -95,7 +90,7 @@ public class GitHelper {
 
 	public File getFile(String schemaRelease, String filePath) {
 		setupSchemaRelease(schemaRelease);
-		String path = ConfigHelper.getValidationSoftwarePath() + prefix + "/" + schemaRelease;
+		String path = localGitPath + "/" + schemaRelease;
 		log.debug("Validation File: " + path + filePath);
 		return new File(path + filePath);
 	}

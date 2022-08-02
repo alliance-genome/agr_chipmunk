@@ -1,7 +1,5 @@
 package org.alliancegenome.agr_submission.util;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.zip.GZIPOutputStream;
 
 /**

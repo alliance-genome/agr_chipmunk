@@ -13,6 +13,7 @@ import javax.ws.rs.ext.Provider;
 import org.alliancegenome.agr_submission.dao.UserDAO;
 import org.alliancegenome.agr_submission.entities.LoggedInUser;
 import org.alliancegenome.agr_submission.util.AESUtil;
+import org.eclipse.microprofile.config.*;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -21,7 +22,7 @@ import lombok.extern.log4j.Log4j2;
 @Provider
 @Priority(Priorities.AUTHENTICATION)
 public class AuthenticationFilter implements ContainerRequestFilter {
-
+	
 	@Inject
 	@AuthenticatedUser
 	Event<AuthedUser> userAuthenticatedEvent;
@@ -85,7 +86,9 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 			log.warn("Authentication Unsuccessful: " + token);
 			throw new Exception("Authentication Unsuccessful: " + token);
 		}
-		log.info("Authentication Successful for: " + AESUtil.decrypt(token, ConfigHelper.getEncryptionPasswordKey()));
+		Config config = ConfigProvider.getConfig();
+		String encryptionPasswordKey = config.getValue("encryption.passwordkey", String.class);
+		log.info("Authentication Successful for: " + AESUtil.decrypt(token, encryptionPasswordKey));
 		
 	}
 }

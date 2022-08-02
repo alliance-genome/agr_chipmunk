@@ -1,12 +1,8 @@
 package org.alliancegenome.agr_submission.main;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.*;
 import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.*;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
