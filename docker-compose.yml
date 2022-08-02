@@ -1,0 +1,21 @@
+version: "3.2"
+
+services:
+
+  chipmunk.app:
+    container_name: agr.chipmunk.${NET}.api.server
+    image: 100225593120.dkr.ecr.us-east-1.amazonaws.com/agr_chipmunk:${AGR_CHIPMUNK_RELEASE}
+    logging:
+      driver: gelf
+      options:
+        gelf-address: 'udp://logs.alliancegenome.org:12201'
+    ports:
+      - "8080:8080"
+    networks:
+      - chipmunk 
+    env_file:
+      - .env
+
+networks:
+  # The presence of these objects is sufficient to define them
+  chipmunk:
