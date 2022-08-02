@@ -84,9 +84,9 @@ public class DataFile extends BaseEntity implements Comparable<DataFile> {
 	@JsonView({View.API.class})
 	public String getS3Url() {
 		Config config = ConfigProvider.getConfig();
-		String bucketName = config.getValue("aws.bucket.name", String.class);
-		if(bucketName != null) {
-			return bucketName + "/" + s3Path;
+		String bucketHost = config.getValue("aws.bucket.host", String.class);
+		if(bucketHost != null) {
+			return bucketHost + "/" + s3Path;
 		} else {
 			return null;
 		}
