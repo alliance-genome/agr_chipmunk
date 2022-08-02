@@ -10,9 +10,8 @@ import org.alliancegenome.agr_submission.BaseService;
 import org.alliancegenome.agr_submission.dao.*;
 import org.alliancegenome.agr_submission.entities.*;
 
-import lombok.extern.jbosslog.JBossLog;
+import io.quarkus.logging.Log;
 
-@JBossLog
 @RequestScoped
 public class ReleaseVersionService extends BaseService<ReleaseVersion> {
 
@@ -22,7 +21,7 @@ public class ReleaseVersionService extends BaseService<ReleaseVersion> {
 	@Override
 	@Transactional
 	public ReleaseVersion create(ReleaseVersion entity) {
-		log.info("ReleaseVersionService: create: ");
+		Log.info("ReleaseVersionService: create: ");
 		return dao.persist(entity);
 	}
 
@@ -34,7 +33,7 @@ public class ReleaseVersionService extends BaseService<ReleaseVersion> {
 
 	@Transactional
 	public ReleaseVersion get(String id) {
-		log.info("ReleaseVersionService: get: " + id);
+		Log.info("ReleaseVersionService: get: " + id);
 		try {
 			Long ident = Long.parseLong(id);
 			return get(ident);
@@ -53,14 +52,14 @@ public class ReleaseVersionService extends BaseService<ReleaseVersion> {
 	@Override
 	@Transactional
 	public ReleaseVersion update(ReleaseVersion entity) {
-		log.info("ReleaseVersionService: update: ");
+		Log.info("ReleaseVersionService: update: ");
 		return dao.merge(entity);
 	}
 
 	@Override
 	@Transactional
 	public ReleaseVersion delete(Long id) {
-		log.info("ReleaseVersionService: delete: " + id);
+		Log.info("ReleaseVersionService: delete: " + id);
 		return dao.remove(id);
 	}
 

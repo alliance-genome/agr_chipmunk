@@ -23,9 +23,8 @@ import org.jboss.resteasy.plugins.providers.multipart.*;
 
 import com.google.common.base.Joiner;
 
-import lombok.extern.jbosslog.JBossLog;
+import io.quarkus.logging.Log;
 
-@JBossLog
 @RequestScoped
 public class SubmissionController extends BaseController implements SubmissionControllerInterface {
 
@@ -63,22 +62,22 @@ public class SubmissionController extends BaseController implements SubmissionCo
 			try {
 				InputStream is = inputPart.getBody(InputStream.class, null);
 
-				log.info("Saving file to local filesystem: " + saveFilePath.getAbsolutePath());
+				Log.info("Saving file to local filesystem: " + saveFilePath.getAbsolutePath());
 				FileUtils.copyInputStreamToFile(is, saveFilePath);
-				log.info("Save file to local filesystem complete");
+				Log.info("Save file to local filesystem complete");
 
 				// if input stream is not gzipped, gzip-it
 				try {
 					GZIPInputStream gs = new GZIPInputStream(new FileInputStream(saveFilePath));
 					gs.close();
 				} catch (IOException e) {
-					log.info("Input stream not in the GZIP format, GZIP it");
+					Log.info("Input stream not in the GZIP format, GZIP it");
 
 					String gzFileName = outFileName + ".gz";
 					if( !compressGzipFile(saveFilePath, gzFileName) ) {
 						throw new GenericException("failed to gzip file");
 					}
-					log.info("gzipped to "+gzFileName);
+					Log.info("gzipped to "+gzFileName);
 
 					// delete original uncompressed file
 					saveFilePath.delete();
@@ -95,7 +94,7 @@ public class SubmissionController extends BaseController implements SubmissionCo
 					success = false;
 				}
 			} catch (GenericException | IOException e) {
-				log.error(e.getMessage());
+				Log.error(e.getMessage());
 				saveFilePath.delete();
 				res.getFileStatus().put(key, e.getMessage());
 				//e.printStackTrace();
@@ -138,7 +137,7 @@ public class SubmissionController extends BaseController implements SubmissionCo
 		if(dataType == null) {
 			throw new SchemaDataTypeException("Could not Find dataType: " + dataTypeString);
 		}
-		log.debug("Data Type: " + dataType);
+		Log.debug("Data Type: " + dataType);
 		
 		boolean gzFileRequest = false;
 		
@@ -158,10 +157,10 @@ public class SubmissionController extends BaseController implements SubmissionCo
 		if(dataSubType == null) {
 			throw new SchemaDataTypeException("Could not Find dataSubType: " + dataSubTypeString);
 		}
-		log.debug("Data Sub Type: " + dataSubType);
+		Log.debug("Data Sub Type: " + dataSubType);
 		
 		ReleaseVersion releaseVersion = releaseService.getCurrentRelease();
-		log.debug("Current Release: " + releaseVersion);
+		Log.debug("Current Release: " + releaseVersion);
 		
 		List<DataFile> dataFiles = dataFileService.getReleaseDataTypeSubTypeFiles(releaseVersion.getReleaseVersion(), dataType.getName(), dataSubType.getName(), true);
 		

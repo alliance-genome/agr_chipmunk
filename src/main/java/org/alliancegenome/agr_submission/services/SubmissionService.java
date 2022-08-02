@@ -21,9 +21,8 @@ import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import com.github.fge.jsonschema.core.report.*;
 import com.github.fge.jsonschema.main.*;
 
-import lombok.extern.jbosslog.JBossLog;
+import io.quarkus.logging.Log;
 
-@JBossLog
 @RequestScoped
 public class SubmissionService {
 
@@ -48,12 +47,12 @@ public class SubmissionService {
 		String dataSubTypeLookup;
 
 		if(keys.length == 3) {
-			log.debug("Key has 3 items: parse: (Release-DataType-DataSubType): " + key);
+			Log.debug("Key has 3 items: parse: (Release-DataType-DataSubType): " + key);
 			releaseVersionLookup = keys[0];
 			dataTypeLookup = keys[1];
 			dataSubTypeLookup = keys[2];
 		} else if(keys.length == 2) { // DataType-DataSubType puts the file under the next release
-			log.debug("Key has 2 items: parse: (DataType-DataSubType): " + key);
+			Log.debug("Key has 2 items: parse: (DataType-DataSubType): " + key);
 			releaseVersionLookup = null;
 			dataTypeLookup = keys[0];
 			dataSubTypeLookup = keys[1];
@@ -64,10 +63,10 @@ public class SubmissionService {
 		ReleaseVersion releaseVersion = null;
 
 		if(releaseVersionLookup == null) {
-			log.debug("Getting Next Release Version: ");
+			Log.debug("Getting Next Release Version: ");
 			releaseVersion = releaseService.getNextRelease();
 		} else {
-			log.debug("Looking up release Version: " + releaseVersionLookup);
+			Log.debug("Looking up release Version: " + releaseVersionLookup);
 			releaseVersion = releaseService.get(releaseVersionLookup);
 
 		}
@@ -75,20 +74,20 @@ public class SubmissionService {
 		if(releaseVersion == null) {
 			throw new SchemaDataTypeException("Could not Find releaseVersion: " + releaseVersionLookup);
 		}
-		log.debug("Release Version: " + releaseVersion);
+		Log.debug("Release Version: " + releaseVersion);
 
 		DataType dataType = dataTypeDAO.findByField("name", dataTypeLookup);
 		if(dataType == null) {
 			throw new SchemaDataTypeException("Could not Find dataType: " + dataTypeLookup);
 		}
-		log.debug("Data Type: " + dataType);
+		Log.debug("Data Type: " + dataType);
 
 		DataSubType dataSubType = dataSubTypeDAO.findByField("name", dataSubTypeLookup);
 
 		if(dataSubType == null) {
 			throw new SchemaDataTypeException("Could not Find dataSubType: " + dataSubTypeLookup);
 		}
-		log.debug("Data Sub Type: " + dataSubType);
+		Log.debug("Data Sub Type: " + dataSubType);
 
 		SchemaVersion schemaVersion = null;
 
@@ -99,7 +98,7 @@ public class SubmissionService {
 			if(schemaVersion == null) {
 				throw new SchemaDataTypeException("Could not Find default schemaVersion for release: " + releaseVersionLookup);
 			}
-			log.debug("Schema Version: " + schemaVersion);
+			Log.debug("Schema Version: " + schemaVersion);
 
 			validateData(releaseVersion, schemaVersion, dataType, inFile);
 		}
@@ -113,24 +112,24 @@ public class SubmissionService {
 
 	private boolean validateData(ReleaseVersion releaseVersion, SchemaVersion schemaVersionName, DataType dataType, File inFile) throws GenericException {
 
-		log.info("Need to validate file: " + schemaVersionName.getSchema() + " " + dataType.getName());
+		Log.info("Need to validate file: " + schemaVersionName.getSchema() + " " + dataType.getName());
 		String dataTypeFilePath = dataType.getSchemaFilesMap().get(schemaVersionName.getSchema());
 
 		if(dataTypeFilePath == null) {
-			log.info("No Data type file found for: " + schemaVersionName.getSchema() + " looking backwards for older schema versions");
+			Log.info("No Data type file found for: " + schemaVersionName.getSchema() + " looking backwards for older schema versions");
 
 			String previousVersion = null;
 			for(previousVersion = schemaVersionDAO.getPreviousVersion(schemaVersionName.getSchema()); previousVersion != null;	previousVersion = schemaVersionDAO.getPreviousVersion(previousVersion) ) {
 				if(dataType.getSchemaFilesMap().get(previousVersion) != null) {
 					dataTypeFilePath = dataType.getSchemaFilesMap().get(previousVersion);
-					log.info("Found File name for: " + previousVersion + " -> " + dataTypeFilePath);
+					Log.info("Found File name for: " + previousVersion + " -> " + dataTypeFilePath);
 					break;
 				}
 			}
 			if(previousVersion == null) {
 				throw new SchemaDataTypeException("No Schema file for Data Type found: schema: " + schemaVersionName + " dataType: " + dataType.getName());
 			} else {
-				log.info("Previous Version Found: " + previousVersion);
+				Log.info("Previous Version Found: " + previousVersion);
 			}
 		}
 		File schemaFile = gitHelper.getFile(schemaVersionName.getSchema(), dataTypeFilePath);
@@ -152,7 +151,7 @@ public class SubmissionService {
 					throw new ValidataionException(message.getMessage());
 				}
 			}
-			log.info("Validation Complete: " + report.isSuccess());
+			Log.info("Validation Complete: " + report.isSuccess());
 			return report.isSuccess();
 		} catch (IOException | ProcessingException e) {
 			throw new ValidataionException(e.getMessage());
@@ -180,35 +179,35 @@ public class SubmissionService {
 		} else {
 			filePath = dir + dataType.getName() + "_" + dataSubType.getName() + "_" + fileIndex + "." + dataType.getFileExtension() + suffix;
 		}
-		log.debug("File Save Path: " + filePath);
+		Log.debug("File Save Path: " + filePath);
 
 		try {
 			InputStream is = new GZIPInputStream(new FileInputStream(inFile));
 			String md5Sum = DigestUtils.md5Hex(is);
 			is.close();
 
-			log.info("MD5 Sum: " + md5Sum);
+			Log.info("MD5 Sum: " + md5Sum);
 
 			// Check that data file doesn't already exist in the system if so update its release version
 			DataFile df = dataFileDao.getByIdOrMD5Sum(md5Sum);
 			if(df != null) {
-				log.debug("DataFile found not uploading: " + df.getS3Path() + " MD5: " + df.getMd5Sum());
+				Log.debug("DataFile found not uploading: " + df.getS3Path() + " MD5: " + df.getMd5Sum());
 				boolean found = false;
 				for(ReleaseVersion r: df.getReleaseVersions()) {
-					log.trace("Release: " + r.getReleaseVersion() + " Release Lookup: " + releaseVersion.getReleaseVersion());
+					Log.trace("Release: " + r.getReleaseVersion() + " Release Lookup: " + releaseVersion.getReleaseVersion());
 					if(r.getReleaseVersion().equals(releaseVersion.getReleaseVersion())) {
-						log.debug("DataFile already under release: " + releaseVersion.getReleaseVersion());
+						Log.debug("DataFile already under release: " + releaseVersion.getReleaseVersion());
 						found = true;
 						break;
 					}
 				}
 				if(!found) {
-					log.debug("Added DataFile to release version: " + releaseVersion.getReleaseVersion());
+					Log.debug("Added DataFile to release version: " + releaseVersion.getReleaseVersion());
 					df.getReleaseVersions().add(releaseVersion);
 				}
 
 			} else {
-				log.debug("MD5 not found: creating new file: " + filePath);
+				Log.debug("MD5 not found: creating new file: " + filePath);
 				df = new DataFile();
 				Set<ReleaseVersion> set = new HashSet<ReleaseVersion>();
 				set.add(releaseVersion);
@@ -219,7 +218,7 @@ public class SubmissionService {
 				df.setS3Path(filePath);
 				df.setMd5Sum(md5Sum);
 				df.setUploadDate(new Date());
-				log.info("Saving New File: " + filePath);
+				Log.info("Saving New File: " + filePath);
 				// gzip compress the input stream on the fly and save it to s3
 				s3Helper.saveFile(filePath, inFile);
 			}

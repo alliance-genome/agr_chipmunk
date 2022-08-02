@@ -8,9 +8,8 @@ import org.eclipse.jgit.api.ListBranchCommand.ListMode;
 import org.eclipse.jgit.lib.*;
 import org.eclipse.jgit.transport.TagOpt;
 
-import lombok.extern.log4j.Log4j2;
+import io.quarkus.logging.Log;
 
-@Log4j2
 public class GitHelper {
 
 	private String localGitPath = "/tmp/git";
@@ -22,7 +21,7 @@ public class GitHelper {
 
 		try {
 			if(!gitRepoDir.exists() || !gitRepoDir.isDirectory()) {
-				log.debug("Cloning Repo: ");
+				Log.debug("Cloning Repo: ");
 				Git.cloneRepository()
 					.setURI( "https://github.com/alliance-genome/agr_schemas.git" )
 					.setDirectory(new File(localPath))
@@ -56,7 +55,7 @@ public class GitHelper {
 			list2.stream().forEach(
 				ref -> {
 					if(ref.getName().startsWith("refs/heads/release-")) {
-						log.debug("Deleting Local Branch: " + ref.getName());
+						Log.debug("Deleting Local Branch: " + ref.getName());
 						try {
 							git.branchDelete().setBranchNames(ref.getName()).call();
 						} catch (Exception e) {
@@ -71,27 +70,27 @@ public class GitHelper {
 
 
 			if(tags.contains(schemaRelease)) {
-				log.debug("Checking out tag: " + schemaRelease);
+				Log.debug("Checking out tag: " + schemaRelease);
 				git.checkout().setName(schemaRelease).call();
 				//git.checkout().setCreateBranch(true).setName(schemaRelease)
 				//	.setUpstreamMode(SetupUpstreamMode.SET_UPSTREAM)
 				//	.setStartPoint("origin/" + schemaRelease).call();
 			} else if(remoteBranches.containsKey("release-" + schemaRelease)) {
-				log.debug("Checking out remote branch: " + "release-" + schemaRelease);
+				Log.debug("Checking out remote branch: " + "release-" + schemaRelease);
 				git.checkout().setName(remoteBranches.get("release-" + schemaRelease)).call();
 			} else {
 				// Do nothing
 			}
 
 		} catch(Exception e) {
-			log.error("Error Happened: " + e);
+			Log.error("Error Happened: " + e);
 		}
 	}
 
 	public File getFile(String schemaRelease, String filePath) {
 		setupSchemaRelease(schemaRelease);
 		String path = localGitPath + "/" + schemaRelease;
-		log.debug("Validation File: " + path + filePath);
+		Log.debug("Validation File: " + path + filePath);
 		return new File(path + filePath);
 	}
 

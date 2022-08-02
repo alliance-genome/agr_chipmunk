@@ -15,9 +15,8 @@ import org.alliancegenome.agr_submission.entities.LoggedInUser;
 import org.alliancegenome.agr_submission.util.AESUtil;
 import org.eclipse.microprofile.config.*;
 
-import lombok.extern.log4j.Log4j2;
+import io.quarkus.logging.Log;
 
-@Log4j2
 @Secured
 @Provider
 @Priority(Priorities.AUTHENTICATION)
@@ -34,11 +33,11 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {
-		log.info("AuthenticationFilter: filter: " + requestContext);
+		Log.info("AuthenticationFilter: filter: " + requestContext);
 		// Get the Authorization header from the request
 		String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
 
-		log.debug("Authorization Header: " + authorizationHeader);
+		Log.debug("Authorization Header: " + authorizationHeader);
 
 		if (!isTokenBasedAuthentication(authorizationHeader)) {
 			abortWithUnauthorized(requestContext);
@@ -83,12 +82,12 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 		userAuthenticatedEvent.fire(authedUser);
 		
 		if(user == null) {
-			log.warn("Authentication Unsuccessful: " + token);
+			Log.warn("Authentication Unsuccessful: " + token);
 			throw new Exception("Authentication Unsuccessful: " + token);
 		}
 		Config config = ConfigProvider.getConfig();
 		String encryptionPasswordKey = config.getValue("encryption.passwordkey", String.class);
-		log.info("Authentication Successful for: " + AESUtil.decrypt(token, encryptionPasswordKey));
+		Log.info("Authentication Successful for: " + AESUtil.decrypt(token, encryptionPasswordKey));
 		
 	}
 }

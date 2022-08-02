@@ -4,8 +4,7 @@ import java.io.File;
 import java.util.*;
 
 import org.alliancegenome.agr_submission.exceptions.*;
-import org.eclipse.microprofile.config.ConfigProvider;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.config.*;
 
 import com.amazonaws.auth.*;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
@@ -14,19 +13,17 @@ import com.amazonaws.services.s3.*;
 import com.amazonaws.services.s3.model.*;
 import com.amazonaws.services.s3.transfer.*;
 
-import lombok.extern.jbosslog.JBossLog;
+import io.quarkus.logging.Log;
 
-@JBossLog
 public class S3Helper {
-	
-	@ConfigProperty(name = "aws.access.key") String accessKey;
-	@ConfigProperty(name = "aws.secret.key") String secretKey;
-	@ConfigProperty(name = "aws.bucket.name") String bucketName;
-	
+
 	public AWSCredentialsProvider getCredentials() {
 		Optional<String> aws_profile = ConfigProvider.getConfig().getOptionalValue("aws.profile", String.class);
+		Config config = ConfigProvider.getConfig();
+		String accessKey = config.getValue("aws.access.key", String.class);
+		String secretKey = config.getValue("aws.secret.key", String.class);
 		if(aws_profile.isPresent() && aws_profile.get() != null) {
-			log.info("Default AWS Profile: " + aws_profile.get());
+			Log.info("Default AWS Profile: " + aws_profile.get());
 			return new ProfileCredentialsProvider("agr");
 		} else if (accessKey != null) {
 			return new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey));
@@ -38,13 +35,15 @@ public class S3Helper {
 	public int listFiles(String prefix) {
 		int count = 0;
 		try {
-			log.info("Getting S3 file listing");
+			Log.info("Getting S3 file listing");
 			AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(getCredentials()).withRegion(Regions.US_EAST_1).build();
+			Config config = ConfigProvider.getConfig();
+			String bucketName = config.getValue("aws.bucket.name", String.class);
 			ObjectListing ol = s3.listObjects(bucketName, prefix);
-			log.debug(ol.getObjectSummaries().size());
+			Log.debug(ol.getObjectSummaries().size());
 			count = ol.getObjectSummaries().size();
 			for (S3ObjectSummary summary : ol.getObjectSummaries()) {
-				log.debug(" - " + summary.getKey() + "\t(size = " + summary.getSize() + ")\t(lastModified = " + summary.getLastModified() + ")");
+				Log.debug(" - " + summary.getKey() + "\t(size = " + summary.getSize() + ")\t(lastModified = " + summary.getLastModified() + ")");
 			}
 			s3.shutdown();
 		} catch (Exception e) {
@@ -56,14 +55,16 @@ public class S3Helper {
 
 	public void saveFile(String path, File inFile) throws GenericException {
 		try {
-			log.info("Uploading file to S3: " + inFile.getAbsolutePath() + " -> s3://" + bucketName + "/" + path);
+			Config config = ConfigProvider.getConfig();
+			String bucketName = config.getValue("aws.bucket.name", String.class);
+			Log.info("Uploading file to S3: " + inFile.getAbsolutePath() + " -> s3://" + bucketName + "/" + path);
 			AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(getCredentials()).withRegion(Regions.US_EAST_1).build();
 			TransferManager tm = TransferManagerBuilder.standard().withS3Client(s3).build();
 			final Upload uploadFile = tm.upload(bucketName, path, inFile);
 			uploadFile.waitForCompletion();
 			tm.shutdownNow();
 			inFile.delete();
-			log.info("S3 Upload complete");
+			Log.info("S3 Upload complete");
 			s3.shutdown();
 		} catch (Exception e) {
 			e.printStackTrace();
