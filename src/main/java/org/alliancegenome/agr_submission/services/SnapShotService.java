@@ -1,24 +1,23 @@
 package org.alliancegenome.agr_submission.services;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.alliancegenome.agr_submission.BaseService;
-import org.alliancegenome.agr_submission.dao.ReleaseVersionDAO;
-import org.alliancegenome.agr_submission.dao.SnapShotDAO;
-import org.alliancegenome.agr_submission.entities.ReleaseVersion;
-import org.alliancegenome.agr_submission.entities.SnapShot;
+import org.alliancegenome.agr_submission.dao.*;
+import org.alliancegenome.agr_submission.entities.*;
 
 import lombok.extern.jbosslog.JBossLog;
 
 @JBossLog
+@RequestScoped
 public class SnapShotService extends BaseService<SnapShot> {
 
-	@Inject	private SnapShotDAO dao;
-	@Inject private ReleaseVersionDAO releaseDAO;
+	@Inject SnapShotDAO dao;
+	@Inject ReleaseVersionDAO releaseDAO;
 
 	@Override
 	@Transactional

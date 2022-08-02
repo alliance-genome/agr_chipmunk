@@ -2,29 +2,25 @@ package org.alliancegenome.agr_submission.services;
 
 import java.util.List;
 
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.alliancegenome.agr_submission.BaseService;
-import org.alliancegenome.agr_submission.dao.DataSubTypeDAO;
-import org.alliancegenome.agr_submission.dao.DataTypeDAO;
-import org.alliancegenome.agr_submission.dao.SchemaFileDAO;
-import org.alliancegenome.agr_submission.dao.SchemaVersionDAO;
-import org.alliancegenome.agr_submission.entities.DataSubType;
-import org.alliancegenome.agr_submission.entities.DataType;
-import org.alliancegenome.agr_submission.entities.SchemaFile;
-import org.alliancegenome.agr_submission.entities.SchemaVersion;
+import org.alliancegenome.agr_submission.dao.*;
+import org.alliancegenome.agr_submission.entities.*;
 import org.alliancegenome.agr_submission.forms.CreateSchemaFileForm;
 
 import lombok.extern.jbosslog.JBossLog;
 
 @JBossLog
+@RequestScoped
 public class DataTypeService extends BaseService<DataType> {
 
-	@Inject private DataTypeDAO dao;
-	@Inject private DataSubTypeDAO subTypeDAO;
-	@Inject private SchemaVersionDAO schemaDAO;
-	@Inject private SchemaFileDAO schemaFileDAO;
+	@Inject DataTypeDAO dao;
+	@Inject DataSubTypeDAO subTypeDAO;
+	@Inject SchemaVersionDAO schemaDAO;
+	@Inject SchemaFileDAO schemaFileDAO;
 
 	@Override
 	@Transactional

@@ -2,8 +2,7 @@ package org.alliancegenome.agr_submission.auth;
 
 import java.io.Serializable;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @SuppressWarnings("serial")
 @Getter @Setter

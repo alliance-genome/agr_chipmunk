@@ -1,12 +1,9 @@
 package org.alliancegenome.agr_submission.application;
 
-import javax.ws.rs.ext.ContextResolver;
-import javax.ws.rs.ext.Provider;
+import javax.ws.rs.ext.*;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.*;
 
 @Provider
 public class RestDefaultObjectMapper implements ContextResolver<ObjectMapper> {

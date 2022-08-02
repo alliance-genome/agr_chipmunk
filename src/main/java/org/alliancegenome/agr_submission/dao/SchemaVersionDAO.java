@@ -1,14 +1,12 @@
 package org.alliancegenome.agr_submission.dao;
 
-import java.util.List;
-import java.util.TreeSet;
+import java.util.*;
 
 import javax.enterprise.context.ApplicationScoped;
 
 import org.alliancegenome.agr_submission.BaseSQLDAO;
 import org.alliancegenome.agr_submission.entities.SchemaVersion;
-import org.alliancegenome.agr_submission.util.github.GithubRESTAPI;
-import org.alliancegenome.agr_submission.util.github.GithubRelease;
+import org.alliancegenome.agr_submission.util.github.*;
 
 import lombok.extern.jbosslog.JBossLog;
 

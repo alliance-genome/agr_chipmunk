@@ -4,17 +4,17 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.transaction.Transactional;
 
 import org.alliancegenome.agr_submission.BaseSQLDAO;
-import org.alliancegenome.agr_submission.entities.User;
+import org.alliancegenome.agr_submission.entities.LoggedInUser;
 
 @ApplicationScoped
-public class UserDAO extends BaseSQLDAO<User> {
+public class UserDAO extends BaseSQLDAO<LoggedInUser> {
 
 	public UserDAO() {
-		super(User.class);
+		super(LoggedInUser.class);
 	}
 	
 	@Transactional
-	public User findUserByApiKey(String apiKey) {
+	public LoggedInUser findUserByApiKey(String apiKey) {
 		return findByField("apiKey", apiKey);
 	}
 

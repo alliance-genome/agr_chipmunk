@@ -1,7 +1,6 @@
 package org.alliancegenome.agr_submission.auth;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter @Setter
 public class AuthToken {

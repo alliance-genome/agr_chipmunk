@@ -1,61 +1,66 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
+
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.alliancegenome</groupId>
-	<version>0.0.7</version>
-
 	<artifactId>agr_chipmunk</artifactId>
 	<name>AGR Java :: File Management System</name>
-	<packaging>war</packaging>
+	<version>0.0.0</version>
 
 	<properties>
-		<maven.compiler.source>1.11</maven.compiler.source>
-		<maven.compiler.target>1.11</maven.compiler.target>
-		<failOnMissingWebXml>false</failOnMissingWebXml>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+      <compiler-plugin.version>3.8.1</compiler-plugin.version>
+      <maven.compiler.parameters>true</maven.compiler.parameters>
+      <maven.compiler.source>11</maven.compiler.source>
+      <maven.compiler.target>11</maven.compiler.target>
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+      <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+      <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
+      <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
+      <quarkus.platform.version>2.10.0.Final</quarkus.platform.version>
+      <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
 	</properties>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>io.thorntail</groupId>
-				<artifactId>bom-all</artifactId>
-				<version>2.6.0.Final</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+   <scm>
+      <developerConnection>scm:git:git@github.com:alliance-genome/agr_chipmunk.git</developerConnection>
+      <tag>HEAD</tag>
+   </scm>
+
+   <distributionManagement>
+      <repository>
+         <id>github</id>
+         <name>GitHub</name>
+         <url>https://maven.pkg.github.com/alliance-genome/agr_chipmunk</url>
+      </repository>
+   </distributionManagement>
+
+   <dependencyManagement>
+      <dependencies>
+         <dependency>
+            <groupId>${quarkus.platform.group-id}</groupId>
+            <artifactId>${quarkus.platform.artifact-id}</artifactId>
+            <version>${quarkus.platform.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+         </dependency>
+
+      </dependencies>
+   </dependencyManagement>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
-			<version>4.5.13</version>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.6</version>
-		</dependency>
+
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
 			<version>2.17.1</version>
 		</dependency>
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.7</version>
-		</dependency>
-		<dependency>
-			<groupId>com.github.mmazi</groupId>
-			<artifactId>rescu</artifactId>
-			<version>2.0.2</version>
-		</dependency>
+
 		<dependency>
 			<groupId>org.eclipse.jgit</groupId>
 			<artifactId>org.eclipse.jgit</artifactId>
@@ -77,74 +82,7 @@
 			<version>1.11.475</version>
 		</dependency>
 
-		<dependency>
-			<groupId>io.thorntail</groupId>
-			<artifactId>jaxrs</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.thorntail</groupId>
-			<artifactId>jpa</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.thorntail</groupId>
-			<artifactId>cdi</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.thorntail</groupId>
-			<artifactId>logging</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.thorntail</groupId>
-			<artifactId>jaxrs-multipart</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.thorntail</groupId>
-			<artifactId>microprofile</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.thorntail</groupId>
-			<artifactId>microprofile-openapi</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.thorntail</groupId>
-			<artifactId>microprofile-config</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-core</artifactId>
-			<version>5.4.1.Final</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.ejb</groupId>
-			<artifactId>javax.ejb-api</artifactId>
-			<version>3.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>1.18.10</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-annotations</artifactId>
-			<version>2.9.10</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-core</artifactId>
-			<version>2.9.10</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>2.10.0.pr1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-collections4</artifactId>
-			<version>4.3</version>
-		</dependency>
+
 		<dependency>
 			<groupId>org.reflections</groupId>
 			<artifactId>reflections</artifactId>
@@ -156,40 +94,245 @@
 			<version>4.13.1</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<version>1.4.200</version>
-		</dependency>
+
+
+      <dependency>
+         <groupId>io.quarkus</groupId>
+         <artifactId>quarkus-hibernate-orm</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>io.quarkus</groupId>
+         <artifactId>quarkus-resteasy</artifactId>
+      </dependency>
+<!--       <dependency> -->
+<!--          <groupId>io.quarkus</groupId> -->
+<!--          <artifactId>quarkus-flyway</artifactId> -->
+<!--       </dependency> -->
+      <dependency>
+         <groupId>io.quarkus</groupId>
+         <artifactId>quarkus-resteasy-jackson</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>io.quarkus</groupId>
+         <artifactId>quarkus-resteasy-jaxb</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>io.quarkus</groupId>
+         <artifactId>quarkus-resteasy-multipart</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>io.quarkus</groupId>
+         <artifactId>quarkus-hibernate-envers</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>io.quarkus</groupId>
+         <artifactId>quarkus-jdbc-postgresql</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>io.quarkus</groupId>
+         <artifactId>quarkus-arc</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>io.quarkus</groupId>
+         <artifactId>quarkus-quartz</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>io.quarkus</groupId>
+         <artifactId>quarkus-junit5</artifactId>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>io.quarkus</groupId>
+         <artifactId>quarkus-vertx</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>io.quarkus</groupId>
+         <artifactId>quarkus-websockets</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>io.quarkus</groupId>
+         <artifactId>quarkus-smallrye-openapi</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>io.quarkus</groupId>
+         <artifactId>quarkus-micrometer-registry-prometheus</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>io.quarkus</groupId>
+         <artifactId>quarkus-smallrye-health</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.mockito</groupId>
+         <artifactId>mockito-core</artifactId>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>io.quarkus</groupId>
+         <artifactId>quarkus-junit5-mockito</artifactId>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>io.quarkiverse.hibernatetypes</groupId>
+         <artifactId>quarkus-hibernate-types</artifactId>
+         <version>0.2.0</version>
+      </dependency>
+
+      <dependency>
+         <groupId>io.rest-assured</groupId>
+         <artifactId>rest-assured</artifactId>
+         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>commons-io</groupId>
+         <artifactId>commons-io</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.apache.logging.log4j</groupId>
+         <artifactId>log4j-api</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.apache.commons</groupId>
+         <artifactId>commons-lang3</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.apache.commons</groupId>
+         <artifactId>commons-collections4</artifactId>
+         <version>4.4</version>
+      </dependency>
+      <dependency>
+         <groupId>commons-collections</groupId>
+         <artifactId>commons-collections</artifactId>
+         <version>3.2.2</version>
+      </dependency>
+
+      <dependency>
+         <groupId>org.projectlombok</groupId>
+         <artifactId>lombok</artifactId>
+         <version>1.18.22</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.fasterxml.jackson.core</groupId>
+         <artifactId>jackson-annotations</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>com.fasterxml.jackson.core</groupId>
+         <artifactId>jackson-core</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>com.fasterxml.jackson.core</groupId>
+         <artifactId>jackson-databind</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>com.fasterxml.jackson.datatype</groupId>
+         <artifactId>jackson-datatype-jsr310</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>com.fasterxml.jackson.dataformat</groupId>
+         <artifactId>jackson-dataformat-xml</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>com.github.mmazi</groupId>
+         <artifactId>rescu</artifactId>
+         <version>2.1.0</version>
+      </dependency>
+
+      <dependency>
+         <groupId>com.cronutils</groupId>
+         <artifactId>cron-utils</artifactId>
+      </dependency>
+
+
+
 	</dependencies>
 
-	<build>
-		<finalName>${project.artifactId}</finalName>
-		<plugins>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.0</version>
-				<configuration>
-					<release>11</release>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>io.thorntail</groupId>
-				<artifactId>thorntail-maven-plugin</artifactId>
-				<version>2.6.0.Final</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>package</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<contextRoot>/api</contextRoot>
-				</configuration>
-			</plugin>
-		</plugins>
+   <build>
+      <finalName>${project.artifactId}</finalName>
 
-	</build>
+      <plugins>
+         <plugin>
+            <groupId>${quarkus.platform.group-id}</groupId>
+            <artifactId>quarkus-maven-plugin</artifactId>
+            <version>${quarkus.platform.version}</version>
+            <extensions>true</extensions>
+            <executions>
+               <execution>
+                  <goals>
+                     <goal>build</goal>
+                     <goal>generate-code</goal>
+                     <goal>generate-code-tests</goal>
+                  </goals>
+               </execution>
+            </executions>
+         </plugin>
+         <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>${compiler-plugin.version}</version>
+            <configuration>
+               <parameters>${maven.compiler.parameters}</parameters>
+            </configuration>
+         </plugin>
+         <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>${surefire-plugin.version}</version>
+            <configuration>
+               <systemPropertyVariables>
+                  <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+                  <maven.home>${maven.home}</maven.home>
+               </systemPropertyVariables>
+            </configuration>
+         </plugin>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-release-plugin</artifactId>
+            <version>3.0.0-M4</version>
+            <configuration>
+               <tagNameFormat>v@{project.version}</tagNameFormat>
+            </configuration>
+         </plugin>
+      </plugins>
+   </build>
+
+   <profiles>
+      <profile>
+         <id>native</id>
+         <activation>
+            <property>
+               <name>native</name>
+            </property>
+         </activation>
+         <build>
+            <plugins>
+               <plugin>
+                  <artifactId>maven-failsafe-plugin</artifactId>
+                  <version>${surefire-plugin.version}</version>
+                  <executions>
+                     <execution>
+                        <goals>
+                           <goal>integration-test</goal>
+                           <goal>verify</goal>
+                        </goals>
+                        <configuration>
+                           <systemPropertyVariables>
+                              <native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
+                              <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+                              <maven.home>${maven.home}</maven.home>
+                           </systemPropertyVariables>
+                        </configuration>
+                     </execution>
+                  </executions>
+               </plugin>
+            </plugins>
+         </build>
+         <properties>
+            <quarkus.package.type>uber-jar</quarkus.package.type>
+         </properties>
+      </profile>
+   </profiles>
+
 
 </project>

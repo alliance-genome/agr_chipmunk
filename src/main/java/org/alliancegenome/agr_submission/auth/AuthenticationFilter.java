@@ -6,25 +6,22 @@ import javax.annotation.Priority;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.ws.rs.Priorities;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerRequestFilter;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.container.*;
+import javax.ws.rs.core.*;
 import javax.ws.rs.ext.Provider;
 
-import org.alliancegenome.agr_submission.config.ConfigHelper;
 import org.alliancegenome.agr_submission.dao.UserDAO;
-import org.alliancegenome.agr_submission.entities.User;
+import org.alliancegenome.agr_submission.entities.LoggedInUser;
 import org.alliancegenome.agr_submission.util.AESUtil;
+import org.eclipse.microprofile.config.*;
 
-import lombok.extern.log4j.Log4j2;
+import io.quarkus.logging.Log;
 
-@Log4j2
 @Secured
 @Provider
 @Priority(Priorities.AUTHENTICATION)
 public class AuthenticationFilter implements ContainerRequestFilter {
-
+	
 	@Inject
 	@AuthenticatedUser
 	Event<AuthedUser> userAuthenticatedEvent;
@@ -36,11 +33,11 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {
-		log.info("AuthenticationFilter: filter: " + requestContext);
+		Log.info("AuthenticationFilter: filter: " + requestContext);
 		// Get the Authorization header from the request
 		String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
 
-		log.debug("Authorization Header: " + authorizationHeader);
+		Log.debug("Authorization Header: " + authorizationHeader);
 
 		if (!isTokenBasedAuthentication(authorizationHeader)) {
 			abortWithUnauthorized(requestContext);
@@ -79,16 +76,18 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 		//log.debug("API Access Token: " + ConfigHelper.getApiAccessToken());
 		//log.debug("Validating Token: " + token);
 		
-		User user = userDAO.findUserByApiKey(token);
+		LoggedInUser user = userDAO.findUserByApiKey(token);
 		AuthedUser authedUser = new AuthedUser();
 		authedUser.setUser(user);
 		userAuthenticatedEvent.fire(authedUser);
 		
 		if(user == null) {
-			log.warn("Authentication Unsuccessful: " + token);
+			Log.warn("Authentication Unsuccessful: " + token);
 			throw new Exception("Authentication Unsuccessful: " + token);
 		}
-		log.info("Authentication Successful for: " + AESUtil.decrypt(token, ConfigHelper.getEncryptionPasswordKey()));
+		Config config = ConfigProvider.getConfig();
+		String encryptionPasswordKey = config.getValue("encryption.passwordkey", String.class);
+		Log.info("Authentication Successful for: " + AESUtil.decrypt(token, encryptionPasswordKey));
 		
 	}
 }

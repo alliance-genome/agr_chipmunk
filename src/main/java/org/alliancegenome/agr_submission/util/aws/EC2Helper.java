@@ -1,44 +1,31 @@
 package org.alliancegenome.agr_submission.util.aws;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.file.*;
+import java.util.*;
 
-import org.alliancegenome.agr_submission.config.ConfigHelper;
 import org.apache.commons.codec.binary.Base64;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.*;
 import com.amazonaws.regions.Regions;
-import com.amazonaws.services.ec2.AmazonEC2;
-import com.amazonaws.services.ec2.AmazonEC2ClientBuilder;
-import com.amazonaws.services.ec2.model.BlockDeviceMapping;
-import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
-import com.amazonaws.services.ec2.model.DescribeInstancesResult;
-import com.amazonaws.services.ec2.model.EbsBlockDevice;
-import com.amazonaws.services.ec2.model.Instance;
-import com.amazonaws.services.ec2.model.InstanceType;
-import com.amazonaws.services.ec2.model.Reservation;
-import com.amazonaws.services.ec2.model.ResourceType;
-import com.amazonaws.services.ec2.model.RunInstancesRequest;
-import com.amazonaws.services.ec2.model.RunInstancesResult;
-import com.amazonaws.services.ec2.model.Tag;
-import com.amazonaws.services.ec2.model.TagSpecification;
-import com.amazonaws.services.ec2.model.VolumeType;
+import com.amazonaws.services.ec2.*;
+import com.amazonaws.services.ec2.model.*;
 
 import lombok.extern.jbosslog.JBossLog;
 
 @JBossLog
 public class EC2Helper {
 
+	@ConfigProperty(name = "aws.access.key") String accessKey;
+	@ConfigProperty(name = "aws.secret.key") String secretKey;
+	
 	public void listInstances() {
 		boolean done = false;
 
 		AmazonEC2 ec2 = AmazonEC2ClientBuilder.standard()
 				.withCredentials(
-						new AWSStaticCredentialsProvider(new BasicAWSCredentials(ConfigHelper.getAWSAccessKey(), ConfigHelper.getAWSSecretKey())))
+						new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey)))
 				.withRegion(Regions.US_EAST_1).build();
 
 		DescribeInstancesRequest request = new DescribeInstancesRequest();
@@ -70,7 +57,7 @@ public class EC2Helper {
 
 		AmazonEC2 ec2 = AmazonEC2ClientBuilder.standard()
 				.withCredentials(new AWSStaticCredentialsProvider(
-						new BasicAWSCredentials(ConfigHelper.getAWSAccessKey(), ConfigHelper.getAWSSecretKey())))
+						new BasicAWSCredentials(accessKey, secretKey)))
 				.withRegion(Regions.US_EAST_1).build();
 
 		RunInstancesRequest runInstancesRequest = new RunInstancesRequest();

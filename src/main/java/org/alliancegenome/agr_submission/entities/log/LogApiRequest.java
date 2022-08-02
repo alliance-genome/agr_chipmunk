@@ -2,21 +2,15 @@ package org.alliancegenome.agr_submission.entities.log;
 
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 import org.alliancegenome.agr_submission.BaseEntity;
-import org.alliancegenome.agr_submission.entities.User;
+import org.alliancegenome.agr_submission.entities.LoggedInUser;
 import org.alliancegenome.agr_submission.views.View;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @Getter @Setter @ToString
@@ -27,22 +21,22 @@ public class LogApiRequest extends BaseEntity {
 	private Long id;
 	
 	@JsonView({View.API.class})
-	@Lob
+	@Column(columnDefinition="TEXT")
 	private String headerString;
 	
 	@JsonView({View.API.class})
-	@Lob
+	@Column(columnDefinition="TEXT")
 	private String queryParametersString;
 	
 	@JsonView({View.API.class})
-	@Lob
+	@Column(columnDefinition="TEXT")
 	private String pathParametersString;
 	
 	@JsonView({View.API.class})
 	private Date timeStamp = new Date();
 	
 	@ManyToOne
-	private User user;
+	private LoggedInUser user;
 	
 	@ManyToOne
 	private LogUserAgent userAgent;

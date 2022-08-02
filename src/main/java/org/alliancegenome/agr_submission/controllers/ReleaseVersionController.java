@@ -6,8 +6,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
 import org.alliancegenome.agr_submission.BaseController;
-import org.alliancegenome.agr_submission.entities.ReleaseVersion;
-import org.alliancegenome.agr_submission.entities.SnapShot;
+import org.alliancegenome.agr_submission.entities.*;
 import org.alliancegenome.agr_submission.interfaces.server.ReleaseVersionControllerInterface;
 import org.alliancegenome.agr_submission.services.ReleaseVersionService;
 

@@ -2,6 +2,7 @@ package org.alliancegenome.agr_submission.services;
 
 import java.util.List;
 
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
@@ -12,10 +13,10 @@ import org.alliancegenome.agr_submission.entities.SchemaFile;
 import lombok.extern.jbosslog.JBossLog;
 
 @JBossLog
+@RequestScoped
 public class SchemaFileService extends BaseService<SchemaFile> {
 
-	@Inject
-	private SchemaFileDAO dao;
+	@Inject SchemaFileDAO dao;
 
 	@Override
 	@Transactional

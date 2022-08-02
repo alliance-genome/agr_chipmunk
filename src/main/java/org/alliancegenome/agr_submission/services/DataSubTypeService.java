@@ -2,6 +2,7 @@ package org.alliancegenome.agr_submission.services;
 
 import java.util.List;
 
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
@@ -12,10 +13,10 @@ import org.alliancegenome.agr_submission.entities.DataSubType;
 import lombok.extern.jbosslog.JBossLog;
 
 @JBossLog
+@RequestScoped
 public class DataSubTypeService extends BaseService<DataSubType> {
 
-	@Inject
-	private DataSubTypeDAO dao;
+	@Inject DataSubTypeDAO dao;
 
 	@Override
 	@Transactional

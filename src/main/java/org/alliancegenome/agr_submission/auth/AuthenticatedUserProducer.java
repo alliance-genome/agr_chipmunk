@@ -10,7 +10,7 @@ public class AuthenticatedUserProducer {
 	@Produces
 	@RequestScoped
 	@AuthenticatedUser
-	private AuthedUser authenticatedUser = new AuthedUser();
+	AuthedUser authenticatedUser = new AuthedUser();
 
 	public void handleAuthenticationEvent(@Observes @AuthenticatedUser AuthedUser user) {
 		this.authenticatedUser = user;

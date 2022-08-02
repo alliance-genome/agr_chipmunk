@@ -7,15 +7,8 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.alliancegenome.agr_submission.BaseService;
-import org.alliancegenome.agr_submission.dao.DataFileDAO;
-import org.alliancegenome.agr_submission.dao.DataSubTypeDAO;
-import org.alliancegenome.agr_submission.dao.DataTypeDAO;
-import org.alliancegenome.agr_submission.dao.ReleaseVersionDAO;
-import org.alliancegenome.agr_submission.entities.DataFile;
-import org.alliancegenome.agr_submission.entities.DataSubType;
-import org.alliancegenome.agr_submission.entities.DataType;
-import org.alliancegenome.agr_submission.entities.ReleaseVersion;
-import org.alliancegenome.agr_submission.entities.SchemaVersion;
+import org.alliancegenome.agr_submission.dao.*;
+import org.alliancegenome.agr_submission.entities.*;
 import org.apache.commons.collections4.keyvalue.MultiKey;
 import org.apache.commons.collections4.map.MultiKeyMap;
 
@@ -25,11 +18,11 @@ import lombok.extern.jbosslog.JBossLog;
 @JBossLog
 public class DataFileService extends BaseService<DataFile> {
 
-	@Inject private DataFileDAO dao;
-	@Inject private DataTypeDAO dataTypeDAO;
-	@Inject private DataSubTypeDAO dataSubTypeDAO;
-	@Inject private ReleaseVersionDAO releaseDAO;
-	@Inject private ReleaseVersionService releaseService;
+	@Inject DataFileDAO dao;
+	@Inject DataTypeDAO dataTypeDAO;
+	@Inject DataSubTypeDAO dataSubTypeDAO;
+	@Inject ReleaseVersionDAO releaseDAO;
+	@Inject ReleaseVersionService releaseService;
 
 	@Override
 	public DataFile create(DataFile entity) {

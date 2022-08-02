@@ -1,21 +1,17 @@
 package org.alliancegenome.agr_submission.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import org.alliancegenome.agr_submission.BaseEntity;
 import org.alliancegenome.agr_submission.views.View;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
-@Entity @Getter @Setter @ToString
+@Entity @Data @ToString
 @JsonView({View.UserView.class})
-public class User extends BaseEntity {
+public class LoggedInUser extends BaseEntity {
 
 	@Id @GeneratedValue
 	private Long id;

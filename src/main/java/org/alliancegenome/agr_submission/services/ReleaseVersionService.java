@@ -1,30 +1,27 @@
 package org.alliancegenome.agr_submission.services;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.alliancegenome.agr_submission.BaseService;
-import org.alliancegenome.agr_submission.dao.ReleaseVersionDAO;
-import org.alliancegenome.agr_submission.dao.SchemaVersionDAO;
-import org.alliancegenome.agr_submission.entities.ReleaseVersion;
-import org.alliancegenome.agr_submission.entities.SchemaVersion;
-import org.alliancegenome.agr_submission.entities.SnapShot;
+import org.alliancegenome.agr_submission.dao.*;
+import org.alliancegenome.agr_submission.entities.*;
 
-import lombok.extern.jbosslog.JBossLog;
+import io.quarkus.logging.Log;
 
-@JBossLog
+@RequestScoped
 public class ReleaseVersionService extends BaseService<ReleaseVersion> {
 
-	@Inject private ReleaseVersionDAO dao;
-	@Inject private SchemaVersionDAO schemaDAO;
+	@Inject ReleaseVersionDAO dao;
+	@Inject SchemaVersionDAO schemaDAO;
 
 	@Override
 	@Transactional
 	public ReleaseVersion create(ReleaseVersion entity) {
-		log.info("ReleaseVersionService: create: ");
+		Log.info("ReleaseVersionService: create: ");
 		return dao.persist(entity);
 	}
 
@@ -36,7 +33,7 @@ public class ReleaseVersionService extends BaseService<ReleaseVersion> {
 
 	@Transactional
 	public ReleaseVersion get(String id) {
-		log.info("ReleaseVersionService: get: " + id);
+		Log.info("ReleaseVersionService: get: " + id);
 		try {
 			Long ident = Long.parseLong(id);
 			return get(ident);
@@ -55,14 +52,14 @@ public class ReleaseVersionService extends BaseService<ReleaseVersion> {
 	@Override
 	@Transactional
 	public ReleaseVersion update(ReleaseVersion entity) {
-		log.info("ReleaseVersionService: update: ");
+		Log.info("ReleaseVersionService: update: ");
 		return dao.merge(entity);
 	}
 
 	@Override
 	@Transactional
 	public ReleaseVersion delete(Long id) {
-		log.info("ReleaseVersionService: delete: " + id);
+		Log.info("ReleaseVersionService: delete: " + id);
 		return dao.remove(id);
 	}
 

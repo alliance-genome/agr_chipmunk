@@ -2,18 +2,11 @@ package org.alliancegenome.agr_submission.interfaces.server;
 
 import java.util.List;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 import org.alliancegenome.agr_submission.auth.Secured;
-import org.alliancegenome.agr_submission.entities.User;
+import org.alliancegenome.agr_submission.entities.LoggedInUser;
 import org.alliancegenome.agr_submission.views.View;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
@@ -28,25 +21,25 @@ public interface UserControllerInterface {
 	@POST @Secured
 	@Path("/")
 	@JsonView(View.UserCreate.class)
-	public User create(User entity);
+	public LoggedInUser create(LoggedInUser entity);
 	
 	@GET @Secured
 	@Path("/{id}")
 	@JsonView(View.UserRead.class)
-	public User get(@PathParam("id") Long id);
+	public LoggedInUser get(@PathParam("id") Long id);
 	
 	@PUT @Secured
 	@Path("/")
 	@JsonView(View.UserUpdate.class)
-	public User update(User entity);
+	public LoggedInUser update(LoggedInUser entity);
 	
 	@DELETE @Secured
 	@Path("/{id}")
 	@JsonView(View.UserDelete.class)
-	public User delete(@PathParam("id") Long id);
+	public LoggedInUser delete(@PathParam("id") Long id);
 	
 	@GET @Secured
 	@Path("/all")
 	@JsonView(View.UserView.class)
-	public List<User> getUsers();
+	public List<LoggedInUser> getUsers();
 }

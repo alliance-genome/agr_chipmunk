@@ -2,8 +2,7 @@ package org.alliancegenome.agr_submission.forms;
 
 import org.alliancegenome.agr_submission.BaseForm;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter @Setter
 public class CreateSchemaFileForm extends BaseForm {

@@ -1,14 +1,10 @@
 package org.alliancegenome.agr_submission.entities.log;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
-import org.alliancegenome.agr_submission.entities.User;
+import org.alliancegenome.agr_submission.entities.LoggedInUser;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter @Setter @ToString
 public class LogApiDTO {
@@ -20,7 +16,7 @@ public class LogApiDTO {
 	public HashMap<String, List<String>> queryParameters;
 	public HashMap<String, List<String>> pathParameters;
 	public String requestUri;
-	public User user;
+	public LoggedInUser user;
 
 	
 }

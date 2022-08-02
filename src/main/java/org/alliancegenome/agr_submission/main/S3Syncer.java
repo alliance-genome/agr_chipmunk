@@ -1,15 +1,13 @@
 package org.alliancegenome.agr_submission.main;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-import org.alliancegenome.agr_submission.config.ConfigHelper;
 import org.alliancegenome.agr_submission.util.aws.S3Helper;
 
 public class S3Syncer {
 
 	public static void main(String[] args) {
-		ConfigHelper.init();
+		//ConfigHelper.init();
 		boolean reportonly = false;
 		
 		S3Helper s3 = new S3Helper();

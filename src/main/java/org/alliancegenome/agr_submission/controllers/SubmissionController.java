@@ -10,7 +10,6 @@ import javax.inject.Inject;
 import javax.ws.rs.core.*;
 
 import org.alliancegenome.agr_submission.BaseController;
-import org.alliancegenome.agr_submission.config.ConfigHelper;
 import org.alliancegenome.agr_submission.dao.*;
 import org.alliancegenome.agr_submission.entities.*;
 import org.alliancegenome.agr_submission.exceptions.*;
@@ -19,21 +18,23 @@ import org.alliancegenome.agr_submission.responces.*;
 import org.alliancegenome.agr_submission.services.*;
 import org.alliancegenome.agr_submission.util.GZIPCompressingInputStream;
 import org.apache.commons.io.FileUtils;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.resteasy.plugins.providers.multipart.*;
 
 import com.google.common.base.Joiner;
 
-import lombok.extern.jbosslog.JBossLog;
+import io.quarkus.logging.Log;
 
-@JBossLog
 @RequestScoped
 public class SubmissionController extends BaseController implements SubmissionControllerInterface {
 
-	@Inject private SubmissionService metaDataService;
-	@Inject private ReleaseVersionService releaseService;
-	@Inject private DataFileService dataFileService;
-	@Inject private DataTypeDAO dataTypeDAO;
-	@Inject private DataSubTypeDAO dataSubTypeDAO;
+	@ConfigProperty(name = "aws.bucket.host") String downloadHost;
+	
+	@Inject SubmissionService metaDataService;
+	@Inject ReleaseVersionService releaseService;
+	@Inject DataFileService dataFileService;
+	@Inject DataTypeDAO dataTypeDAO;
+	@Inject DataSubTypeDAO dataSubTypeDAO;
 
 	@Override
 	public APIResponce submitData(MultipartFormDataInput input) {
@@ -61,21 +62,22 @@ public class SubmissionController extends BaseController implements SubmissionCo
 			try {
 				InputStream is = inputPart.getBody(InputStream.class, null);
 
-				log.info("Saving file to local filesystem: " + saveFilePath.getAbsolutePath());
+				Log.info("Saving file to local filesystem: " + saveFilePath.getAbsolutePath());
 				FileUtils.copyInputStreamToFile(is, saveFilePath);
-				log.info("Save file to local filesystem complete");
+				Log.info("Save file to local filesystem complete");
 
 				// if input stream is not gzipped, gzip-it
 				try {
 					GZIPInputStream gs = new GZIPInputStream(new FileInputStream(saveFilePath));
+					gs.close();
 				} catch (IOException e) {
-					log.info("Input stream not in the GZIP format, GZIP it");
+					Log.info("Input stream not in the GZIP format, GZIP it");
 
 					String gzFileName = outFileName + ".gz";
 					if( !compressGzipFile(saveFilePath, gzFileName) ) {
 						throw new GenericException("failed to gzip file");
 					}
-					log.info("gzipped to "+gzFileName);
+					Log.info("gzipped to "+gzFileName);
 
 					// delete original uncompressed file
 					saveFilePath.delete();
@@ -92,7 +94,7 @@ public class SubmissionController extends BaseController implements SubmissionCo
 					success = false;
 				}
 			} catch (GenericException | IOException e) {
-				log.error(e.getMessage());
+				Log.error(e.getMessage());
 				saveFilePath.delete();
 				res.getFileStatus().put(key, e.getMessage());
 				//e.printStackTrace();
@@ -135,7 +137,7 @@ public class SubmissionController extends BaseController implements SubmissionCo
 		if(dataType == null) {
 			throw new SchemaDataTypeException("Could not Find dataType: " + dataTypeString);
 		}
-		log.debug("Data Type: " + dataType);
+		Log.debug("Data Type: " + dataType);
 		
 		boolean gzFileRequest = false;
 		
@@ -155,10 +157,10 @@ public class SubmissionController extends BaseController implements SubmissionCo
 		if(dataSubType == null) {
 			throw new SchemaDataTypeException("Could not Find dataSubType: " + dataSubTypeString);
 		}
-		log.debug("Data Sub Type: " + dataSubType);
+		Log.debug("Data Sub Type: " + dataSubType);
 		
 		ReleaseVersion releaseVersion = releaseService.getCurrentRelease();
-		log.debug("Current Release: " + releaseVersion);
+		Log.debug("Current Release: " + releaseVersion);
 		
 		List<DataFile> dataFiles = dataFileService.getReleaseDataTypeSubTypeFiles(releaseVersion.getReleaseVersion(), dataType.getName(), dataSubType.getName(), true);
 		
@@ -166,36 +168,27 @@ public class SubmissionController extends BaseController implements SubmissionCo
 		if(dataFiles.size() == 1) {
 			DataFile dataFile = dataFiles.get(0);
 			
-			String downloadHost = "";
-			if(ConfigHelper.getAWSBucketName().equals("mod-datadumps")) {
-				downloadHost = "http://download.alliancegenome.org/";
-			} else if(ConfigHelper.getAWSBucketName().contentEquals("mod-datadumps-dev")) {
-				downloadHost = "http://downloaddev.alliancegenome.org/";
-			} else {
-				downloadHost = "http://localhost:8080/";
-			}
-			
 			try {
 				if(gzFileRequest) {
 					// Person asked for compressed version
 					if(dataFile.getS3Path().endsWith(".gz")) {
 						// Already compressed send straight through
-						InputStream is = new URL(downloadHost + dataFile.getS3Path()).openStream();
+						InputStream is = new URL(downloadHost + "/" + dataFile.getS3Path()).openStream();
 						responseBuilder = Response.ok(is);
 					} else {
 						// Not compressed, compress file and send
-						GZIPCompressingInputStream gis = new GZIPCompressingInputStream(new URL(downloadHost + dataFile.getS3Path()).openStream());
+						GZIPCompressingInputStream gis = new GZIPCompressingInputStream(new URL(downloadHost + "/" + dataFile.getS3Path()).openStream());
 						responseBuilder = Response.ok(gis);
 					}
 				} else {
 					// Person asked for uncompressed version
 					if(dataFile.getS3Path().endsWith(".gz")) {
 						// Already compressed, uncompress file and send
-						GZIPInputStream gis = new GZIPInputStream(new URL(downloadHost + dataFile.getS3Path()).openStream());
+						GZIPInputStream gis = new GZIPInputStream(new URL(downloadHost + "/" + dataFile.getS3Path()).openStream());
 						responseBuilder = Response.ok(gis);
 					} else {
 						// Already uncompressed send straight through
-						InputStream is = new URL(downloadHost + dataFile.getS3Path()).openStream();
+						InputStream is = new URL(downloadHost + "/" + dataFile.getS3Path()).openStream();
 						responseBuilder = Response.ok(is);
 					}
 				}

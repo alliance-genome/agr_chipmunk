@@ -1,27 +1,43 @@
-ARG REG=100225593120.dkr.ecr.us-east-1.amazonaws.com
-ARG DOCKER_PULL_TAG=latest
+ARG OVERWRITE_VERSION
 
-FROM ${REG}/agr_base_linux_env:${DOCKER_PULL_TAG}
-  
-RUN mkdir /data
+FROM node:12 AS BUILD_UI_STAGE
 
-WORKDIR /workdir/agr_fms_software
+WORKDIR /agr_fms
 
-ADD . .
+COPY src/main/cliapp ./cliapp
 
-WORKDIR /workdir/agr_fms_software/src/main/cliapp
+WORKDIR /agr_fms/cliapp
+RUN make all build
 
-RUN /bin/bash -c '. $HOME/.nvm/nvm.sh --no-use && \
-  nvm install && \
-  nvm use && \
-  npm install'
+FROM maven:3.8-openjdk-11 as BUILD_API_STAGE
+ARG OVERWRITE_VERSION
 
-RUN /bin/bash -c '. $HOME/.nvm/nvm.sh && npm run-script build'
+WORKDIR /agr_fms/cliapp
 
-RUN mv build/* ../webapp
+COPY . .
 
-WORKDIR /workdir/agr_fms_software
+COPY --from=BUILD_UI_STAGE /agr_fms/cliapp/build/index.html  ./src/main/resources/META-INF/resources/index.html
+COPY --from=BUILD_UI_STAGE /agr_fms/cliapp/build/favicon.ico ./src/main/resources/META-INF/resources/favicon.ico
+COPY --from=BUILD_UI_STAGE /agr_fms/cliapp/build/static/ ./src/main/resources/META-INF/resources/static/
 
-RUN mvn -T 6 -B clean package
+# Optionally overwrite the application version stored in the pom.xml
+RUN if [ "${OVERWRITE_VERSION}" != "" ]; then \
+        mvn versions:set -ntp -DnewVersion=$OVERWRITE_VERSION; \
+    fi;
+# build the api jar
+RUN cp src/main/resources/application.properties.defaults src/main/resources/application.properties
 
+RUN mvn -T 8 clean package -Dquarkus.package.type=uber-jar -ntp
+
+FROM openjdk:11-jre-slim
+
+WORKDIR /agr_fms
+
+COPY --from=BUILD_API_STAGE /agr_fms/cliapp/target/agr_chipmunk-runner.jar .
+
+# Expose necessary ports
 EXPOSE 8080
+
+# Set default env variables for local docker application execution
+
+CMD ["java", "-Xmx6g", "-jar", "agr_chipmunk-runner.jar"]
