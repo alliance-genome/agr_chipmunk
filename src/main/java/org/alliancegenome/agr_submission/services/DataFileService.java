@@ -190,7 +190,9 @@ public class DataFileService extends BaseService<DataFile> {
 
 		ReleaseVersion currentReleaseVersion = releaseService.getCurrentRelease();
 		ReleaseVersion releaseVersionLookup = releaseDAO.findByField("releaseVersion", releaseVersion);
-
+		
+		if(releaseVersionLookup == null) return new ArrayList<>();
+		
 		if(latest) {
 			MultiKeyMap<String, DataFile> map = new MultiKeyMap<>();
 			for(DataFile df: releaseVersionLookup.getDataFiles()) {
