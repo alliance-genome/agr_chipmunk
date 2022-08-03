@@ -66,13 +66,13 @@ public class DataFile extends BaseEntity implements Comparable<DataFile> {
 	public String getStableURL() {
 		Config config = ConfigProvider.getConfig();
 		String bucketName = config.getValue("aws.bucket.name", String.class);
-		String bucketHost = config.getValue("aws.bucket.host", String.class);
+		String fmsDownloadUrlPrefix = config.getValue("fms.download.urlPrefix", String.class);
 		if((currentRelease == null && requestRelease == null) || requestRelease.equals(currentRelease)) {
 			String suffix = "";
 			if(s3Path.endsWith(".gz")) suffix = ".gz";
 
-			if(bucketName != null) {
-				return bucketHost + "/download/" + dataType.getName() + "_" + dataSubType.getName() + "." + dataType.getFileExtension() + suffix;
+			if(bucketName != null && fmsDownloadUrlPrefix != null) {
+				return fmsDownloadUrlPrefix + "/" + dataType.getName() + "_" + dataSubType.getName() + "." + dataType.getFileExtension() + suffix;
 			} else {
 				return null;
 			}

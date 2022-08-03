@@ -52,9 +52,15 @@ aws.bucket.name = mod-datadumps
 %test.aws.bucket.name = mod-datadumps-dev
 %dev.aws.bucket.name = mod-datadumps-dev
 
+aws.bucket.host = https://download.alliancegenome.org
+%test.aws.bucket.host = https://downloaddev.alliancegenome.org
+%dev.aws.bucket.host = http://localhost:8080
+
+fms.download.urlPrefix = https://fms.alliancegenome.org/api/data/download
+%test.fms.download.urlPrefix = https://fmsdev.alliancegenome.org/api/data/download
+%dev.fms.download.urlPrefix = http://localhost:8080/api/data/download
+
 aws.access.key = 
 aws.secret.key = 
 
-aws.bucket.host = http://download.alliancegenome.org
-%test.aws.bucket.host = http://downloaddev.alliancegenome.org
-%dev.aws.bucket.host = http://localhost:8080
+
