@@ -21,6 +21,8 @@ quarkus.datasource.jdbc.max-size=128
 
 quarkus.hibernate-orm.database.generation=update
 
+quarkus.transaction-manager.default-transaction-timeout = 600s
+
 #quarkus.flyway.sql-migration-prefix=v
 #quarkus.flyway.default-schema=public
 #quarkus.flyway.schemas=public
