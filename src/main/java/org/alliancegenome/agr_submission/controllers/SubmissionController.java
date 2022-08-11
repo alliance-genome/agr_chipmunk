@@ -173,6 +173,7 @@ public class SubmissionController extends BaseController implements SubmissionCo
 					// Person asked for compressed version
 					if(dataFile.getS3Path().endsWith(".gz")) {
 						// Already compressed send straight through
+						Log.info("Download: " + downloadHost + "/" + dataFile.getS3Path());
 						InputStream is = new URL(downloadHost + "/" + dataFile.getS3Path()).openStream();
 						responseBuilder = Response.ok(is);
 					} else {
