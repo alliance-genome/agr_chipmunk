@@ -15,14 +15,14 @@ import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-@Path("/data")
+@Path("/")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "Submission Endpoints")
 public interface SubmissionControllerInterface {
 	
 	@POST
-	@Path("/submit")
+	@Path("/api/data/submit")
 	@Secured
 	//@SecurityRequirement(name = "api_token", scopes = "write: read")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -30,7 +30,7 @@ public interface SubmissionControllerInterface {
 	public APIResponce submitData(MultipartFormDataInput input);
 
 	@POST
-	@Path("/validate")
+	@Path("/api/data/validate")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@JsonView({View.API.class})
 	public APIResponce validateData(MultipartFormDataInput input);

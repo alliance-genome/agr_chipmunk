@@ -8,7 +8,7 @@ import org.eclipse.microprofile.openapi.annotations.enums.SecuritySchemeType;
 import org.eclipse.microprofile.openapi.annotations.info.Info;
 import org.eclipse.microprofile.openapi.annotations.security.*;
 
-@ApplicationPath("/api")
+//@ApplicationPath("/api")
 @OpenAPIDefinition(
 	info = @Info(
 		description = "This is the File Management System Java API",

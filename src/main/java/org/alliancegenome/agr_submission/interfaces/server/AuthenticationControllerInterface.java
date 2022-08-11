@@ -6,7 +6,7 @@ import javax.ws.rs.core.*;
 import org.alliancegenome.agr_submission.auth.Credentials;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
-@Path("/authentication")
+@Path("/api/authentication")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "Authentication Endpoints")
