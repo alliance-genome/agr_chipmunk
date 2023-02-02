@@ -9,7 +9,7 @@ COPY src/main/cliapp ./cliapp
 WORKDIR /agr_fms/cliapp
 RUN make all build
 
-FROM maven:3.8-openjdk-11 as BUILD_API_STAGE
+FROM maven:3.8-openjdk-17 as BUILD_API_STAGE
 ARG OVERWRITE_VERSION
 
 WORKDIR /agr_fms/cliapp
@@ -29,7 +29,7 @@ RUN cp src/main/resources/application.properties.defaults src/main/resources/app
 
 RUN mvn -T 8 clean package -Dquarkus.package.type=uber-jar -ntp
 
-FROM openjdk:11-jre-slim
+FROM openjdk:17.0.1-jdk-slim
 
 WORKDIR /agr_fms
 
