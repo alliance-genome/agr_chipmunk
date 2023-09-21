@@ -2,11 +2,10 @@ package org.alliancegenome.agr_submission.dao;
 
 import java.util.*;
 
-import javax.enterprise.context.ApplicationScoped;
-
 import org.alliancegenome.agr_submission.BaseSQLDAO;
 import org.alliancegenome.agr_submission.entities.ReleaseVersion;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import lombok.extern.jbosslog.JBossLog;
 
 @JBossLog

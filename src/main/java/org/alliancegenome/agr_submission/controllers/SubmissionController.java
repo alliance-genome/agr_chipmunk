@@ -1,29 +1,47 @@
 package org.alliancegenome.agr_submission.controllers;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
-import java.util.*;
-import java.util.zip.*;
-
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.ws.rs.core.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import org.alliancegenome.agr_submission.BaseController;
-import org.alliancegenome.agr_submission.dao.*;
-import org.alliancegenome.agr_submission.entities.*;
-import org.alliancegenome.agr_submission.exceptions.*;
+import org.alliancegenome.agr_submission.dao.DataSubTypeDAO;
+import org.alliancegenome.agr_submission.dao.DataTypeDAO;
+import org.alliancegenome.agr_submission.entities.DataFile;
+import org.alliancegenome.agr_submission.entities.DataSubType;
+import org.alliancegenome.agr_submission.entities.DataType;
+import org.alliancegenome.agr_submission.entities.ReleaseVersion;
+import org.alliancegenome.agr_submission.exceptions.GenericException;
+import org.alliancegenome.agr_submission.exceptions.SchemaDataTypeException;
 import org.alliancegenome.agr_submission.interfaces.server.SubmissionControllerInterface;
-import org.alliancegenome.agr_submission.responces.*;
-import org.alliancegenome.agr_submission.services.*;
+import org.alliancegenome.agr_submission.responces.APIResponce;
+import org.alliancegenome.agr_submission.responces.SubmissionResponce;
+import org.alliancegenome.agr_submission.services.DataFileService;
+import org.alliancegenome.agr_submission.services.ReleaseVersionService;
+import org.alliancegenome.agr_submission.services.SubmissionService;
 import org.alliancegenome.agr_submission.util.GZIPCompressingInputStream;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.jboss.resteasy.plugins.providers.multipart.*;
+import org.jboss.resteasy.plugins.providers.multipart.InputPart;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 import com.google.common.base.Joiner;
 
 import io.quarkus.logging.Log;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 @RequestScoped
 public class SubmissionController extends BaseController implements SubmissionControllerInterface {

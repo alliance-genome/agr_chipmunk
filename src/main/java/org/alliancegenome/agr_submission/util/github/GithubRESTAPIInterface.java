@@ -2,11 +2,10 @@ package org.alliancegenome.agr_submission.util.github;
 
 import java.util.List;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-
 import org.eclipse.microprofile.openapi.annotations.Operation;
 
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import si.mazi.rescu.HttpStatusIOException;
 
 @Path("/repos/alliance-genome/")

@@ -1,10 +1,10 @@
 package org.alliancegenome.agr_submission.interfaces.server;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.*;
-
 import org.alliancegenome.agr_submission.auth.Credentials;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.*;
 
 @Path("/api/authentication")
 @Produces(MediaType.APPLICATION_JSON)

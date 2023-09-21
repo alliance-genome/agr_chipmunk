@@ -2,7 +2,7 @@ package org.alliancegenome.agr_submission.auth;
 
 import java.lang.annotation.*;
 
-import javax.ws.rs.NameBinding;
+import jakarta.ws.rs.NameBinding;
 
 @NameBinding
 @Retention(RetentionPolicy.RUNTIME)

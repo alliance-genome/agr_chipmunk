@@ -2,9 +2,8 @@ package org.alliancegenome.agr_submission;
 
 import java.util.*;
 
-import javax.persistence.*;
-import javax.persistence.criteria.*;
-
+import jakarta.persistence.*;
+import jakarta.persistence.criteria.*;
 import lombok.extern.jbosslog.JBossLog;
 
 @JBossLog

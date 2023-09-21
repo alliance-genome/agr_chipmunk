@@ -2,9 +2,6 @@ package org.alliancegenome.agr_submission.interfaces.server;
 
 import java.util.List;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-
 import org.alliancegenome.agr_submission.auth.Secured;
 import org.alliancegenome.agr_submission.entities.SnapShot;
 import org.alliancegenome.agr_submission.responces.*;
@@ -15,6 +12,9 @@ import org.eclipse.microprofile.openapi.annotations.responses.*;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import com.fasterxml.jackson.annotation.JsonView;
+
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 
 @Path("/api/snapshot")
 @Produces(MediaType.APPLICATION_JSON)

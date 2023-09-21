@@ -2,8 +2,8 @@ package org.alliancegenome.agr_submission.application;
 
 import java.io.IOException;
 
-import javax.ws.rs.container.*;
-import javax.ws.rs.ext.Provider;
+import jakarta.ws.rs.container.*;
+import jakarta.ws.rs.ext.Provider;
 
 @Provider
 public class CORSFilter implements ContainerResponseFilter {

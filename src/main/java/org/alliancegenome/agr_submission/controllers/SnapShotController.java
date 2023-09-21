@@ -2,14 +2,14 @@ package org.alliancegenome.agr_submission.controllers;
 
 import java.util.List;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-
 import org.alliancegenome.agr_submission.BaseController;
 import org.alliancegenome.agr_submission.entities.SnapShot;
 import org.alliancegenome.agr_submission.interfaces.server.SnapShotControllerInterface;
 import org.alliancegenome.agr_submission.responces.*;
 import org.alliancegenome.agr_submission.services.SnapShotService;
+
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 
 @RequestScoped
 public class SnapShotController extends BaseController implements SnapShotControllerInterface {

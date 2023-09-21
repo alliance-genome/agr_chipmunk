@@ -1,10 +1,10 @@
 package org.alliancegenome.agr_submission.dao;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.transaction.Transactional;
-
 import org.alliancegenome.agr_submission.BaseSQLDAO;
 import org.alliancegenome.agr_submission.entities.LoggedInUser;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
 
 @ApplicationScoped
 public class UserDAO extends BaseSQLDAO<LoggedInUser> {

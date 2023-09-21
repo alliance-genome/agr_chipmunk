@@ -2,16 +2,15 @@ package org.alliancegenome.agr_submission.services;
 
 import java.util.*;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.transaction.Transactional;
-
 import org.alliancegenome.agr_submission.BaseService;
 import org.alliancegenome.agr_submission.dao.*;
 import org.alliancegenome.agr_submission.entities.*;
 import org.apache.commons.collections4.keyvalue.MultiKey;
 import org.apache.commons.collections4.map.MultiKeyMap;
 
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import lombok.extern.jbosslog.JBossLog;
 
 @RequestScoped

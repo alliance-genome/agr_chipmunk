@@ -2,13 +2,13 @@ package org.alliancegenome.agr_submission.controllers;
 
 import java.util.List;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-
 import org.alliancegenome.agr_submission.BaseController;
 import org.alliancegenome.agr_submission.entities.*;
 import org.alliancegenome.agr_submission.interfaces.server.ReleaseVersionControllerInterface;
 import org.alliancegenome.agr_submission.services.ReleaseVersionService;
+
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 
 @RequestScoped
 public class ReleaseVersionController extends BaseController implements ReleaseVersionControllerInterface {

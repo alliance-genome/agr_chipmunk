@@ -1,12 +1,12 @@
 package org.alliancegenome.agr_submission.controllers;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.ws.rs.core.Response;
-
 import org.alliancegenome.agr_submission.auth.*;
 import org.alliancegenome.agr_submission.dao.UserDAO;
 import org.alliancegenome.agr_submission.interfaces.server.AuthenticationControllerInterface;
+
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Response;
 
 @RequestScoped
 public class AuthenticationController implements AuthenticationControllerInterface {

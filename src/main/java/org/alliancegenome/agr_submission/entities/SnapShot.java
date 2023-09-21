@@ -2,8 +2,6 @@ package org.alliancegenome.agr_submission.entities;
 
 import java.util.*;
 
-import javax.persistence.*;
-
 import org.alliancegenome.agr_submission.BaseEntity;
 import org.alliancegenome.agr_submission.views.View;
 import org.apache.commons.collections4.keyvalue.MultiKey;
@@ -11,6 +9,7 @@ import org.apache.commons.collections4.keyvalue.MultiKey;
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity

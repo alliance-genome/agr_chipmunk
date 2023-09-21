@@ -4,10 +4,6 @@ import java.io.*;
 import java.util.*;
 import java.util.zip.GZIPInputStream;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.transaction.Transactional;
-
 import org.alliancegenome.agr_submission.dao.*;
 import org.alliancegenome.agr_submission.entities.*;
 import org.alliancegenome.agr_submission.exceptions.*;
@@ -22,6 +18,9 @@ import com.github.fge.jsonschema.core.report.*;
 import com.github.fge.jsonschema.main.*;
 
 import io.quarkus.logging.Log;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 @RequestScoped
 public class SubmissionService {

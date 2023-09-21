@@ -2,7 +2,7 @@ package org.alliancegenome.agr_submission.auth;
 
 import java.lang.annotation.*;
 
-import javax.inject.Qualifier;
+import jakarta.inject.Qualifier;
 
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)

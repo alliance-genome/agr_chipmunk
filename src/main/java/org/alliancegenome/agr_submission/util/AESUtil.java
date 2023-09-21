@@ -1,7 +1,8 @@
 package org.alliancegenome.agr_submission.util;
 
 import java.io.UnsupportedEncodingException;
-import java.security.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 import javax.crypto.Cipher;
@@ -9,9 +10,6 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Hex;
 
-import lombok.extern.log4j.Log4j2;
-
-@Log4j2
 public class AESUtil {
 
 	public static SecretKeySpec getKey(String myKey) {

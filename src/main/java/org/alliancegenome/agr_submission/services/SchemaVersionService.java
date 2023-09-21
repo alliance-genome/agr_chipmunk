@@ -2,14 +2,13 @@ package org.alliancegenome.agr_submission.services;
 
 import java.util.List;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.transaction.Transactional;
-
 import org.alliancegenome.agr_submission.BaseService;
 import org.alliancegenome.agr_submission.dao.SchemaVersionDAO;
 import org.alliancegenome.agr_submission.entities.SchemaVersion;
 
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import lombok.extern.jbosslog.JBossLog;
 
 @JBossLog

@@ -2,14 +2,14 @@ package org.alliancegenome.agr_submission.controllers;
 
 import java.util.List;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-
 import org.alliancegenome.agr_submission.BaseController;
 import org.alliancegenome.agr_submission.entities.*;
 import org.alliancegenome.agr_submission.forms.*;
 import org.alliancegenome.agr_submission.interfaces.server.DataTypeControllerInterface;
 import org.alliancegenome.agr_submission.services.DataTypeService;
+
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 
 @RequestScoped
 public class DataTypeController extends BaseController implements DataTypeControllerInterface {

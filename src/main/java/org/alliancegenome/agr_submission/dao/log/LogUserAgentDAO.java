@@ -1,9 +1,9 @@
 package org.alliancegenome.agr_submission.dao.log;
 
-import javax.enterprise.context.ApplicationScoped;
-
 import org.alliancegenome.agr_submission.BaseSQLDAO;
 import org.alliancegenome.agr_submission.entities.log.LogUserAgent;
+
+import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class LogUserAgentDAO extends BaseSQLDAO<LogUserAgent> {
