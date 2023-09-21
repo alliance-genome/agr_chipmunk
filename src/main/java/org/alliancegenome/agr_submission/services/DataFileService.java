@@ -1,10 +1,21 @@
 package org.alliancegenome.agr_submission.services;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.alliancegenome.agr_submission.BaseService;
-import org.alliancegenome.agr_submission.dao.*;
-import org.alliancegenome.agr_submission.entities.*;
+import org.alliancegenome.agr_submission.dao.DataFileDAO;
+import org.alliancegenome.agr_submission.dao.DataSubTypeDAO;
+import org.alliancegenome.agr_submission.dao.DataTypeDAO;
+import org.alliancegenome.agr_submission.dao.ReleaseVersionDAO;
+import org.alliancegenome.agr_submission.entities.DataFile;
+import org.alliancegenome.agr_submission.entities.DataSubType;
+import org.alliancegenome.agr_submission.entities.DataType;
+import org.alliancegenome.agr_submission.entities.ReleaseVersion;
+import org.alliancegenome.agr_submission.entities.SchemaVersion;
 import org.apache.commons.collections4.keyvalue.MultiKey;
 import org.apache.commons.collections4.map.MultiKeyMap;
 

@@ -1,6 +1,8 @@
 package org.alliancegenome.agr_submission.util.github;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter

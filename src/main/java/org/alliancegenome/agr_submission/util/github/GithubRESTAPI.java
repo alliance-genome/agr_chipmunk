@@ -2,9 +2,11 @@ package org.alliancegenome.agr_submission.util.github;
 
 import java.util.List;
 
-import org.apache.commons.logging.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-import si.mazi.rescu.*;
+import si.mazi.rescu.HttpStatusIOException;
+import si.mazi.rescu.RestProxyFactory;
 
 public class GithubRESTAPI implements GithubRESTAPIInterface {
 

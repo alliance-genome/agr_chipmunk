@@ -1,16 +1,19 @@
 package org.alliancegenome.agr_submission.application;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
 
-import org.alliancegenome.agr_submission.auth.*;
+import org.alliancegenome.agr_submission.auth.AuthedUser;
+import org.alliancegenome.agr_submission.auth.AuthenticatedUser;
 import org.alliancegenome.agr_submission.entities.log.LogApiDTO;
 import org.jboss.resteasy.spi.HttpRequest;
 
 import jakarta.enterprise.event.Event;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.container.*;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.ext.Provider;
 

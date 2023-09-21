@@ -5,7 +5,8 @@ import java.util.List;
 import org.alliancegenome.agr_submission.BaseController;
 import org.alliancegenome.agr_submission.entities.SnapShot;
 import org.alliancegenome.agr_submission.interfaces.server.SnapShotControllerInterface;
-import org.alliancegenome.agr_submission.responces.*;
+import org.alliancegenome.agr_submission.responces.APIResponce;
+import org.alliancegenome.agr_submission.responces.SnapShotResponce;
 import org.alliancegenome.agr_submission.services.SnapShotService;
 
 import jakarta.enterprise.context.RequestScoped;

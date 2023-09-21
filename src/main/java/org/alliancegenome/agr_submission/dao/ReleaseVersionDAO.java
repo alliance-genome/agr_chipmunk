@@ -1,6 +1,7 @@
 package org.alliancegenome.agr_submission.dao;
 
-import java.util.*;
+import java.util.List;
+import java.util.TreeSet;
 
 import org.alliancegenome.agr_submission.BaseSQLDAO;
 import org.alliancegenome.agr_submission.entities.ReleaseVersion;

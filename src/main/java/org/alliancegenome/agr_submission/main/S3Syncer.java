@@ -1,6 +1,7 @@
 package org.alliancegenome.agr_submission.main;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.alliancegenome.agr_submission.util.aws.S3Helper;
 

@@ -1,10 +1,13 @@
 package org.alliancegenome.agr_submission.services;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 import org.alliancegenome.agr_submission.BaseService;
-import org.alliancegenome.agr_submission.dao.*;
-import org.alliancegenome.agr_submission.entities.*;
+import org.alliancegenome.agr_submission.dao.ReleaseVersionDAO;
+import org.alliancegenome.agr_submission.dao.SnapShotDAO;
+import org.alliancegenome.agr_submission.entities.ReleaseVersion;
+import org.alliancegenome.agr_submission.entities.SnapShot;
 
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;

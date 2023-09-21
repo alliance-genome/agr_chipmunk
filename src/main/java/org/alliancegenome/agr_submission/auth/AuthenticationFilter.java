@@ -5,15 +5,18 @@ import java.io.IOException;
 import org.alliancegenome.agr_submission.dao.UserDAO;
 import org.alliancegenome.agr_submission.entities.LoggedInUser;
 import org.alliancegenome.agr_submission.util.AESUtil;
-import org.eclipse.microprofile.config.*;
+import org.eclipse.microprofile.config.Config;
+import org.eclipse.microprofile.config.ConfigProvider;
 
 import io.quarkus.logging.Log;
 import jakarta.annotation.Priority;
 import jakarta.enterprise.event.Event;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Priorities;
-import jakarta.ws.rs.container.*;
-import jakarta.ws.rs.core.*;
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.container.ContainerRequestFilter;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.Provider;
 
 @Secured

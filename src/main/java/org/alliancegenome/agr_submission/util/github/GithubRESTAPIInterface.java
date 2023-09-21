@@ -4,7 +4,10 @@ import java.util.List;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
 
-import jakarta.ws.rs.*;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import si.mazi.rescu.HttpStatusIOException;
 
