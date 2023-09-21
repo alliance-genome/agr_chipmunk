@@ -8,10 +8,11 @@ import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
-@Entity @Data @ToString
+@Entity @Getter @Setter @ToString
 @JsonView({View.UserView.class})
 public class LoggedInUser extends BaseEntity {
 
