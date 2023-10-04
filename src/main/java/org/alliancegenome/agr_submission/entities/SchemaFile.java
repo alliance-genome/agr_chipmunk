@@ -1,13 +1,16 @@
 package org.alliancegenome.agr_submission.entities;
 
-import javax.persistence.*;
-
 import org.alliancegenome.agr_submission.BaseEntity;
 import org.alliancegenome.agr_submission.views.View;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import lombok.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Getter @Setter

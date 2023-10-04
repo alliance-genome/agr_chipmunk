@@ -1,16 +1,21 @@
 package org.alliancegenome.agr_submission.websocket;
 
-import java.util.*;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
-import javax.websocket.*;
-import javax.websocket.server.ServerEndpoint;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.alliancegenome.agr_submission.entities.log.LogApiDTO;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Observes;
+import jakarta.websocket.OnClose;
+import jakarta.websocket.OnMessage;
+import jakarta.websocket.OnOpen;
+import jakarta.websocket.Session;
+import jakarta.websocket.server.ServerEndpoint;
 
 @ApplicationScoped
 @ServerEndpoint("/apilog")

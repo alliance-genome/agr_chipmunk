@@ -1,16 +1,19 @@
 package org.alliancegenome.agr_submission.services;
 
-import java.util.*;
-
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.transaction.Transactional;
+import java.util.Date;
+import java.util.List;
 
 import org.alliancegenome.agr_submission.BaseService;
-import org.alliancegenome.agr_submission.dao.*;
-import org.alliancegenome.agr_submission.entities.*;
+import org.alliancegenome.agr_submission.dao.ReleaseVersionDAO;
+import org.alliancegenome.agr_submission.dao.SchemaVersionDAO;
+import org.alliancegenome.agr_submission.entities.ReleaseVersion;
+import org.alliancegenome.agr_submission.entities.SchemaVersion;
+import org.alliancegenome.agr_submission.entities.SnapShot;
 
 import io.quarkus.logging.Log;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 @RequestScoped
 public class ReleaseVersionService extends BaseService<ReleaseVersion> {

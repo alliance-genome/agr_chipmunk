@@ -13,15 +13,15 @@ public class GitTest {
 		//helper.setupSchemaRelease("1.0.1.0");
 		//log.debug(ConfigHelper.getValidationSoftwarePath());
 		
-		AESUtil util = new AESUtil();
+		//AESUtil util = new AESUtil();
 		
 		String user = "";
 		String key = "";
-		String enc = util.encrypt(user, key);
+		String enc = AESUtil.encrypt(user, key);
 		
 		System.out.println(enc);
 		
-		log.info(util.decrypt(enc, key));
+		log.info(AESUtil.decrypt(enc, key));
 	}
 
 }

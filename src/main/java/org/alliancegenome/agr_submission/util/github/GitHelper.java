@@ -1,11 +1,16 @@
 package org.alliancegenome.agr_submission.util.github;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ListBranchCommand.ListMode;
-import org.eclipse.jgit.lib.*;
+import org.eclipse.jgit.lib.Constants;
+import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.TagOpt;
 
 import io.quarkus.logging.Log;
@@ -33,8 +38,8 @@ public class GitHelper {
 
 			Repository repo = git.getRepository();
 
-			for(String key: repo.getTags().keySet()) {
-				git.tagDelete().setTags(key).call();
+			for(Ref key: repo.getRefDatabase().getRefsByPrefix(Constants.R_TAGS)) {
+				git.tagDelete().setTags(key.getName()).call();
 			}
 
 			git.fetch().setTagOpt(TagOpt.FETCH_TAGS).call();

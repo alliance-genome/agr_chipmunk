@@ -1,17 +1,30 @@
 package org.alliancegenome.agr_submission.util.aws;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
-import org.alliancegenome.agr_submission.exceptions.*;
-import org.eclipse.microprofile.config.*;
+import org.alliancegenome.agr_submission.exceptions.FileSavingException;
+import org.alliancegenome.agr_submission.exceptions.GenericException;
+import org.eclipse.microprofile.config.Config;
+import org.eclipse.microprofile.config.ConfigProvider;
 
-import com.amazonaws.auth.*;
+import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.regions.Regions;
-import com.amazonaws.services.s3.*;
-import com.amazonaws.services.s3.model.*;
-import com.amazonaws.services.s3.transfer.*;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.ListObjectsV2Request;
+import com.amazonaws.services.s3.model.ListObjectsV2Result;
+import com.amazonaws.services.s3.model.ObjectListing;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.amazonaws.services.s3.transfer.TransferManager;
+import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
+import com.amazonaws.services.s3.transfer.Upload;
 
 import io.quarkus.logging.Log;
 

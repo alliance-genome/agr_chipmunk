@@ -1,9 +1,9 @@
 package org.alliancegenome.agr_submission.dao.log;
 
-import javax.enterprise.context.ApplicationScoped;
-
 import org.alliancegenome.agr_submission.BaseSQLDAO;
 import org.alliancegenome.agr_submission.entities.log.LogAddress;
+
+import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class LogAddressDAO extends BaseSQLDAO<LogAddress> {
