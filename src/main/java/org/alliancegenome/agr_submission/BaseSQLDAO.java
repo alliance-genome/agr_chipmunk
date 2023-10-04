@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.quarkus.logging.Log;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -13,9 +14,7 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
-import lombok.extern.jbosslog.JBossLog;
 
-@JBossLog
 public class BaseSQLDAO<E extends BaseEntity> extends BaseDAO<E> {
 
 	@PersistenceContext(name="primary")
@@ -26,20 +25,20 @@ public class BaseSQLDAO<E extends BaseEntity> extends BaseDAO<E> {
 	}
 	
 	public E persist(E entity) {
-		log.debug("SqlDAO: persist: " + entity);
+		Log.debug("SqlDAO: persist: " + entity);
 		entityManager.persist(entity);
 		return entity;
 	}
 
 	public E find(Long id) {
-		log.debug("SqlDAO: find: " + id + " " + myClass);
+		Log.debug("SqlDAO: find: " + id + " " + myClass);
 		E entity = entityManager.find(myClass, id);
-		log.debug("Entity Found: " + entity);
+		Log.debug("Entity Found: " + entity);
 		return entity;
 	}
 
 	public List<E> findAll() {
-		log.debug("SqlDAO: findAll: " + myClass);
+		Log.debug("SqlDAO: findAll: " + myClass);
 		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<E> cq = cb.createQuery(myClass);
 		Root<E> rootEntry = cq.from(myClass);
@@ -49,24 +48,24 @@ public class BaseSQLDAO<E extends BaseEntity> extends BaseDAO<E> {
 	}
 
 	public E merge(E entity) {
-		log.debug("SqliteDAO: merge: " + entity);
+		Log.debug("SqliteDAO: merge: " + entity);
 		entityManager.merge(entity);
 		return entity;
 	}
 	
 	public E remove(Long id) {
-		log.debug("SqliteDAO: remove: " + id);
+		Log.debug("SqliteDAO: remove: " + id);
 		E entity = find(id);
 		entityManager.remove(entity);
 		return entity;
 	}
 
 	public E findByField(String field, String value) {
-		log.debug("SqlDAO: findByField: " + field + " " + value);
+		Log.debug("SqlDAO: findByField: " + field + " " + value);
 		HashMap<String, Object> params = new HashMap<>();
 		params.put(field, value);
 		List<E> list = search(params);
-		log.debug("Result List: " + list);
+		Log.debug("Result List: " + list);
 		if(list.size() > 0) {
 			return list.get(0);
 		} else {
@@ -79,7 +78,7 @@ public class BaseSQLDAO<E extends BaseEntity> extends BaseDAO<E> {
 	}
 	
 	public List<E> search(Map<String, Object> params, String orderByField) {
-		log.debug("Search By Params: " + params + " Order by: " + orderByField);
+		Log.debug("Search By Params: " + params + " Order by: " + orderByField);
 		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<E> query = builder.createQuery(myClass);
 		Root<E> root = query.from(myClass);

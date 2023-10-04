@@ -9,11 +9,9 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,15 +26,15 @@ public class SchemaVersion extends BaseEntity {
 	@Column(unique = true)
 	private String schema;
 	
-	@OneToMany(mappedBy="schemaVersion", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="schemaVersion")
 	@JsonView({View.SchemaVersionView.class})
 	private Set<SchemaFile> schemaFiles;
 	
-	@OneToOne(mappedBy="defaultSchemaVersion")
+	@OneToMany(mappedBy="defaultSchemaVersion")
 	@JsonView({View.SchemaVersionView.class})
-	private ReleaseVersion releaseVersion;
+	private Set<ReleaseVersion> releaseVersions;
 	
-	@OneToMany(mappedBy="schemaVersion", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="schemaVersion")
 	@JsonView({View.SchemaVersionView.class})
 	private Set<DataFile> dataFiles;
 
