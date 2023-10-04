@@ -40,4 +40,4 @@ EXPOSE 8080
 
 # Set default env variables for local docker application execution
 
-CMD ["java", "-Xmx6g", "-jar", "agr_chipmunk-runner.jar"]
+CMD ["java", "-jar", "agr_chipmunk-runner.jar"]
