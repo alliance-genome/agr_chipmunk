@@ -12,12 +12,11 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -38,7 +37,7 @@ public class ReleaseVersion extends BaseEntity {
 	@OneToMany(mappedBy="releaseVersion")
 	private List<SnapShot> snapShots;
 	
-	@OneToOne(fetch=FetchType.EAGER)
+	@ManyToOne
 	@JsonView({View.ReleaseVersionView.class})
 	private SchemaVersion defaultSchemaVersion;
 
