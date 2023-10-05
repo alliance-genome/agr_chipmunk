@@ -1,5 +1,5 @@
 quarkus.http.host=0.0.0.0
-quarkus.http.cors=true
+quarkus.http.cors=false
 
 # The max-body-size needs to be unset
 # it defaults to something too small for DQM submissions
