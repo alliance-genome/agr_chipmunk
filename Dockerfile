@@ -9,7 +9,7 @@ COPY src/main/cliapp ./cliapp
 WORKDIR /agr_fms/cliapp
 RUN make all build
 
-FROM maven:3.8-openjdk-17 as BUILD_API_STAGE
+FROM maven:3.9.9-sapmachine-21 as BUILD_API_STAGE
 ARG OVERWRITE_VERSION
 
 WORKDIR /agr_fms/cliapp
