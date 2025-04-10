@@ -29,7 +29,7 @@ RUN cp src/main/resources/application.properties.defaults src/main/resources/app
 
 RUN mvn -T 8 clean package -Dquarkus.package.type=uber-jar -ntp
 
-FROM openjdk:17.0.1-jdk-slim
+FROM openjdk:21-jdk-slim
 
 WORKDIR /agr_fms
 
