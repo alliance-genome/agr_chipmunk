@@ -1,385 +1,533 @@
-# File Management System (FMS)
+# AGR Chipmunk - File Management System (FMS)
 
-The FMS will be used for submitting all data files to AGR.
-The rest endpoint: `http://fms.alliancegenome.org/api/data/submit` is using a multipart post.
+AGR Chipmunk is the Alliance of Genome Resources' File Management System (FMS), providing a centralized REST API for data file submissions, validation, and distribution across multiple model organism databases (MODs). Built with Quarkus and React, it serves as the primary data ingestion pipeline for the Alliance.
 
-Here is an example using curl:
+## Table of Contents
+
+- [Overview](#overview)
+- [Architecture](#architecture)
+- [Features](#features)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Development](#development)
+- [API Documentation](#api-documentation)
+- [Data Types and Submission](#data-types-and-submission)
+- [Deployment](#deployment)
+- [Configuration](#configuration)
+- [Testing](#testing)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Overview
+
+The FMS enables data providers from various model organism databases to submit, validate, and manage genomic data files. It provides:
+
+- **Multipart file upload API** for bulk data submission
+- **JSON schema validation** for structured data types
+- **AWS S3 integration** for scalable file storage
+- **Release versioning** and snapshot management
+- **Authentication** via Bearer tokens
+- **Web UI** for monitoring and administration
+
+### Supported Model Organism Databases
+
+- **FB** - FlyBase
+- **MGD** - Mouse Genome Database  
+- **RGD** - Rat Genome Database
+- **SGD** - Saccharomyces Genome Database
+- **WB** - WormBase
+- **ZFIN** - Zebrafish Information Network
+- **HUMAN** - Human data supplied by RGD
+
+## Architecture
+
+The application follows a three-tier architecture:
 
 ```
-curl \
-	-H "Authorization: Bearer 2C07D715..." \
-	-X POST "https://fms.alliancegenome.org/api/data/submit" \
-	-F "ReleaseVersion_DataType_DataSubType=@/full/path/to/file1.json" \
-	-F "ReleaseVersion_DataType_DataSubType=@/full/path/to/file2.json"
+┌─────────────────────────────────────────────────────────┐
+│                    Frontend (React)                      │
+│                 src/main/cliapp/                         │
+├─────────────────────────────────────────────────────────┤
+│                  Backend API (Quarkus)                   │
+│           src/main/java/.../agr_submission/              │
+├─────────────────────────────────────────────────────────┤
+│                    Data Layer                            │
+│         PostgreSQL Database    |    AWS S3 Storage       │
+└─────────────────────────────────────────────────────────┘
 ```
 
-Valid values for ReleaseVersion, DataType, and DataSubType can be found in the examples below.
+### Technology Stack
 
-## Contents
+- **Backend**: Java 21, Quarkus framework
+- **Frontend**: React 16, Redux, Bootstrap 4
+- **Database**: PostgreSQL with Hibernate ORM
+- **Storage**: AWS S3 for file storage
+- **Build Tools**: Maven (backend), npm/yarn (frontend)
+- **Container**: Docker with multi-stage builds
+- **Deployment**: AWS Elastic Beanstalk
 
-- [Release Version](#release-version)
-- [Data Type](#data-type)
-- [Data SubType](#data-subtype)
-- [Examples](#examples)
-  * [ReleaseVersion DataType DataSubType String format](#releaseversion-datatype-datasubtype-string-format)
-  * [Valid examples for submitting files](#valid-examples-for-submitting-files)
-- [Return object](#return-object)
-  * [Success example](#success-example)
-  * [Failed example](#failed-example)
-- [Loader](#loader)
-  * [Releases](#releases)
-  * [Snap Shot](#snap-shot)
-  * [Take Snap Shot](#take-snap-shot)
+## Features
 
-## API Access Token
+### Core Functionality
 
-This will be a key that is generated for the DQM's to use for uploading files.
+- **Multi-file Upload**: Submit multiple data files in a single request
+- **Schema Validation**: Automatic validation against JSON schemas for supported data types
+- **Version Management**: Track data by release versions
+- **Snapshot System**: Create and retrieve point-in-time data snapshots
+- **Download Service**: Stable URLs for data file retrieval
+- **Audit Logging**: Track all API requests and data modifications
 
-## Release Version
+### Supported Data Types
 
-| Release Version |
-| --- |
-| 0.6.0 |
-| 1.0.0 |
-| 1.7.0 |
-| 2.0.0 |
-| 2.1.0 |
-| 2.2.0 |
-| 2.3.0 |
-| 2.4.0 |
-| etc... |
+| Data Type | Description | Format | Validation |
+|-----------|-------------|--------|------------|
+| BGI | Basic Gene Information | JSON | Required |
+| AGM | Affected Genomic Model | JSON | Required |
+| ALLELE | Allele Information | JSON | Required |
+| DAF | Disease Annotations | JSON | Required |
+| ORTHO | Orthology Information | JSON | Required |
+| GENOTYPE | Genotype Information | JSON | Required |
+| PHENOTYPE | Phenotype Information | JSON | Required |
+| EXPRESSION | Expression Data | JSON | Required |
+| VARIATION | Variation Information | JSON | Required |
+| SQTR | Sequence Targeting Reagent | JSON | Required |
+| TRANSCRIPT | Transcript Data | JSON | Required |
+| GAF | Gene Ontology Annotations | GAF | Not Required |
+| GFF | Gene Feature File | GFF | Not Required |
+| FASTA | Assembly Sequences | FA | Not Required |
+| ONTOLOGY | Ontology Files | OBO | Not Required |
+| INTERACTION | Interaction Data | TAR.GZ | Not Required |
 
-This will be the current main release of the Alliance.
+## Prerequisites
 
-## Data Type
+- Java 21 or higher
+- Maven 3.9.9 or higher
+- Node.js 12+ and npm
+- PostgreSQL 12+
+- Docker (optional, for containerized deployment)
+- AWS CLI (for deployment)
 
-| Data Type        | What it means                     | Schema Validation File  | Format | Data SubType Required | Validation Required |
-| ---              | ---                               | ---                                                            | ---  | ---  | ---  |
-| AGM              | Affected Genomic Model            | /ingest/affectedGenomicModel/affectedGenomicModelMetaData.json | json | true | true |
-| BGI              | Basic Gene information            | /ingest/gene/geneMetaData.json                                 | json | true | true |
-| DAF              | Disease Ontology Annotations File | /ingest/disease/diseaseMetaDataDefinition.json                 | json | true | true |
-| ORTHO            | Orthology Information File        | /ingest/orthology/orthologyMetaData.json                       | json | true | true |
-| ALLELE           | Allele Information File           | /ingest/allele/alleleMetaData.json                             | json | true | true |
-| GENOTYPE         | Genotype Information File         | /genotype/genotypeMetaDataDefinition.json                      | json | true | true |
-| PHENOTYPE        | Phenotype Information File        | /ingest/phenotype/phenotypeMetaDataDefinition.json             | json | true | true |
-| EXPRESSION       | Expression Information File       | /ingest/expression/wildtypeExpressionMetaDataDefinition.json   | json | true | true |
-| VARIATION        | Variation Information File        | /ingest/allele/variantMetaData.json                            | json | true | true |
-| SQTR             | Sequence Targeting Reagent File   | /genotype/sequenceTargetingReagentMetaData.json                | json | true | true |
-| TRANSCRIPT       | Transcript                        | /ingest/sequenceFeature/transcriptMetaData.json                | json | false | true |
-| GAF              | Gene Ontology Annotations File    | - | gaf    | true  | false |
-| EXPRESSIONATLAS  | Expression Atlas Information File | - | xml    | true  | false |
-| FASTA            | Assembly fasta file               | - | fa     | true  | false |
-| GFF              | Gene Feature File                 | - | gff    | true  | false |
-| ONTOLOGY         | Ontology Information File         | - | obo    | true  | false |
-| INTERACTION      | Consolidated Interactions File    | - | tar.gz | false | false |
-| NONGENESEQUENCEFEATURE | Non gene, non transcript/exon sequence features | /ingest/sequenceFeature/nonGeneSequenceFeatureMetaData.json   | json | false | false |
+## Installation
 
-## Data SubType
+### Quick Start with Docker
 
-| Name | Description |
-| --- | --- |
-| FB    | Fly Base |
-| HUMAN | Human Supplied by RGD |
-| MGD   | Mouse Genome Database |
-| RGD   | Rat Genome Database |
-| SGD   | Saccharomyces Genome Database |
-| WB    | Worm Base |
-| ZFIN  | Zebrafish Information Network |
+```bash
+# Clone the repository
+git clone https://github.com/alliance-genome/agr_chipmunk.git
+cd agr_chipmunk
 
-## Examples
+# Build and run with Docker
+make docker
+make docker-run
+```
 
-### ReleaseVersion DataType DataSubType String format
+The application will be available at http://localhost:8080
 
-Valid combinations for Release-DataType-DataSubType are as follows:
+### Manual Installation
 
-| Type | What does it mean? |
-| --------------- | --- |
-| ReleaseVersion\_DataType\_DataSubType | Validation will occur for BGI, Disease, Orthology, Allele, Genotype, Phenotype, Expression and not for GAF, GFF, and Ontology, all files will be stored under the Release Version Directory in S3. |
-| DataType\_DataSubType | Validation will occur for BGI, Disease, Orthology, Allele, Genotype, Phenotype, Expression and not for GAF, GFF, and Ontology, the current release version will get looked up based on date, and the default schema will be used to validate the file. All files will be stored under the Release Version Directory in S3.
-| ReleaseVersion-DataType | Invalid (Data Type not found for: ReleaseVersion) |
+1. **Clone the repository**:
+```bash
+git clone https://github.com/alliance-genome/agr_chipmunk.git
+cd agr_chipmunk
+```
 
-### Valid examples for submitting files
+2. **Set up the database**:
+```bash
+# Create PostgreSQL database
+createdb chipmunk
+```
 
-#### One file at a time
+3. **Configure application properties**:
+```bash
+cp src/main/resources/application.properties.defaults src/main/resources/application.properties
+# Edit application.properties with your database and AWS credentials
+```
 
-	> curl \
-		-H "Authorization: Bearer 2C07D715..." \
-		-X POST "https://fms.alliancegenome.org/api/data/submit" \
-		-F "1.2.0_GFF_MGD=@MGI_1.0.4_GFF.gff"
-	> curl \
-		-H "Authorization: Bearer 2C07D715..." \
-		-X POST "https://fms.alliancegenome.org/api/data/submit" \
-		-F "1.7.0_Allele_MGD=@MGI_1.0.4_feature.json"
-	> curl \
-		-H "Authorization: Bearer 2C07D715..." \
-		-X POST "https://fms.alliancegenome.org/api/data/submit" \
-		-F "2.0.0_BGI_FB=@FB_1.0.4_BGI.json"
-	> curl \
-		-H "Authorization: Bearer 2C07D715..." \
-		-X POST "https://fms.alliancegenome.org/api/data/submit" \
-		-F "GAF_MGD=@gene_association_1.0.mgi.gaf"
-	> curl \
-		-H "Authorization: Bearer 2C07D715..." \
-		-X POST "https://fms.alliancegenome.org/api/data/submit" \
-		-F "Allele_ZFIN=@ZFIN_1.0.4_feature.json"
-	
-#### Multiple files at a time
+4. **Build the frontend**:
+```bash
+cd src/main/cliapp
+npm install
+npm run build
+cd ../../..
+```
 
-	> curl \
-		-H "Authorization: Bearer 2C07D715..." \
-		-X POST "https://fms.alliancegenome.org/api/data/submit" \
-		-F "2.2.0_BGI_FB=@FB_1.0.4_BGI.json" \
-		-F "2.2.0_Allele_FB=@FB_1.0.4_feature.json" \
-		-F "2.2.0_Disease_FB=@FB_1.0.4_disease.json" \
-		-F "2.2.0_GFF_FB=@FB_1.0.4_GFF.gff"
-		
-	> curl \
-		-H "Authorization: Bearer 2C07D715..." \
-		-X POST "https://fms.alliancegenome.org/api/data/submit" \
-		-F "BGI_FB=@FB_1.0.4_BGI.json" \
-		-F "Allele_FB=@FB_1.0.4_feature.json" \
-		-F "Disease_FB=@FB_1.0.4_disease.json" \
-		-F "GFF_FB=@FB_1.0.4_GFF.gff"	
+5. **Build the backend**:
+```bash
+mvn clean package
+```
 
+6. **Run the application**:
+```bash
+java -jar target/agr_chipmunk-runner.jar
+```
 
-## Return object
+## Development
 
-The responce object that is returned will be based on the files that were submitted.
+### Project Structure
 
-### Success example
+```
+agr_chipmunk/
+├── src/
+│   ├── main/
+│   │   ├── java/                 # Backend Java code
+│   │   │   └── org/alliancegenome/agr_submission/
+│   │   │       ├── controllers/  # REST endpoints
+│   │   │       ├── services/     # Business logic
+│   │   │       ├── dao/          # Data access layer
+│   │   │       ├── entities/     # JPA entities
+│   │   │       └── auth/         # Authentication
+│   │   ├── cliapp/               # Frontend React application
+│   │   │   ├── src/
+│   │   │   │   ├── components/  # React components
+│   │   │   │   ├── containers/  # Container components
+│   │   │   │   ├── actions/     # Redux actions
+│   │   │   │   └── reducers/    # Redux reducers
+│   │   │   └── package.json
+│   │   └── resources/            # Configuration files
+│   └── test/                     # Test files
+├── pom.xml                       # Maven configuration
+├── Dockerfile                    # Container definition
+├── docker-compose.yml           # Docker Compose setup
+└── Makefile                     # Build automation
+```
 
-For the following command:
+### Development Mode
 
-	> curl \
-		-H "Authorization: Bearer 2C07D715..." \
-		-X POST "https://fms.alliancegenome.org/api/data/submit" \
-		-F "2.2.0_BGI_FB=@FB_1.0.4_BGI.json" \
-		-F "2.2.0_Allele_FB=@FB_1.0.4_feature.json" \
-		-F "2.2.0_Disease_FB=@FB_1.0.4_disease.json" \
-		-F "2.2.0_GFF_FB=@FB_1.0.4_GFF.gff"
+Run the backend in development mode with hot reload:
 
-<details>
-<summary>View Response</summary>
-<pre>
-```{
-	"fileStatus": {
-		"2.2.0_BGI_FB":"success",
-		"2.2.0_Disease_FB":"success",
-		"2.2.0_GFF_FB":"success",
-		"2.2.0_Allele_FB":"success"
-	},
-	"status":"success"
-}```
-</details>
+```bash
+# Backend with hot reload
+mvn compile quarkus:dev
 
-### Failed example
+# Frontend with hot reload (in separate terminal)
+cd src/main/cliapp
+npm start
+```
 
-For the following command (Missing API Access Token):
+The backend API will be available at http://localhost:8080 and the frontend development server at http://localhost:3000.
 
-	> curl \
-		-X POST "https://fms.alliancegenome.org/api/data/submit" \
-		-F "2.2.0_BGI_MGD=@MGI_1.0.4_BGI.json" \
-		-F "2.2.0_Allele_MGD=@MGI_1.0.4_feature.json" \
-		-F "2.2.0_Disease_MGD=@MGI_1.0.4_disease.json" \
-		-F "2.2.0_GFF_MGD=@MGI_1.0.4_GFF.gff" 
+### Setting Up Your Development Environment
 
-<details>
-<summary>View Failure Response</summary>
-<pre>
+1. **IDE Setup**:
+   - **IntelliJ IDEA**: Import as Maven project, ensure Java 21 SDK is configured
+   - **VS Code**: Install Java Extension Pack and Quarkus extension
+
+2. **Database Setup**:
+```bash
+# Start PostgreSQL with Docker
+docker run -d --name chipmunk-db \
+  -e POSTGRES_DB=chipmunk \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=postgres \
+  -p 5432:5432 \
+  postgres:12
+```
+
+3. **Environment Variables**:
+Create a `.env` file in the project root:
+```properties
+AWS_ACCESS_KEY=your_access_key
+AWS_SECRET_KEY=your_secret_key
+AWS_BUCKET_NAME=mod-datadumps-dev
+QUARKUS_DATASOURCE_JDBC_URL=jdbc:postgresql://localhost:5432/chipmunk
+QUARKUS_DATASOURCE_USERNAME=postgres
+QUARKUS_DATASOURCE_PASSWORD=postgres
+```
+
+### Code Style and Standards
+
+- **Java**: Follow standard Java conventions, use meaningful variable names
+- **React**: Use functional components with hooks where possible
+- **Git**: Use conventional commit messages (feat:, fix:, docs:, etc.)
+
+### Making Changes
+
+1. **Backend Changes**:
+   - Controllers are in `src/main/java/.../controllers/`
+   - Services contain business logic in `src/main/java/.../services/`
+   - Entities define the data model in `src/main/java/.../entities/`
+
+2. **Frontend Changes**:
+   - Components are in `src/main/cliapp/src/components/`
+   - Redux state management in `src/main/cliapp/src/actions/` and `reducers/`
+   - API calls are made through axios in the actions
+
+3. **Adding a New Data Type**:
+   - Add the type to `DataType` entity
+   - Create validation schema in resources
+   - Update `SubmissionService` to handle the new type
+   - Add UI support if needed
+
+### Debugging
+
+1. **Backend Debugging**:
+```bash
+# Run with debug port
+java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5045 \
+  -jar target/agr_chipmunk-runner.jar
+```
+
+2. **Frontend Debugging**:
+   - Use React Developer Tools browser extension
+   - Redux DevTools for state debugging
+
+3. **Database Queries**:
+   - Enable SQL logging in application.properties:
+   ```properties
+   %dev.quarkus.log.category."org.hibernate.SQL".level=DEBUG
+   ```
+
+## API Documentation
+
+### OpenAPI/Swagger Documentation
+
+The API documentation is available at:
+- Development: http://localhost:8080/q/swagger-ui
+- Production: https://fms.alliancegenome.org/q/swagger-ui
+
+### Main Endpoints
+
+#### Submit Data Files
+```bash
+POST /api/data/submit
+Authorization: Bearer <token>
+Content-Type: multipart/form-data
+
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+  -X POST "https://fms.alliancegenome.org/api/data/submit" \
+  -F "3.2.0_BGI_MGD=@mouse_genes.json" \
+  -F "3.2.0_ALLELE_MGD=@mouse_alleles.json"
+```
+
+#### Validate Data Files
+```bash
+POST /api/data/validate
+Content-Type: multipart/form-data
+
+curl -X POST "https://fms.alliancegenome.org/api/data/validate" \
+  -F "BGI_MGD=@mouse_genes.json"
+```
+
+#### Get Release Snapshots
+```bash
+GET /api/data/releases
+GET /api/data/releases/{version}
+
+curl "https://fms.alliancegenome.org/api/data/releases/3.2.0"
+```
+
+#### Take Snapshot
+```bash
+POST /api/snapshot/take/{version}
+Authorization: Bearer <token>
+
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+  "https://fms.alliancegenome.org/api/snapshot/take/3.2.0"
+```
+
+### File Naming Convention
+
+Files must follow the naming pattern:
+- `[ReleaseVersion]_[DataType]_[DataSubType]`
+- Example: `3.2.0_BGI_MGD`, `3.2.0_ALLELE_ZFIN`
+
+### Response Format
+
+Success Response:
+```json
 {
-	"fileStatus": {
-		"2.2.0_BGI_MGD":"Authentication Failure: Please check your api_access_token",
-		"2.2.0_Allele_MGD":"Authentication Failure: Please check your api_access_token",
-		"2.2.0_Disease_MGD":"Authentication Failure: Please check your api_access_token",
-		"2.2.0_GFF_MGD":"Authentication Failure: Please check your api_access_token"
-	},
-	"status":"failed"
-}</pre>
-</details>
+  "status": "success",
+  "fileStatus": {
+    "3.2.0_BGI_MGD": "success",
+    "3.2.0_ALLELE_MGD": "success"
+  }
+}
+```
 
-For the following command (Errors in BGI):
-
-	> curl \
-		-H "Authorization: Bearer 2C07D715..." \
-		-X POST "https://fms.alliancegenome.org/api/data/submit" \
-		-F "2.2.0_BGI_MGD=@MGI_1.0.4_BGI.json" \
-		-F "2.2.0_Allele_MGD=@MGI_1.0.4_feature.json" \
-		-F "2.2.0_Disease_MGD=@MGI_1.0.4_disease.json" \
-		-F "2.2.0_GFF_MGD=@MGI_1.0.4_GFF.gff" 
-
-<details>
-<summary>View Failure Response</summary>
-<pre>
+Error Response:
+```json
 {
-	"fileStatus": {
-		"2.2.0_Allele_MGD":"success",
-		"2.2.0_BGI_MGD":"string \"https://en.wikipedia.org/wiki/Cathepsin L2\" is not a valid URI",
-		"2.2.0_Disease_10090":"success",
-		"2.2.0_GFF_MGD":"Unable to complete multi-part upload. Individual part upload failed : Your socket connection to the server was not read from or written to within the timeout period. Idle connections will be closed. (Service: Amazon S3; Status Code: 400; Error Code: RequestTimeout; Request ID: 3ABBDFD90F0C4CAA)"
-	},
-	"status":"failed"
-}</pre>
-</details>
-	
-In a failed example only the files that failed need to be attempted again:
+  "status": "failed",
+  "fileStatus": {
+    "3.2.0_BGI_MGD": "Validation error: missing required field 'symbol'"
+  }
+}
+```
 
-	> curl \
-		-H "Authorization: Bearer 2C07D715..." \
-		-X POST "https://fms.alliancegenome.org/api/data/submit" \
-		-F "2.2.0_BGI_10090=@MGI_1.0.4_BGI.json" \
-		-F "2.2.0_GFF_10090=@MGI_1.0.4_GFF.gff" 
+## Data Types and Submission
 
-<details>
-<summary>View Success Response</summary>
-<pre>
-{
-	"fileStatus": {
-		"2.2.0_BGI_10090":"success",
-		"2.2.0_GFF_10090":"success"
-	},
-	"status":"success"
-}</pre>
-</details>
+### Submission Process
 
-## Loader
+1. **Obtain API Token**: Contact AGR administrators for an API access token
+2. **Prepare Data Files**: Ensure files conform to the required JSON schemas
+3. **Name Files Correctly**: Use the `ReleaseVersion_DataType_DataSubType` format
+4. **Submit via API**: Use the multipart POST endpoint
+5. **Check Response**: Verify all files were accepted successfully
+6. **Resubmit if Needed**: Only failed files need to be resubmitted
 
-The loader will run against the snapshot and releases API's, using the API Access Token for the "take snapshot" endpoint. Links to download these files will be in the following format:
+### Validation Schemas
 
-	https://s3.amazonaws.com/mod-datadumps/<path>
+JSON schemas for each data type are located in:
+- `/ingest/[datatype]/[datatype]MetaData.json`
 
-### Releases
+Schemas define required fields, data types, and validation rules. Files are automatically validated during submission for applicable data types.
 
-The following command can be used to pull a list of releases from the system that are available:
-	
-	> curl "https://fms.alliancegenome.org/api/data/releases"
+### Best Practices
 
-<details>
-<summary>View Success Response</summary>
-<pre>
-{
-    "1.4.0": 1523284823719,
-    "1.0.0": 1523284848246,
-    "1.3.0": 1523284837284
-}</pre>
-</details>
+- Submit related files together in a single request
+- Compress large files with gzip before submission
+- Use consistent release versions across submissions
+- Monitor the response for validation errors
+- Keep API tokens secure and rotate regularly
 
-### Snap Shot
+## Deployment
 
-The following command, can be used to pull a specific SnapShot by release version, release version is required.
+### Docker Deployment
 
-	> curl "https://fms.alliancegenome.org/api/data/releases/2.2.0"
+Build and push to registry:
+```bash
+# Build Docker image
+make docker
 
-<details>
-<summary>View Success Response</summary>
-<pre>
-{
-    "releaseVersion": "1.4.0",
-    "schemaVersion": "1.0.0.2",
-    "snapShotDate": 1523284823719,
-    "dataFiles": [
-        {
-            "schemaVersion": "1.0.0.2",
-            "dataType": "Allele",
-            "dataSubType": "MGD",
-            "s3path": "1.0.0.2/Allele/MGD/1.0.0.2\_Allele\_MGD\_0.json",
-            "uploadDate": 1522181792721
-        },
-        {
-            "schemaVersion": "1.0.0.2",
-            "dataType": "Disease",
-            "dataSubType": "MGD",
-            "s3path": "1.0.0.2/Disease/MGD/1.0.0.2\_Disease\_MGD\_0.json",
-            "uploadDate": 1522181816273
-        },
-        {
-            "schemaVersion": "1.0.0.2",
-            "dataType": "Allele",
-            "dataSubType": "ZFIN",
-            "path": "1.0.0.2/Allele/ZFIN/1.0.0.2\_Allele\_ZFIN\_2.json",
-            "uploadDate": 1522179715428
-        },
-        {
-            "schemaVersion": "1.0.0.2",
-            "dataType": "BGI",
-            "dataSubType": "ZFIN",
-            "s3path": "1.0.0.2/BGI/ZFIN/1.0.0.2\_BGI\_ZFIN\_1.json",
-            "uploadDate": 1522181715592
-        },
-        {
-            "schemaVersion": "1.0.0.2",
-            "dataType": "GFF",
-            "dataSubType": "ZFIN",
-            "s3path": "1.0.0.2/GFF/ZFIN/1.0.0.2\_GFF\_ZFIN\_1.gff",
-            "uploadDate": 1522181475376
-        },
-        {
-            "schemaVersion": "1.0.0.2",
-            "dataType": "Disease",
-            "dataSubType": "ZFIN",
-            "s3path": "1.0.0.2/Disease/ZFIN/1.0.0.2\_Disease\_ZFIN\_1.json",
-            "uploadDate": 1522180298184
-        }
-    ]
-}</pre>
-</details>
+# Push to ECR
+make registry-docker-login
+make docker-push
+```
 
-### Take Snap Shot
+### AWS Elastic Beanstalk Deployment
 
-This will take a snapshot of all the latest datafiles for each DataSubType by each DataType. 
+Initialize and deploy:
+```bash
+# Initialize EB application
+make eb-init
 
-	> curl -H "Authorization: Bearer 2C07D715..." \
-	"https://fms.alliancegenome.org/api/snapshot/take/2.2.0"
+# Create environment
+make eb-create ENV_NAME=chipmunk-prod
 
-<details>
-<summary>View Success Response</summary>
-<pre>
-{
-    "releaseVersion": "1.4.0",
-    "schemaVersion": "1.0.0.2",
-    "snapShotDate": 1523284823719,
-    "dataFiles": [
-        {
-            "schemaVersion": "1.0.0.2",
-            "dataType": "Allele",
-            "dataSubType": "MGD",
-            "s3path": "1.0.0.2/Allele/MGD/1.0.0.2\_Allele\_MGD\_0.json",
-            "uploadDate": 1522181792721
-        },
-        {
-            "schemaVersion": "1.0.0.2",
-            "dataType": "Disease",
-            "dataSubType": "MGD",
-            "s3path": "1.0.0.2/Disease/MGD/1.0.0.2\_Disease\_MGD\_0.json",
-            "uploadDate": 1522181816273
-        },
-        {
-            "schemaVersion": "1.0.0.2",
-            "dataType": "Allele",
-            "dataSubType": "ZFIN",
-            "path": "1.0.0.2/Allele/ZFIN/1.0.0.2\_Allele\_ZFIN\_2.json",
-            "uploadDate": 1522179715428
-        },
-        {
-            "schemaVersion": "1.0.0.2",
-            "dataType": "BGI",
-            "dataSubType": "ZFIN",
-            "s3path": "1.0.0.2/BGI/ZFIN/1.0.0.2\_BGI\_ZFIN\_1.json",
-            "uploadDate": 1522181715592
-        },
-        {
-            "schemaVersion": "1.0.0.2",
-            "dataType": "GFF",
-            "dataSubType": "ZFIN",
-            "s3path": "1.0.0.2/GFF/ZFIN/1.0.0.2\_GFF\_ZFIN\_1.gff",
-            "uploadDate": 1522181475376
-        },
-        {
-            "schemaVersion": "1.0.0.2",
-            "dataType": "Disease",
-            "dataSubType": "ZFIN",
-            "s3path": "1.0.0.2/Disease/ZFIN/1.0.0.2\_Disease\_ZFIN\_1.json",
-            "uploadDate": 1522180298184
-        }
-    ]
-}</pre>
-</details>
+# Deploy updates
+make eb-deploy ENV_NAME=chipmunk-prod
+```
+
+### Production Configuration
+
+Key production settings:
+```properties
+# Database
+quarkus.datasource.jdbc.url=jdbc:postgresql://prod-db:5432/chipmunk
+quarkus.datasource.jdbc.max-size=128
+
+# AWS
+aws.bucket.name=mod-datadumps
+aws.bucket.host=https://download.alliancegenome.org
+
+# Authentication
+okta.authentication=true
+okta.client.id=<client_id>
+okta.url=<okta_url>
+```
+
+### Monitoring and Health Checks
+
+- Health endpoint: `/q/health`
+- Metrics endpoint: `/q/metrics`
+- Application logs via CloudWatch
+
+## Configuration
+
+### Application Properties
+
+The main configuration file is `src/main/resources/application.properties`. Key settings:
+
+| Property | Description | Default |
+|----------|-------------|---------|
+| `quarkus.datasource.jdbc.url` | Database connection URL | localhost:5432/chipmunk |
+| `aws.bucket.name` | S3 bucket for file storage | mod-datadumps-dev |
+| `aws.access.key` | AWS access key | - |
+| `aws.secret.key` | AWS secret key | - |
+| `okta.authentication` | Enable Okta auth | false (dev) |
+| `quarkus.http.limits.max-body-size` | Max upload size | unlimited |
+
+### Environment-Specific Configuration
+
+Use Quarkus profiles for environment-specific settings:
+- `%dev.property` - Development environment
+- `%test.property` - Test environment  
+- `%prod.property` - Production environment
+
+## Testing
+
+### Unit Tests
+
+Run unit tests:
+```bash
+mvn test
+```
+
+### Integration Tests
+
+Run integration tests:
+```bash
+mvn verify
+```
+
+### Manual Testing
+
+1. **Test file submission**:
+```bash
+# Test with sample files
+curl -H "Authorization: Bearer test_token" \
+  -X POST "http://localhost:8080/api/data/submit" \
+  -F "TEST_BGI_MGD=@test/resources/sample_bgi.json"
+```
+
+2. **Test validation**:
+```bash
+curl -X POST "http://localhost:8080/api/data/validate" \
+  -F "BGI_MGD=@test/resources/sample_bgi.json"
+```
+
+### Test Data
+
+Sample test files are located in `src/test/resources/`. Use these for development and testing.
+
+## Contributing
+
+We welcome contributions! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'feat: add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Pull Request Guidelines
+
+- Provide a clear description of changes
+- Include tests for new functionality
+- Update documentation as needed
+- Ensure all tests pass
+- Follow existing code style
+
+### Reporting Issues
+
+Report issues via GitHub Issues. Include:
+- Description of the problem
+- Steps to reproduce
+- Expected vs actual behavior
+- System information
+- Error messages/logs
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Contact
+
+For questions or support:
+- GitHub Issues: https://github.com/alliance-genome/agr_chipmunk/issues
+- Alliance Contact: admin@alliancegenome.org
+- Documentation: https://www.alliancegenome.org/
+
+## Acknowledgments
+
+This project is maintained by the Alliance of Genome Resources, a consortium of model organism databases working together to provide unified access to genomic data.
