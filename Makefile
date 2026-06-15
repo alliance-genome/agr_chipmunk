@@ -57,7 +57,7 @@ eb-init:
 	eb init --region us-east-1 -p Docker chipmunk-app
 
 eb-create:
-	@eb create ${ENV_NAME} --region=us-east-1 --cname="${ENV_NAME}" --elb-type application --envvars \
+	@eb create ${ENV_NAME} --region=us-east-1 --cname="${ENV_NAME}" --elb-type application --tags Team=shared,Project=chipmunk --envvars \
 		AWS_SECRET_KEY=${AWS_SECRET_KEY},AWS_ACCESS_KEY=${AWS_ACCESS_KEY},AWS_BUCKET_HOST=${AWS_BUCKET_HOST},AWS_BUCKET_NAME=${AWS_BUCKET_NAME},QUARKUS_DATASOURCE_JDBC_URL=${QUARKUS_DATASOURCE_JDBC_URL},QUARKUS_DATASOURCE_USERNAME=${QUARKUS_DATASOURCE_USERNAME},QUARKUS_DATASOURCE_PASSWORD=${QUARKUS_DATASOURCE_PASSWORD},ENCRYPTION_PASSWORDKEY=${ENCRYPTION_PASSWORDKEY},FMS_DOWNLOAD_URLPREFIX=${FMS_DOWNLOAD_URLPREFIX},NET=${NET}
 
 eb-deploy:
