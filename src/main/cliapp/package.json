@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@kenshooui/react-multi-select": "^1.1.5",
-    "axios": "^0.21.2",
+    "axios": "^0.28.0",
     "bootstrap": "^4.3.1",
     "braces": "^2.3.2",
     "circular-json": "^0.5.9",
